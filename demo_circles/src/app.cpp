@@ -18,21 +18,18 @@ public:
         // Add entities
         for (size_t i = 0; i < 5; i++)
         {
-            // Add a new entity
-            tef::entity_t entity = world.add_entity();
-
             // Add a transform component
             if (i != 0)
             {
                 c_transform transform;
-                transform.owner = entity;
+                transform.owner = i;
                 world.add_component(transform);
             }
 
             // Add a circle component
             c_circle circle;
-            circle.owner = entity;
-            circle.radius = world.prng.next_float(.05f, .15f);
+            circle.owner = i;
+            circle.radius = world.prng.next_float(.05f, .2f);
             world.add_component(circle);
         }
 
