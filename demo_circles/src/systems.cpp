@@ -1,0 +1,104 @@
+#include "systems.h"
+
+#include <iostream>
+
+// s_empty
+
+s_empty::s_empty(const std::string& name)
+    : tef::system_t(name)
+{}
+
+void s_empty::on_start(tef::world_t& world)
+{}
+
+void s_empty::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
+{}
+
+void s_empty::on_trigger(tef::world_t& world, const tef::world_iteration_t& iter, const tef::event_t& event)
+{}
+
+void s_empty::on_stop(tef::world_t& world, const tef::world_iteration_t& iter)
+{}
+
+// s_movement
+
+s_movement::s_movement(const std::string& name)
+    : tef::system_t(name)
+{}
+
+void s_movement::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
+{
+    // Get all transform components
+    c_transform* components; size_t size;
+    world.get_components_of_type<c_transform>(components, size);
+
+    // Iterate and update
+    for (size_t i = 0; i < size; i++)
+    {
+        c_transform& transform = components[i];
+        transform.pos = vec2
+        {
+            3.f * std::cos(.5f * (i + 1.f) * iter.elapsed),
+            3.f * std::sin(.5f * (i + 1.f) * iter.elapsed)
+        };
+    }
+}
+
+// s_circle_renderer
+
+s_circle_renderer::s_circle_renderer(const std::string& name)
+    : tef::system_t(name)
+{}
+
+void s_circle_renderer::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
+{
+    // Clear the screen
+#if defined(_WIN32) || defined(_WIN64) || defined(WINDOWS)
+    std::system("cls");
+#else
+    std::system("clear");
+#endif
+
+    // Get all circle components
+    c_circle* components; size_t size;
+    world.get_components_of_type<c_circle>(components, size);
+
+    // Render (per-pixel shader)
+    constexpr ivec2 res{ 30, 20 };
+    float px2uv = get_px2uv_ratio(res);
+    for (int y = 0; y < res.y; y++)
+    {
+        for (int x = 0; x < res.x; x++)
+        {
+            // UV
+            vec2 uv = screen_to_uv({ x, y }, res);
+
+            // Minimum distance from the closest circle
+            float dist = 1e9f;
+            for (size_t i = 0; i < size; i++)
+            {
+                c_circle& circle = components[i];
+                c_transform* transform = world.get_component_of_type_owned_by<c_transform>(circle.owner);
+                if (transform)
+                {
+                    // Use transform.pos as the center
+                    dist = std::min(dist, sd_circle(uv, transform->pos, circle.radius));
+                }
+                else
+                {
+                    // Use the origin as the center
+                    dist = std::min(dist, sd_circle(uv, vec2{ 0, 0 }, circle.radius));
+                }
+            }
+
+            // Print
+            std::cout << (dist < px2uv ? '*' : ' ') << " ";
+        }
+        std::cout << '\n';
+    }
+    std::cout << std::flush;
+
+    // Stop running after 10 seconds
+    if (iter.elapsed > 10.)
+        world.stop(false);
+}
