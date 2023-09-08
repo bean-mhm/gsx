@@ -32,26 +32,6 @@ namespace tef
         : name(name)
     {}
 
-    entity_t world_t::add_entity()
-    {
-        // Generate an ID
-        id_t id = prng.next_u64();
-
-        // Add the ID
-        entities.push_back(id);
-
-        return id;
-    }
-
-    void world_t::remove_entity(entity_t entity)
-    {
-        // Remove all components owned by the entity
-        remove_components_owned_by(entity);
-
-        // Remove the entity
-        vec_remove(entities, vec_find_index(entities, entity));
-    }
-
     void world_t::remove_components_owned_by(entity_t owner)
     {
         // Iterate over all component types

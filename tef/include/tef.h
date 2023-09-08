@@ -18,9 +18,8 @@ namespace tef
 
     using byte_t = uint8_t;
     using id_t = uint64_t;
-    using tag_t = uint64_t;
-    using event_type_t = uint64_t;
     using entity_t = id_t;
+    using event_type_t = uint64_t;
 
     class world_t;
     struct world_iteration_t;
@@ -65,7 +64,7 @@ namespace tef
         virtual void on_stop(world_t& world, const world_iteration_t& iter);
     };
 
-    // A world for holding and managing a collection of entities, components, and systems.
+    // A world for holding and managing a collection of components and systems.
     class world_t
     {
     public:
@@ -75,9 +74,6 @@ namespace tef
 
         world_t(const std::string& name);
         no_default_copy_move_constructor(world_t);
-
-        entity_t add_entity();
-        void remove_entity(entity_t entity);
 
         // T must be derived from component_t.
         template <typename T>
@@ -89,7 +85,7 @@ namespace tef
         }
 
         // T must be derived from component_t.
-        // Do not add the same component to the same entity twice.
+        // Do not add two components with identical owners.
         template <typename T>
         void add_component(const T& initial_values)
         {
@@ -163,7 +159,6 @@ namespace tef
         };
 
         std::deque<event_t> events;
-        std::vector<entity_t> entities;
 
         // Maps a component type to a list of components of that type
         std::unordered_map<size_t, component_list_t> comp_map;
