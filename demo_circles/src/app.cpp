@@ -23,14 +23,14 @@ public:
             {
                 c_transform transform;
                 transform.owner = i;
-                world.add_component(transform);
+                world.add_component_of_type<c_transform>(transform);
             }
 
             // Add a circle component
             c_circle circle;
             circle.owner = i;
             circle.radius = world.prng.next_float(.05f, .2f);
-            world.add_component(circle);
+            world.add_component_of_type<c_circle>(circle);
         }
 
         // Add systems
