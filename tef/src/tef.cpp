@@ -32,6 +32,11 @@ namespace tef
         : name(name)
     {}
 
+    void world_t::enqueue_event(const event_t& event)
+    {
+        events.push_back(event);
+    }
+
     void world_t::remove_components_owned_by(entity_t owner)
     {
         // Iterate over all component types
@@ -57,7 +62,29 @@ namespace tef
         }
     }
 
-    void world_t::add_system(std::shared_ptr<system_t> system)
+    void world_t::remove_components()
+    {
+        comp_map.clear();
+    }
+
+    std::shared_ptr<system_t> world_t::get_system_named(const std::string& name)
+    {
+        for (auto& system : systems)
+        {
+            if (system->name == name)
+            {
+                return system;
+            }
+        }
+        return nullptr;
+    }
+
+    std::vector<std::shared_ptr<system_t>>& world_t::get_systems()
+    {
+        return systems;
+    }
+
+    void world_t::add_system(const std::shared_ptr<system_t>& system)
     {
         systems.push_back(system);
     }
@@ -74,9 +101,9 @@ namespace tef
         }
     }
 
-    void world_t::enqueue_event(const event_t& event)
+    void world_t::remove_systems()
     {
-        events.push_back(event);
+        vec_clear(systems);
     }
 
     void world_t::run(float max_update_rate)
@@ -138,10 +165,11 @@ namespace tef
             time_last_iter = high_resolution_clock::now();
         }
 
-        // Stop
-        for (auto& system : systems)
+        // Stop in reverse order. The first system added will be started first and it will be
+        // stopped at the end.
+        for (int64_t i = systems.size() - 1; i >= 0; i--)
         {
-            system->on_stop(*this, iter);
+            systems[i]->on_stop(*this, iter);
         }
 
         running = false;

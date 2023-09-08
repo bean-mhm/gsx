@@ -8,6 +8,8 @@
 #include <any>
 #include <mutex>
 #include <memory>
+#include <typeinfo>
+#include <typeindex>
 #include <cstdint>
 
 #include "tef_prng.h"
@@ -24,9 +26,13 @@ namespace tef
     class world_t;
     struct world_iteration_t;
 
+    // Event
     struct event_t
     {
+        // Event type specified by the sender
         event_type_t type;
+
+        // Event data
         std::any data;
 
         event_t(event_type_t type, const std::any& data);
@@ -39,88 +45,58 @@ namespace tef
         entity_t owner;
     };
 
-    // Abstract struct for a system. A system generally should not have a state.
+    // Abstract struct for a system. The abstract functions will be called at appropriate times
+    // by the parent world while it is running.
     struct system_t
     {
+        // A name for the system
         const std::string name;
 
         // Which event types will trigger this system?
         std::set<event_type_t> triggers;
 
+        // Create a system with a given name.
         system_t(const std::string& name);
         no_default_copy_move_constructor(system_t);
         virtual ~system_t();
 
-        // Called when the world starts running
+        // Called when the world starts running, in the order that the systems were added.
         virtual void on_start(world_t& world);
 
-        // Called every iteration
+        // Called in every iteration when the world is running. A system would typically get a
+        // list of components it's interested in, iterate over them, and update them. The
+        // iteration can be parallelized by the user for improved performance.
         virtual void on_update(world_t& world, const world_iteration_t& iter);
 
-        // Called when triggered by an event
-        virtual void on_trigger(world_t& world, const world_iteration_t& iter, const event_t& event);
+        // Called when triggered by an event.
+        virtual void on_trigger(world_t& world, const world_iteration_t& iter,
+            const event_t& event);
 
-        // Called when the world stops running
+        // Called when the world stops running, in the opposite order in which the systems were
+        // added.
         virtual void on_stop(world_t& world, const world_iteration_t& iter);
     };
 
-    // A world for holding and managing a collection of components and systems.
+    // A world for holding and managing a collection of components and systems
     class world_t
     {
     public:
+        // A name for the world
         const std::string name;
-        std::mutex mutex;
+
+        // A PRNG (Pseudo-Random Number Generator) for the world
         prng_t prng;
 
+        // Create a world with a given name.
         world_t(const std::string& name);
         no_default_copy_move_constructor(world_t);
 
-        // T must be derived from component_t.
-        template <typename T>
-        void get_components_of_type(T*& out_components, size_t& out_size)
-        {
-            std::vector<byte_t>& bytes = get_components_of_type_bytes<T>();
-            out_components = (T*)(bytes.data());
-            out_size = bytes.size() / sizeof(T);
-        }
+        // Enqueue a given event.
+        void enqueue_event(const event_t& event);
 
-        // T must be derived from component_t.
-        // Do not add two components with identical owners.
-        template <typename T>
-        void add_component(const T& initial_values)
-        {
-            // Component list for T
-            std::vector<byte_t>& bytes = get_components_of_type_bytes<T>();
-
-            // Make space
-            size_t old_size = bytes.size();
-            bytes.resize(bytes.size() + sizeof(T));
-
-            // Add component with the given values
-            std::copy((byte_t*)(&initial_values), (byte_t*)(&initial_values) + sizeof(T), bytes.data() + old_size);
-        }
-
-        // T must be derived from component_t.
-        template <typename T>
-        void remove_component(entity_t owner)
-        {
-            // Component list for T
-            std::vector<byte_t>& bytes = get_components_of_type_bytes<T>();
-
-            // Find the index of entity
-            ptrdiff_t offset = find_entity_index_for_component_bytes<T>(owner);
-
-            // No component of type T is attached to the entity
-            if (offset < 0)
-                return;
-
-            // Erase
-            bytes.erase(bytes.begin() + offset, bytes.begin() + offset + sizeof(T));
-        }
-
-        void remove_components_owned_by(entity_t owner);
-
-        // T must be derived from component_t.
+        // Get the first component of type T owned by a given entity. If no such component exists,
+        // nullptr will be returned.
+        // Note: T must be derived from component_t.
         template <typename T>
         T* get_component_of_type_owned_by(entity_t owner)
         {
@@ -136,59 +112,156 @@ namespace tef
             }
         }
 
-        // Duplication of a system type may result in undefined behavior.
-        void add_system(std::shared_ptr<system_t> system);
-
-        // Remove the first system in the list with a given name.
-        void remove_system(const std::string& name);
-
-        // Enqueue a given event
-        void enqueue_event(const event_t& event);
-
-        // Start the main loop. Only a single thread can be running the main loop at a time.
-        void run(float max_update_rate = 0);
-
-        // Signal the runner thread to stop, and optionally wait for it.
-        void stop(bool wait);
-
-    private:
-        struct component_list_t
-        {
-            size_t stride = 0;
-            std::vector<byte_t> data;
-        };
-
-        std::deque<event_t> events;
-
-        // Maps a component type to a list of components of that type
-        std::unordered_map<size_t, component_list_t> comp_map;
-
-        std::vector<std::shared_ptr<system_t>> systems;
-
-        bool running = false;
-        bool should_stop = false;
-
-        // Byte array for components of type T
+        // Get a list of all components of type T.
+        // Note: T must be derived from component_t.
         template <typename T>
-        std::vector<byte_t>& get_components_of_type_bytes()
+        void get_components_of_type(T*& out_components, size_t& out_size)
         {
-            // Type ID hash
-            const size_t type_hash = typeid(T).hash_code();
+            std::vector<byte_t>& bytes = get_components_of_type_bytes<T>();
+            out_components = (T*)(bytes.data());
+            out_size = bytes.size() / sizeof(T);
+        }
 
-            // See if we've already made a list for this type
-            if (comp_map.contains(type_hash))
+        // Add a component of type T with given initial values. You cannot use initial_values to
+        // modify the component afterward. Instead, a pointer to the new copy in the component
+        // list will be returned.
+        // Note: Do not add two components of the same type with identical owners.
+        // Note: T must be derived from component_t.
+        template <typename T>
+        T* add_component_of_type(const T& initial_values)
+        {
+            // Component list for T
+            std::vector<byte_t>& bytes = get_components_of_type_bytes<T>();
+
+            // Make space
+            size_t old_size = bytes.size();
+            bytes.resize(bytes.size() + sizeof(T));
+
+            // Add component with given values
+            std::copy(
+                (byte_t*)(&initial_values),
+                (byte_t*)(&initial_values) + sizeof(T),
+                bytes.data() + old_size
+            );
+
+            // Return a pointer to the new copy
+            return (T*)(bytes.data() + old_size);
+        }
+
+        // Remove the first component of type T owned by a given entity, if any.
+        // Note: T must be derived from component_t.
+        template <typename T>
+        void remove_component_of_type_owned_by(entity_t owner)
+        {
+            // Component list for T
+            std::vector<byte_t>& bytes = get_components_of_type_bytes<T>();
+
+            // Find the index of entity
+            ptrdiff_t offset = find_entity_index_for_component_bytes<T>(owner);
+
+            // No component of type T is attached to the entity
+            if (offset < 0)
+                return;
+
+            // Erase
+            bytes.erase(bytes.begin() + offset, bytes.begin() + offset + sizeof(T));
+        }
+
+        // Remove all components of all types owned by a given entity.
+        void remove_components_owned_by(entity_t owner);
+
+        // Remove all components of type T.
+        // Note: T must be derived from component_t.
+        template <typename T>
+        void remove_components_of_type()
+        {
+            // Type index
+            const std::type_index ti = std::type_index(typeid(T));
+
+            // See if there's a list for this type
+            if (comp_map.contains(ti))
             {
-                return comp_map[type_hash].data;
-            }
-            else
-            {
-                comp_map[type_hash] = component_list_t();
-                comp_map[type_hash].stride = sizeof(T);
-                return comp_map[type_hash].data;
+                comp_map.erase(ti);
             }
         }
 
-        // Find the index (in bytes) of the first component of type T owned by a given entity
+        // Remove all components in the world.
+        void remove_components();
+
+        // Get the first system in the list with a given name. If no such system exists, nullptr
+        // will be returned.
+        std::shared_ptr<system_t> get_system_named(const std::string& name);
+
+        // Get a list of all systems in the world.
+        std::vector<std::shared_ptr<system_t>>& get_systems();
+
+        // Add a system to the world.
+        // Note: Duplication of a system type may result in undefined behavior.
+        void add_system(const std::shared_ptr<system_t>& system);
+
+        // Remove the first system in the list with a given name, if any.
+        void remove_system(const std::string& name);
+
+        // Remove all systems in the world.
+        void remove_systems();
+
+        // Start the main loop with a given maximum update rate. This will call the abstract
+        // functions of the systems present in the world.
+        // Note: Use a max_update_rate of 0 for uncapped update rate.
+        // Note: Only a single thread can be running the main loop at a time.
+        void run(float max_update_rate = 0);
+
+        // Signal the runner thread to stop, and optionally wait for it if calling from a separate
+        // thread. If this is called from the same thread that called run(), wait must be false.
+        void stop(bool wait);
+
+    private:
+        // Wrapper for a byte array holding a list of components of the same type
+        struct component_list_t
+        {
+            // How many bytes does a single component take up in memory?
+            size_t stride = 0;
+
+            // Byte array
+            std::vector<byte_t> data;
+        };
+
+        // Event queue
+        std::deque<event_t> events;
+
+        // Mapping from a component type to a list of components of that type
+        std::unordered_map<std::type_index, component_list_t> comp_map;
+
+        // Systems
+        std::vector<std::shared_ptr<system_t>> systems;
+
+        // Is the world currently running?
+        bool running = false;
+
+        // Should the world stop running?
+        bool should_stop = false;
+
+        // Get a byte array of all components of type T.
+        // Note: T must be derived from component_t.
+        template <typename T>
+        std::vector<byte_t>& get_components_of_type_bytes()
+        {
+            // Type index
+            const std::type_index ti = std::type_index(typeid(T));
+
+            // See if there's no list for this type
+            if (!comp_map.contains(ti))
+            {
+                comp_map[ti] = component_list_t();
+                comp_map[ti].stride = sizeof(T);
+            }
+
+            // Return
+            return comp_map[ti].data;
+        }
+
+        // Find the index (in bytes) of the first component of type T owned by a given entity.
+        // Note: T must be derived from component_t.
         template <typename T>
         ptrdiff_t find_entity_index_for_component_bytes(entity_t entity)
         {
@@ -206,6 +279,8 @@ namespace tef
 
     };
 
+    // Information about the current iteration of the world. This will be passed to systems when
+    // the world is running.
     struct world_iteration_t
     {
         // Iteration number starting from 0

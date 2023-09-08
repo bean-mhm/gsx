@@ -52,6 +52,7 @@ namespace tef
     }
 
     float elapsed_sec(std::chrono::steady_clock::time_point t_start);
+
     float elapsed_sec(
         std::chrono::steady_clock::time_point t_start,
         std::chrono::steady_clock::time_point t_end
