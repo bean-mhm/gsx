@@ -7,7 +7,7 @@
 // Transform component
 struct c_transform : tef::component_t
 {
-    vec2 pos;
+    glm::vec2 pos;
 };
 
 // Circle component
