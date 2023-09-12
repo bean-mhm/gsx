@@ -10,7 +10,7 @@ namespace tef
     enum class log_level_t
     {
         error = 0,
-        warn,
+        warning,
         info,
         verbose
     };
