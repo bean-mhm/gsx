@@ -97,5 +97,5 @@ void app_t::run()
     }
 
     // Run
-    world.run(10, 5);
+    world.run(10, 10);
 }

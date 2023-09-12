@@ -90,7 +90,7 @@ void s_circle_renderer::on_update(tef::world_t& world, const tef::world_iteratio
             }
 
             // Print
-            std::cout << (dist < px2uv ? '*' : ' ') << " ";
+            std::cout << (dist < px2uv ? 'o' : ' ') << " ";
         }
         std::cout << '\n';
     }
