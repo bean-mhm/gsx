@@ -2,6 +2,10 @@
 
 namespace tef
 {
+    const char* cstr_from_bool(bool v)
+    {
+        return v ? "true" : "false";
+    }
 
     float elapsed_sec(std::chrono::steady_clock::time_point t_start)
     {
