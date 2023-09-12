@@ -93,7 +93,7 @@ namespace tef
 
     void world_t::add_system(const std::shared_ptr<system_t>& system)
     {
-        tef_log(log_level_t::verbose, name, format(
+        tef_log(log_level_t::verbose, name, str_format(
             "Adding a new system named \"%s\"",
             system->name.c_str()
         ));
@@ -103,7 +103,7 @@ namespace tef
 
     void world_t::remove_system(const std::string& sname)
     {
-        tef_log(log_level_t::verbose, name, format(
+        tef_log(log_level_t::verbose, name, str_format(
             "Removing the first system named \"%s\"",
             sname.c_str()
         ));
@@ -129,7 +129,7 @@ namespace tef
         using namespace std::chrono;
 
         // Initialization
-        tef_log(log_level_t::info, name, format(
+        tef_log(log_level_t::info, name, str_format(
             "Preparing to run (max_update_rate = %.3f iterations/s, max_run_time = %.3f s)",
             max_update_rate,
             max_run_time
@@ -142,7 +142,7 @@ namespace tef
         // Start the systems
         for (auto& system : systems)
         {
-            tef_log(log_level_t::info, name, format(
+            tef_log(log_level_t::info, name, str_format(
                 "Starting system named \"%s\"",
                 system->name.c_str()
             ));
@@ -160,7 +160,7 @@ namespace tef
         // Loop
         while (!should_stop)
         {
-            tef_log(log_level_t::verbose, name, format(
+            tef_log(log_level_t::verbose, name, str_format(
                 "Loop iteration %llu (elapsed = %.3f s, dt = %.3f s)",
                 iter.i, iter.elapsed, iter.dt
             ));
@@ -168,7 +168,7 @@ namespace tef
             // Update the systems
             for (auto& system : systems)
             {
-                tef_log(log_level_t::verbose, name, format(
+                tef_log(log_level_t::verbose, name, str_format(
                     "Updating system named \"%s\"",
                     system->name.c_str()
                 ));
@@ -186,7 +186,7 @@ namespace tef
                 {
                     if (system->triggers.contains(event.type))
                     {
-                        tef_log(log_level_t::verbose, name, format(
+                        tef_log(log_level_t::verbose, name, str_format(
                             "Using event of type %s to trigger system named \"%s\"",
                             std::to_string(event.type).c_str(),
                             system->name.c_str()
@@ -225,7 +225,7 @@ namespace tef
         // will be stopped at the end.
         for (int64_t i = systems.size() - 1; i >= 0; i--)
         {
-            tef_log(log_level_t::info, name, format(
+            tef_log(log_level_t::info, name, str_format(
                 "Stopping system named \"%s\"",
                 systems[i]->name.c_str()
             ));
@@ -241,21 +241,17 @@ namespace tef
 
     void world_t::stop(bool wait)
     {
-        tef_log(log_level_t::info, name, "Signaling the world to stop running");
+        tef_log(log_level_t::info, name, str_format("Signaling the world to stop running (wait = %s)", cstr_from_bool(wait)));
 
         should_stop = true;
 
         if (!wait)
             return;
 
-        tef_log(log_level_t::info, name, "Waiting for the world to stop running");
-
         while (running)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(2));
         }
-
-        tef_log(log_level_t::info, name, "Done waiting for the world to stop running");
     }
 
 }
