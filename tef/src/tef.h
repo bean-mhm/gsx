@@ -137,7 +137,7 @@ namespace tef
         template <typename T>
         T* add_component_of_type(const T& initial_values)
         {
-            tef_log(log_level_t::verbose, name, format(
+            tef_log(log_level_t::verbose, name, str_format(
                 "Adding a new component of type \"%s\" owned by %s",
                 typeid(T).name(),
                 std::to_string(initial_values.owner).c_str()
@@ -166,7 +166,7 @@ namespace tef
         template <typename T>
         void remove_component_of_type_owned_by(entity_t owner)
         {
-            tef_log(log_level_t::verbose, name, format(
+            tef_log(log_level_t::verbose, name, str_format(
                 "Removing the first component of type \"%s\" owned by %s",
                 typeid(T).name(),
                 std::to_string(owner).c_str()
@@ -194,7 +194,7 @@ namespace tef
         template <typename T>
         void remove_components_of_type()
         {
-            tef_log(log_level_t::verbose, name, format(
+            tef_log(log_level_t::verbose, name, str_format(
                 "Removing all components of type \"%s\"",
                 typeid(T).name()
             ));
@@ -273,7 +273,7 @@ namespace tef
             // See if there's no list for this type
             if (!comp_map.contains(ti))
             {
-                tef_log(log_level_t::verbose, name, format(
+                tef_log(log_level_t::verbose, name, str_format(
                     "Creating a new component list for type \"%s\"",
                     typeid(T).name()
                 ));
