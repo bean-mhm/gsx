@@ -1,4 +1,4 @@
-#include "../include/tef_prng.h"
+#include "tef_prng.h"
 
 namespace tef
 {

@@ -58,17 +58,18 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)tef\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)tef\src\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)libs\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tef.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>XCOPY "$(SolutionDir)bin\$(Platform)\$(Configuration)\tef.lib" "$(ProjectDir)libs\" /Y</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -80,7 +81,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)tef\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\;$(SolutionDir)tef\src\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
@@ -89,13 +90,17 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)libs\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>tef.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>XCOPY "$(SolutionDir)bin\$(Platform)\$(Configuration)\tef.lib" "$(ProjectDir)libs\" /Y</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\tef\src\tef.cpp" />
+    <ClCompile Include="..\tef\src\tef_prng.cpp" />
+    <ClCompile Include="..\tef\src\tef_utils.cpp" />
     <ClCompile Include="include\glm\detail\glm.cpp" />
     <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -103,6 +108,10 @@
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\tef\src\tef.h" />
+    <ClInclude Include="..\tef\src\tef_log.h" />
+    <ClInclude Include="..\tef\src\tef_prng.h" />
+    <ClInclude Include="..\tef\src\tef_utils.h" />
     <ClInclude Include="include\glm\common.hpp" />
     <ClInclude Include="include\glm\detail\compute_common.hpp" />
     <ClInclude Include="include\glm\detail\compute_vector_relational.hpp" />
@@ -385,6 +394,7 @@
     <ClInclude Include="include\glm\vec3.hpp" />
     <ClInclude Include="include\glm\vec4.hpp" />
     <ClInclude Include="include\glm\vector_relational.hpp" />
+    <ClInclude Include="src\app.h" />
     <ClInclude Include="src\components.h" />
     <ClInclude Include="src\systems.h" />
     <ClInclude Include="src\utils.h" />

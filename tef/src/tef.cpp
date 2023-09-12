@@ -1,6 +1,4 @@
-#include "../include/tef.h"
-
-#include <thread>
+#include "tef.h"
 
 namespace tef
 {
@@ -28,17 +26,30 @@ namespace tef
     void system_t::on_stop(world_t& world, const world_iteration_t& iter)
     {}
 
-    world_t::world_t(const std::string& name)
-        : name(name)
-    {}
+    world_t::world_t(const std::string& name, cb_log_t cb_log)
+        : name(name), cb_log(cb_log)
+    {
+        tef_log(log_level_t::info, name, "World created");
+    }
+
+    world_t::~world_t()
+    {
+        tef_log(log_level_t::info, name, "World destroyed");
+    }
 
     void world_t::enqueue_event(const event_t& event)
     {
+        tef_log(log_level_t::verbose, name,
+            "Enqueueing an event of type " + std::to_string(event.type));
+
         events.push_back(event);
     }
 
     void world_t::remove_components_owned_by(entity_t owner)
     {
+        tef_log(log_level_t::verbose, name,
+            "Removing all components owned by " + std::to_string(owner));
+        
         // Iterate over all component types
         for (auto& v : comp_map)
         {
@@ -64,6 +75,7 @@ namespace tef
 
     void world_t::remove_components()
     {
+        tef_log(log_level_t::verbose, name, "Removing all components");
         comp_map.clear();
     }
 
@@ -79,21 +91,26 @@ namespace tef
         return nullptr;
     }
 
-    std::vector<std::shared_ptr<system_t>>& world_t::get_systems()
-    {
-        return systems;
-    }
-
     void world_t::add_system(const std::shared_ptr<system_t>& system)
     {
+        tef_log(log_level_t::verbose, name, format(
+            "Adding a new system named \"%s\"",
+            system->name.c_str()
+        ));
+
         systems.push_back(system);
     }
 
-    void world_t::remove_system(const std::string& name)
+    void world_t::remove_system(const std::string& sname)
     {
+        tef_log(log_level_t::verbose, name, format(
+            "Removing the first system named \"%s\"",
+            sname.c_str()
+        ));
+
         for (size_t i = 0; i < systems.size(); i++)
         {
-            if (systems[i]->name == name)
+            if (systems[i]->name == sname)
             {
                 vec_remove(systems, i);
                 break;
@@ -103,22 +120,33 @@ namespace tef
 
     void world_t::remove_systems()
     {
+        tef_log(log_level_t::verbose, name, "Removing all systems");
         vec_clear(systems);
     }
 
-    void world_t::run(float max_update_rate)
+    void world_t::run(const float max_update_rate, const float max_run_time)
     {
         using namespace std::chrono;
 
         // Initialization
+        tef_log(log_level_t::info, name, format(
+            "Preparing to run (max_update_rate = %.3f iterations/s, max_run_time = %.3f s)",
+            max_update_rate,
+            max_run_time
+        ));
         stop(true);
         running = true;
         should_stop = false;
         const float min_dt = (max_update_rate == 0) ? 0 : (1.f / max_update_rate);
 
-        // Start
+        // Start the systems
         for (auto& system : systems)
         {
+            tef_log(log_level_t::info, name, format(
+                "Starting system named \"%s\"",
+                system->name.c_str()
+            ));
+
             system->on_start(*this);
         }
 
@@ -127,12 +155,24 @@ namespace tef
         auto time_start = high_resolution_clock::now();
         auto time_last_iter = time_start;
 
+        tef_log(log_level_t::info, name, "Starting the loop");
+
         // Loop
         while (!should_stop)
         {
-            // Update
+            tef_log(log_level_t::verbose, name, format(
+                "Loop iteration %llu (elapsed = %.3f s, dt = %.3f s)",
+                iter.i, iter.elapsed, iter.dt
+            ));
+
+            // Update the systems
             for (auto& system : systems)
             {
+                tef_log(log_level_t::verbose, name, format(
+                    "Updating system named \"%s\"",
+                    system->name.c_str()
+                ));
+
                 system->on_update(*this, iter);
             }
 
@@ -146,16 +186,23 @@ namespace tef
                 {
                     if (system->triggers.contains(event.type))
                     {
+                        tef_log(log_level_t::verbose, name, format(
+                            "Using event of type %s to trigger system named \"%s\"",
+                            std::to_string(event.type).c_str(),
+                            system->name.c_str()
+                        ));
                         system->on_trigger(*this, iter, event);
                     }
                 }
             }
 
-            // Sleep if needed
+            // Don't go faster than the maximum update rate
             float time_left = min_dt - elapsed_sec(time_last_iter);
             if (time_left > 0)
             {
-                std::this_thread::sleep_for(std::chrono::nanoseconds((uint64_t)(time_left * 1e9f)));
+                std::this_thread::sleep_for(
+                    std::chrono::nanoseconds((uint64_t)(time_left * 1e9f))
+                );
             }
 
             // Iteration info
@@ -163,29 +210,52 @@ namespace tef
             iter.elapsed = elapsed_sec(time_start);
             iter.dt = elapsed_sec(time_last_iter);
             time_last_iter = high_resolution_clock::now();
+
+            // Stop running if the maximum run time is exceeded
+            if (max_run_time != 0 && iter.elapsed > max_run_time)
+            {
+                tef_log(log_level_t::info, name,
+                    "Breaking the loop because the maximum run time was exceeded");
+
+                break;
+            }
         }
 
-        // Stop in reverse order. The first system added will be started first and it will be
-        // stopped at the end.
+        // Stop the systems in reverse order. The first system added will be started first and it
+        // will be stopped at the end.
         for (int64_t i = systems.size() - 1; i >= 0; i--)
         {
+            tef_log(log_level_t::info, name, format(
+                "Stopping system named \"%s\"",
+                systems[i]->name.c_str()
+            ));
+
             systems[i]->on_stop(*this, iter);
         }
 
         running = false;
+        should_stop = false;
+
+        tef_log(log_level_t::info, name, "Stopped running");
     }
 
     void world_t::stop(bool wait)
     {
+        tef_log(log_level_t::info, name, "Signaling the world to stop running");
+
         should_stop = true;
 
         if (!wait)
             return;
 
+        tef_log(log_level_t::info, name, "Waiting for the world to stop running");
+
         while (running)
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(5));
+            std::this_thread::sleep_for(std::chrono::milliseconds(2));
         }
+
+        tef_log(log_level_t::info, name, "Done waiting for the world to stop running");
     }
 
 }

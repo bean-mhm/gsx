@@ -26,13 +26,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\tef_prng.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\tef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\tef_utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\tef_prng.h">
+    <ClInclude Include="src\tef_log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

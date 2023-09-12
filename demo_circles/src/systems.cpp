@@ -95,8 +95,4 @@ void s_circle_renderer::on_update(tef::world_t& world, const tef::world_iteratio
         std::cout << '\n';
     }
     std::cout << std::flush;
-
-    // Stop running after 10 seconds
-    if (iter.elapsed > 10.)
-        world.stop(false);
 }
