@@ -90,6 +90,14 @@ namespace tef
         // Log callback
         const cb_log_t cb_log;
 
+        // Mutex for the components
+        // Note: Not used internally, can optionally be used by the developer for synchronization.
+        std::mutex mutex_components;
+
+        // Mutex for the systems
+        // Note: Not used internally, can optionally be used by the developer for synchronization.
+        std::mutex mutex_systems;
+
         // A PRNG (Pseudo-Random Number Generator) for the world
         prng_t prng;
 
@@ -216,8 +224,7 @@ namespace tef
         // will be returned.
         std::shared_ptr<system_t> get_system_named(const std::string& name);
 
-        // Add a system to the world.
-        // Note: Duplication of a system type may result in undefined behavior.
+        // Add a system to the world. Avoid adding two worlds with identical names.
         void add_system(const std::shared_ptr<system_t>& system);
 
         // Remove the first system in the list with a given name, if any.
@@ -237,6 +244,12 @@ namespace tef
         void stop(bool wait);
 
     private:
+        // Internal mutex for running the world
+        std::mutex mutex_run;
+
+        // Internal mutex for the event queue
+        std::mutex mutex_events;
+        
         // Wrapper for a byte array holding a list of components of the same type
         struct component_list_t
         {
@@ -255,9 +268,6 @@ namespace tef
 
         // Systems
         std::vector<std::shared_ptr<system_t>> systems;
-
-        // Is the world currently running?
-        bool running = false;
 
         // Should the world stop running?
         bool should_stop = false;

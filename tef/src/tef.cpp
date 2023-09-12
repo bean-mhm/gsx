@@ -42,6 +42,7 @@ namespace tef
         tef_log(log_level_t::verbose, name,
             "Enqueueing an event of type " + std::to_string(event.type));
 
+        std::scoped_lock lock(mutex_events);
         events.push_back(event);
     }
 
@@ -49,7 +50,7 @@ namespace tef
     {
         tef_log(log_level_t::verbose, name,
             "Removing all components owned by " + std::to_string(owner));
-        
+
         // Iterate over all component types
         for (auto& v : comp_map)
         {
@@ -134,10 +135,12 @@ namespace tef
             max_update_rate,
             max_run_time
         ));
-        stop(true);
-        running = true;
-        should_stop = false;
         const float min_dt = (max_update_rate == 0) ? 0 : (1.f / max_update_rate);
+
+        // Stop running if the world is already running on another thread
+        stop(false);
+        std::scoped_lock lock(mutex_run);
+        should_stop = false;
 
         // Start the systems
         for (auto& system : systems)
@@ -179,8 +182,10 @@ namespace tef
             // Events
             while (!events.empty())
             {
-                const event_t& event = events.front();
+                mutex_events.lock();
+                event_t event = events.front();
                 events.pop_front();
+                mutex_events.unlock();
 
                 for (auto& system : systems)
                 {
@@ -233,9 +238,6 @@ namespace tef
             systems[i]->on_stop(*this, iter);
         }
 
-        running = false;
-        should_stop = false;
-
         tef_log(log_level_t::info, name, "Stopped running");
     }
 
@@ -244,13 +246,9 @@ namespace tef
         tef_log(log_level_t::info, name, str_format("Signaling the world to stop running (wait = %s)", cstr_from_bool(wait)));
 
         should_stop = true;
-
-        if (!wait)
-            return;
-
-        while (running)
+        if (wait)
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(2));
+            std::scoped_lock lock(mutex_run);
         }
     }
 
