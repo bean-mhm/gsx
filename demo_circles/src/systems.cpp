@@ -94,5 +94,5 @@ void s_circle_renderer::on_update(tef::world_t& world, const tef::world_iteratio
         }
         std::cout << '\n';
     }
-    std::cout << std::flush;
+    std::cout.flush();
 }
