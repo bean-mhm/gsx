@@ -60,6 +60,7 @@ namespace tef
         // Update order. A system with a higher order value will have its on_update() function
         // invoked after a system with a lower order value. Systems with the same order will have
         // their on_update() functions invoked in parallel.
+        // Note: Avoid modifying this value when the parent world is running.
         int32_t update_order = 0;
 
         // Which event types will trigger this system?
