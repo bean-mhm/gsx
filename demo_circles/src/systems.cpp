@@ -2,27 +2,6 @@
 
 #include <iostream>
 
-// s_empty
-
-s_empty::s_empty(const std::string& name)
-    : tef::base_system_t(name)
-{}
-
-s_empty::~s_empty()
-{}
-
-void s_empty::on_start(tef::world_t& world)
-{}
-
-void s_empty::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
-{}
-
-void s_empty::on_trigger(tef::world_t& world, const tef::world_iteration_t& iter, const tef::event_t& event)
-{}
-
-void s_empty::on_stop(tef::world_t& world, const tef::world_iteration_t& iter)
-{}
-
 // s_movement
 
 s_movement::s_movement(const std::string& name)
