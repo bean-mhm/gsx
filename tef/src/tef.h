@@ -15,7 +15,6 @@
 #include <cstdint>
 
 #include "tef_log.h"
-#include "tef_csv_logger.h"
 #include "tef_prng.h"
 #include "tef_utils.h"
 
@@ -44,14 +43,14 @@ namespace tef
 
     // Abstract struct for a component. Subclasses should not allocate heap memory. A component
     // has no functionality, it only ever stores data.
-    struct component_t
+    struct base_component_t
     {
         entity_t owner;
     };
 
     // Abstract struct for a system. The abstract functions will be called at appropriate times
     // by the parent world while it is running.
-    struct system_t
+    struct base_system_t
     {
         // A unique name for the system
         const std::string name;
@@ -60,9 +59,9 @@ namespace tef
         std::set<event_type_t> triggers;
 
         // Create a system with a given name.
-        system_t(const std::string& name);
-        no_default_copy_move_constructor(system_t);
-        virtual ~system_t();
+        base_system_t(const std::string& name);
+        no_default_copy_move_constructor(base_system_t);
+        virtual ~base_system_t();
 
         // Called when the world starts running, in the order that the systems were added.
         virtual void on_start(world_t& world);
@@ -88,8 +87,8 @@ namespace tef
         // A name for the world
         const std::string name;
 
-        // Callback function for logging
-        const cb_log_t cb_log;
+        // Logger
+        std::shared_ptr<base_logger_t> logger;
 
         // Mutex for the components
         // Note: Not used internally, can optionally be used by the developer for synchronization.
@@ -102,8 +101,8 @@ namespace tef
         // A PRNG (Pseudo-Random Number Generator) for the world
         prng_t prng;
 
-        // Create a world with a given name and a callback function for logging.
-        world_t(const std::string& name, cb_log_t cb_log);
+        // Create a world with a given name and a logger.
+        world_t(const std::string& name, std::shared_ptr<base_logger_t> logger);
         no_default_copy_move_constructor(world_t);
         ~world_t();
 
@@ -112,7 +111,7 @@ namespace tef
 
         // Get the first component of type T owned by a given entity. If no such component exists,
         // nullptr will be returned.
-        // Note: T must be derived from component_t.
+        // Note: T must be derived from base_component_t.
         template <typename T>
         T* get_component_of_type_owned_by(entity_t owner)
         {
@@ -129,7 +128,7 @@ namespace tef
         }
 
         // Get a list of all components of type T.
-        // Note: T must be derived from component_t.
+        // Note: T must be derived from base_component_t.
         template <typename T>
         void get_components_of_type(T*& out_components, size_t& out_size)
         {
@@ -142,7 +141,7 @@ namespace tef
         // modify the component afterward. Instead, a pointer to the new copy in the component
         // list will be returned.
         // Note: Do not add two components of the same type with identical owners.
-        // Note: T must be derived from component_t.
+        // Note: T must be derived from base_component_t.
         template <typename T>
         T* add_component_of_type(const T& initial_values)
         {
@@ -171,7 +170,7 @@ namespace tef
         }
 
         // Remove the first component of type T owned by a given entity, if any.
-        // Note: T must be derived from component_t.
+        // Note: T must be derived from base_component_t.
         template <typename T>
         void remove_component_of_type_owned_by(entity_t owner)
         {
@@ -199,7 +198,7 @@ namespace tef
         void remove_components_owned_by(entity_t owner);
 
         // Remove all components of type T.
-        // Note: T must be derived from component_t.
+        // Note: T must be derived from base_component_t.
         template <typename T>
         void remove_components_of_type()
         {
@@ -223,10 +222,10 @@ namespace tef
 
         // Get the first system in the list with a given name. If no such system exists, nullptr
         // will be returned.
-        std::shared_ptr<system_t> get_system_named(const std::string& name);
+        std::shared_ptr<base_system_t> get_system_named(const std::string& name);
 
         // Add a system to the world. Avoid adding two worlds with identical names.
-        void add_system(const std::shared_ptr<system_t>& system);
+        void add_system(const std::shared_ptr<base_system_t>& system);
 
         // Remove the first system in the list with a given name, if any.
         void remove_system(const std::string& name);
@@ -268,13 +267,13 @@ namespace tef
         std::unordered_map<std::type_index, component_list_t> comp_map;
 
         // Systems
-        std::vector<std::shared_ptr<system_t>> systems;
+        std::vector<std::shared_ptr<base_system_t>> systems;
 
         // Should the world stop running?
         bool should_stop = false;
 
         // Get a byte array of all components of type T.
-        // Note: T must be derived from component_t.
+        // Note: T must be derived from base_component_t.
         template <typename T>
         std::vector<byte_t>& get_components_of_type_bytes()
         {
@@ -298,7 +297,7 @@ namespace tef
         }
 
         // Find the index (in bytes) of the first component of type T owned by a given entity.
-        // Note: T must be derived from component_t.
+        // Note: T must be derived from base_component_t.
         template <typename T>
         ptrdiff_t find_entity_index_for_component_bytes(entity_t entity)
         {

@@ -1,5 +1,7 @@
 #include "tef.h"
 
+#include <stdexcept>
+
 namespace tef
 {
 
@@ -7,28 +9,31 @@ namespace tef
         : type(type), data(data)
     {}
 
-    system_t::system_t(const std::string& name)
+    base_system_t::base_system_t(const std::string& name)
         : name(name)
     {}
 
-    system_t::~system_t()
+    base_system_t::~base_system_t()
     {}
 
-    void system_t::on_start(world_t& world)
+    void base_system_t::on_start(world_t& world)
     {}
 
-    void system_t::on_update(world_t& world, const world_iteration_t& iter)
+    void base_system_t::on_update(world_t& world, const world_iteration_t& iter)
     {}
 
-    void system_t::on_trigger(world_t& world, const world_iteration_t& iter, const event_t& event)
+    void base_system_t::on_trigger(world_t& world, const world_iteration_t& iter, const event_t& event)
     {}
 
-    void system_t::on_stop(world_t& world, const world_iteration_t& iter)
+    void base_system_t::on_stop(world_t& world, const world_iteration_t& iter)
     {}
 
-    world_t::world_t(const std::string& name, cb_log_t cb_log)
-        : name(name), cb_log(cb_log)
+    world_t::world_t(const std::string& name, std::shared_ptr<base_logger_t> logger)
+        : name(name), logger(logger)
     {
+        if (logger == nullptr)
+            throw std::runtime_error("The world logger must not be null.");
+
         tef_log(log_level_t::info, name, "World created");
     }
 
@@ -80,7 +85,7 @@ namespace tef
         comp_map.clear();
     }
 
-    std::shared_ptr<system_t> world_t::get_system_named(const std::string& name)
+    std::shared_ptr<base_system_t> world_t::get_system_named(const std::string& name)
     {
         for (auto& system : systems)
         {
@@ -92,7 +97,7 @@ namespace tef
         return nullptr;
     }
 
-    void world_t::add_system(const std::shared_ptr<system_t>& system)
+    void world_t::add_system(const std::shared_ptr<base_system_t>& system)
     {
         tef_log(log_level_t::verbose, name, str_format(
             "Adding a new system named \"%s\"",
