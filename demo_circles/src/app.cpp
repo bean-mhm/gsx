@@ -17,7 +17,7 @@ void app_t::run()
     // Create a world
     tef::world_t world(
         "Circles",
-        std::make_shared<tef::ostream_logger_t>(std::cout)
+        std::make_shared<tef::csv_logger_t>("./log.csv")
     );
 
     // Add entities
@@ -41,9 +41,9 @@ void app_t::run()
     // Add systems
     {
         world.add_system(std::make_shared<s_movement>("Movement"));
-        //world.add_system(std::make_shared<s_circle_renderer>("Circle Renderer"));
+        world.add_system(std::make_shared<s_circle_renderer>("Circle Renderer"));
     }
 
     // Run
-    world.run(10, 1);
+    world.run(10, 5);
 }
