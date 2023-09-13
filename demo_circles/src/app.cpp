@@ -40,8 +40,8 @@ void app_t::run()
 
     // Add systems
     {
-        world.add_system(std::make_shared<s_movement>("Movement"));
-        world.add_system(std::make_shared<s_circle_renderer>("Circle Renderer"));
+        world.add_system(std::make_shared<s_movement>("Movement", 0));
+        world.add_system(std::make_shared<s_circle_renderer>("Circle Renderer", 1));
     }
 
     // Run
