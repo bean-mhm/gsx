@@ -94,6 +94,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\tef_log.cpp" />
     <ClCompile Include="src\tef_prng.cpp" />
     <ClCompile Include="src\tef.cpp" />
     <ClCompile Include="src\tef_utils.cpp" />
