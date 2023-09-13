@@ -2,6 +2,9 @@
 
 #include <iostream>
 
+#include "components.h"
+#include "utils.h"
+
 // s_movement
 
 s_movement::s_movement(const std::string& name, int32_t update_order)
@@ -38,12 +41,8 @@ s_circle_renderer::~s_circle_renderer()
 
 void s_circle_renderer::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
 {
-    // Clear the screen
-#if defined(_WIN32) || defined(_WIN64) || defined(WINDOWS)
-    std::system("cls");
-#else
-    std::system("clear");
-#endif
+    // Clear the console
+    clear_console();
 
     // Get all circle components
     c_circle* components; size_t size;

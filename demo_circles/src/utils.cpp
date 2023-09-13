@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstdint>
+#include <cstdlib>
 
 static constexpr float uv_scale = 4.;
 
@@ -18,4 +19,13 @@ float get_px2uv_ratio(glm::uvec2 res)
 float sd_circle(glm::vec2 p, glm::vec2 center, float radius)
 {
     return glm::distance(p, center) - radius;
+}
+
+void clear_console()
+{
+#if defined(_WIN32) || defined(_WIN64) || defined(WINDOWS)
+    std::system("cls");
+#else
+    std::system("clear");
+#endif
 }

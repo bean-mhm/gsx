@@ -2,7 +2,7 @@
 
 #include "tef.h"
 
-#include "utils.h"
+#include "glm/glm.hpp"
 
 // Transform component
 struct c_transform : tef::base_component_t

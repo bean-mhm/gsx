@@ -2,9 +2,6 @@
 
 #include "tef.h"
 
-#include "components.h"
-#include "utils.h"
-
 // Movement system
 struct s_movement : tef::base_system_t
 {
