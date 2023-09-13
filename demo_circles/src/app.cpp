@@ -1,8 +1,9 @@
 #include "app.h"
 
 #include <iostream>
-#include <fstream>
 #include <string>
+#include <thread>
+#include <memory>
 #include <cstdint>
 
 #include "tef.h"
@@ -11,66 +12,24 @@
 #include "systems.h"
 #include "utils.h"
 
-static std::ofstream log_file;
+static std::shared_ptr<tef::csv_logger_t> logger;
 
-// Log callback, writes to log_file in the CSV format
-void tef_log_cb(
+void cb_log(
     tef::log_level_t log_level,
     const std::string& world_name,
     std::thread::id thread_id,
     const std::string& message)
 {
-    // Replace " with "" because CSV
-    std::string world_name_copy = str_replace(world_name, "\"", "\"\"");
-    std::string message_copy = str_replace(message, "\"", "\"\"");
-
-    // time
-    log_file << '"' << str_from_time() << "\",";
-
-    // log_level
-    switch (log_level)
-    {
-    case tef::log_level_t::error:
-        log_file << "error,";
-        break;
-    case tef::log_level_t::warning:
-        log_file << "warning,";
-        break;
-    case tef::log_level_t::info:
-        log_file << "info,";
-        break;
-    case tef::log_level_t::verbose:
-        log_file << "verbose,";
-        break;
-    default:
-        break;
-    }
-
-    // world_name, thread_id, message
-    log_file << '"' << world_name_copy << "\",";
-    log_file << thread_id << ',';
-    log_file << '"' << message_copy << "\"\n";
-
-    // Flush
-    log_file.flush();
+    logger->add(log_level, world_name, thread_id, message);
 }
 
 void app_t::run()
 {
     // Log file
-    log_file.open("./log.csv", std::ofstream::out | std::ofstream::trunc);
-    if (!log_file.is_open())
-    {
-        throw std::runtime_error("A log file could not be created/opened.");
-    }
-    else
-    {
-        log_file << "time,log_level,world_name,thread_id,message\n";
-        log_file.flush();
-    }
+    logger = std::make_shared<tef::csv_logger_t>("./log.csv");
 
     // Create a world
-    tef::world_t world("Circles", tef_log_cb);
+    tef::world_t world("Circles", cb_log);
 
     // Add entities
     for (size_t i = 0; i < 5; i++)
