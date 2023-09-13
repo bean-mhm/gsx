@@ -24,7 +24,9 @@ namespace tef
     }
 
     ostream_logger_t::~ostream_logger_t()
-    {}
+    {
+        std::scoped_lock(mutex);
+    }
 
     void ostream_logger_t::log(const log_entry_t& entry)
     {
@@ -82,7 +84,9 @@ namespace tef
     }
 
     csv_logger_t::~csv_logger_t()
-    {}
+    {
+        std::scoped_lock(mutex);
+    }
 
     void csv_logger_t::log(const log_entry_t& entry)
     {
