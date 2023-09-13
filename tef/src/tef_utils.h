@@ -29,6 +29,10 @@ namespace tef
         return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
     }
 
+    void str_replace_in_place(std::string& s, const std::string& from, const std::string& to);
+    std::string str_replace(const std::string& s, const std::string& from, const std::string& to);
+    std::string str_from_time();
+
     const char* cstr_from_bool(bool v);
 
     template <typename T>
