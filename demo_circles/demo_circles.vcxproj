@@ -99,7 +99,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\tef\src\tef.cpp" />
-    <ClCompile Include="..\tef\src\tef_csv_logger.cpp" />
+    <ClCompile Include="..\tef\src\tef_log.cpp" />
     <ClCompile Include="..\tef\src\tef_prng.cpp" />
     <ClCompile Include="..\tef\src\tef_utils.cpp" />
     <ClCompile Include="include\glm\detail\glm.cpp" />
@@ -110,7 +110,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\tef\src\tef.h" />
-    <ClInclude Include="..\tef\src\tef_csv_logger.h" />
     <ClInclude Include="..\tef\src\tef_log.h" />
     <ClInclude Include="..\tef\src\tef_prng.h" />
     <ClInclude Include="..\tef\src\tef_utils.h" />
