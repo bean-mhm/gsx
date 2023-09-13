@@ -21,11 +21,13 @@
 namespace tef
 {
 
+    // Type definitions
     using byte_t = uint8_t;
     using id_t = uint64_t;
     using entity_t = id_t;
     using event_type_t = uint64_t;
 
+    // Forward declerations
     class world_t;
     struct world_iteration_t;
 
@@ -55,28 +57,41 @@ namespace tef
         // A unique name for the system
         const std::string name;
 
+        // Update order. A system with a higher order value will have its on_update() function
+        // invoked after a system with a lower order value. Systems with the same order will have
+        // their on_update() functions invoked in parallel.
+        int32_t update_order = 0;
+
         // Which event types will trigger this system?
         std::set<event_type_t> triggers;
 
         // Create a system with a given name.
-        base_system_t(const std::string& name);
+        base_system_t(const std::string& name, int32_t update_order);
         no_default_copy_move_constructor(base_system_t);
         virtual ~base_system_t();
 
-        // Called when the world starts running, in the order that the systems were added.
+        // Called when the world starts running, in the order in which the systems were added.
+        // Note: Avoid starting separate threads that keep running after returning from this
+        // function.
         virtual void on_start(world_t& world);
 
         // Called in every iteration when the world is running. A system would typically get a
         // list of components it's interested in, iterate over them, and update them. The
-        // iteration can be parallelized by the user for improved performance.
+        // iteration can be manually parallelized by the user for improved performance.
+        // Note: Avoid starting separate threads that keep running after returning from this
+        // function.
         virtual void on_update(world_t& world, const world_iteration_t& iter);
 
         // Called when triggered by an event.
+        // Note: Avoid starting separate threads that keep running after returning from this
+        // function.
         virtual void on_trigger(world_t& world, const world_iteration_t& iter,
             const event_t& event);
 
-        // Called when the world stops running, in the opposite order in which the systems were
-        // added.
+        // Called when the world stops running, in the opposite order to that in which the systems
+        // were added.
+        // Note: Avoid starting separate threads that keep running after returning from this
+        // function.
         virtual void on_stop(world_t& world, const world_iteration_t& iter);
     };
 
@@ -249,7 +264,7 @@ namespace tef
 
         // Internal mutex for the event queue
         std::mutex mutex_events;
-        
+
         // Wrapper for a byte array holding a list of components of the same type
         struct component_list_t
         {

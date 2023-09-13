@@ -1,5 +1,7 @@
 #include "tef.h"
 
+#include <algorithm>
+#include <execution>
 #include <stdexcept>
 
 namespace tef
@@ -9,8 +11,8 @@ namespace tef
         : type(type), data(data)
     {}
 
-    base_system_t::base_system_t(const std::string& name)
-        : name(name)
+    base_system_t::base_system_t(const std::string& name, int32_t update_order)
+        : name(name), update_order(update_order)
     {}
 
     base_system_t::~base_system_t()
@@ -174,14 +176,60 @@ namespace tef
             ));
 
             // Update the systems
-            for (auto& system : systems)
             {
-                tef_log(log_level_t::verbose, name, utils::str_format(
-                    "Updating system named \"%s\"",
-                    system->name.c_str()
-                ));
+                // Make a sorted and unique set of the update order values of the systems
+                std::set<int32_t, std::less<int32_t>> update_orders;
+                for (auto& system : systems)
+                {
+                    update_orders.insert(system->update_order);
+                }
 
-                system->on_update(*this, iter);
+                // Iterate over the set of the update order values
+                for (auto order : update_orders)
+                {
+                    tef_log(log_level_t::verbose, name, "Updating all systems at order " + std::to_string(order));
+
+                    // Gather systems with the same update order
+                    std::vector<std::shared_ptr<base_system_t>> to_update;
+                    for (auto& system : systems)
+                    {
+                        if (system->update_order == order)
+                        {
+                            to_update.push_back(system);
+                        }
+                    }
+
+                    if (to_update.size() == 1)
+                    {
+                        tef_log(log_level_t::verbose, name, utils::str_format(
+                            "Updating system named \"%s\" at order %s (not parallel)",
+                            to_update[0]->name.c_str(),
+                            std::to_string(order).c_str()
+                        ));
+
+                        // Just a single system to update (no need for parallelization)
+                        to_update[0]->on_update(*this, iter);
+                    }
+                    else
+                    {
+                        // Update in parallel
+                        std::for_each(
+                            std::execution::par,
+                            std::begin(to_update),
+                            std::end(to_update),
+                            [this, &iter, order](std::shared_ptr<base_system_t>& system)
+                            {
+                                tef_log(log_level_t::verbose, name, utils::str_format(
+                                    "Updating system named \"%s\" at order %s (parallel)",
+                                    system->name.c_str(),
+                                    std::to_string(order).c_str()
+                                ));
+
+                                system->on_update(*this, iter);
+                            }
+                        );
+                    }
+                }
             }
 
             // Events
