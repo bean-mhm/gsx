@@ -14,8 +14,9 @@
 #include <thread>
 #include <cstdint>
 
-#include "tef_prng.h"
 #include "tef_log.h"
+#include "tef_csv_logger.h"
+#include "tef_prng.h"
 #include "tef_utils.h"
 
 namespace tef
@@ -87,7 +88,7 @@ namespace tef
         // A name for the world
         const std::string name;
 
-        // Log callback
+        // Callback function for logging
         const cb_log_t cb_log;
 
         // Mutex for the components
