@@ -99,7 +99,7 @@ namespace tef
 
     void world_t::add_system(const std::shared_ptr<base_system_t>& system)
     {
-        tef_log(log_level_t::verbose, name, str_format(
+        tef_log(log_level_t::verbose, name, utils::str_format(
             "Adding a new system named \"%s\"",
             system->name.c_str()
         ));
@@ -109,7 +109,7 @@ namespace tef
 
     void world_t::remove_system(const std::string& sname)
     {
-        tef_log(log_level_t::verbose, name, str_format(
+        tef_log(log_level_t::verbose, name, utils::str_format(
             "Removing the first system named \"%s\"",
             sname.c_str()
         ));
@@ -118,7 +118,7 @@ namespace tef
         {
             if (systems[i]->name == sname)
             {
-                vec_remove(systems, i);
+                utils::vec_remove(systems, i);
                 break;
             }
         }
@@ -127,7 +127,7 @@ namespace tef
     void world_t::remove_systems()
     {
         tef_log(log_level_t::verbose, name, "Removing all systems");
-        vec_clear(systems);
+        utils::vec_clear(systems);
     }
 
     void world_t::run(const float max_update_rate, const float max_run_time)
@@ -135,7 +135,7 @@ namespace tef
         using namespace std::chrono;
 
         // Initialization
-        tef_log(log_level_t::info, name, str_format(
+        tef_log(log_level_t::info, name, utils::str_format(
             "Preparing to run (max_update_rate = %.3f iterations/s, max_run_time = %.3f s)",
             max_update_rate,
             max_run_time
@@ -150,7 +150,7 @@ namespace tef
         // Start the systems
         for (auto& system : systems)
         {
-            tef_log(log_level_t::info, name, str_format(
+            tef_log(log_level_t::info, name, utils::str_format(
                 "Starting system named \"%s\"",
                 system->name.c_str()
             ));
@@ -168,7 +168,7 @@ namespace tef
         // Loop
         while (!should_stop)
         {
-            tef_log(log_level_t::verbose, name, str_format(
+            tef_log(log_level_t::verbose, name, utils::str_format(
                 "Loop iteration %llu (elapsed = %.3f s, dt = %.3f s)",
                 iter.i, iter.elapsed, iter.dt
             ));
@@ -176,7 +176,7 @@ namespace tef
             // Update the systems
             for (auto& system : systems)
             {
-                tef_log(log_level_t::verbose, name, str_format(
+                tef_log(log_level_t::verbose, name, utils::str_format(
                     "Updating system named \"%s\"",
                     system->name.c_str()
                 ));
@@ -196,7 +196,7 @@ namespace tef
                 {
                     if (system->triggers.contains(event.type))
                     {
-                        tef_log(log_level_t::verbose, name, str_format(
+                        tef_log(log_level_t::verbose, name, utils::str_format(
                             "Using event of type %s to trigger system named \"%s\"",
                             std::to_string(event.type).c_str(),
                             system->name.c_str()
@@ -207,7 +207,7 @@ namespace tef
             }
 
             // Don't go faster than the maximum update rate
-            float time_left = min_dt - elapsed_sec(time_last_iter);
+            float time_left = min_dt - utils::elapsed_sec(time_last_iter);
             if (time_left > 0)
             {
                 std::this_thread::sleep_for(
@@ -217,8 +217,8 @@ namespace tef
 
             // Iteration info
             iter.i++;
-            iter.elapsed = elapsed_sec(time_start);
-            iter.dt = elapsed_sec(time_last_iter);
+            iter.elapsed = utils::elapsed_sec(time_start);
+            iter.dt = utils::elapsed_sec(time_last_iter);
             time_last_iter = high_resolution_clock::now();
 
             // Stop running if the maximum run time is exceeded
@@ -235,7 +235,7 @@ namespace tef
         // will be stopped at the end.
         for (int64_t i = systems.size() - 1; i >= 0; i--)
         {
-            tef_log(log_level_t::info, name, str_format(
+            tef_log(log_level_t::info, name, utils::str_format(
                 "Stopping system named \"%s\"",
                 systems[i]->name.c_str()
             ));
@@ -248,7 +248,10 @@ namespace tef
 
     void world_t::stop(bool wait)
     {
-        tef_log(log_level_t::info, name, str_format("Signaling the world to stop running (wait = %s)", cstr_from_bool(wait)));
+        tef_log(log_level_t::info, name, utils::str_format(
+            "Signaling the world to stop running (wait = %s)",
+            utils::cstr_from_bool(wait)
+        ));
 
         should_stop = true;
         if (wait)

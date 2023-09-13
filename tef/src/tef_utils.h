@@ -11,7 +11,7 @@
 #define no_copy_move_constructor(CLASS) no_copy_constructor(CLASS); no_move_constructor(CLASS);
 #define no_default_copy_move_constructor(CLASS) no_default_constructor(CLASS); no_copy_constructor(CLASS); no_move_constructor(CLASS);
 
-namespace tef
+namespace tef::utils
 {
 
     template<typename ... Args>

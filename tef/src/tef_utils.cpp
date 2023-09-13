@@ -2,7 +2,7 @@
 
 #include <time.h>
 
-namespace tef
+namespace tef::utils
 {
     // https://stackoverflow.com/a/3418285/18049911
     void str_replace_in_place(std::string& s, const std::string& from, const std::string& to)

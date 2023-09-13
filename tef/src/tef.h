@@ -145,7 +145,7 @@ namespace tef
         template <typename T>
         T* add_component_of_type(const T& initial_values)
         {
-            tef_log(log_level_t::verbose, name, str_format(
+            tef_log(log_level_t::verbose, name, utils::str_format(
                 "Adding a new component of type \"%s\" owned by %s",
                 typeid(T).name(),
                 std::to_string(initial_values.owner).c_str()
@@ -283,7 +283,7 @@ namespace tef
             // See if there's no list for this type
             if (!comp_map.contains(ti))
             {
-                tef_log(log_level_t::verbose, name, str_format(
+                tef_log(log_level_t::verbose, name, utils::str_format(
                     "Creating a new component list for type \"%s\"",
                     typeid(T).name()
                 ));

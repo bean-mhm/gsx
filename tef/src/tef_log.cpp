@@ -36,7 +36,7 @@ namespace tef
         }
 
         // time
-        stream << str_format("%s | ", str_from_time().c_str());
+        stream << utils::str_format("%s | ", utils::str_from_time().c_str());
 
         // log_level
         switch (entry.log_level)
@@ -58,7 +58,7 @@ namespace tef
         }
 
         // world_name, thread_id, message
-        stream << str_format("%s | ", entry.world_name.c_str());
+        stream << utils::str_format("%s | ", entry.world_name.c_str());
         stream << entry.thread_id << " | ";
         stream << entry.message << '\n';
 
@@ -72,7 +72,7 @@ namespace tef
         log_file.open(filename, std::ofstream::out | std::ofstream::trunc);
         if (!log_file.is_open())
         {
-            throw std::runtime_error(str_format("Log file \"%s\" could not be created/opened.", filename.c_str()));
+            throw std::runtime_error(utils::str_format("Log file \"%s\" could not be created/opened.", filename.c_str()));
         }
         else
         {
@@ -90,15 +90,15 @@ namespace tef
 
         if (!log_file)
         {
-            throw std::runtime_error(str_format("The log file stream \"%s\" is in failure state.", filename.c_str()));
+            throw std::runtime_error(utils::str_format("The log file stream \"%s\" is in failure state.", filename.c_str()));
         }
 
         // Replace " with "" because CSV
-        std::string world_name_copy = str_replace(entry.world_name, "\"", "\"\"");
-        std::string message_copy = str_replace(entry.message, "\"", "\"\"");
+        std::string world_name_copy = utils::str_replace(entry.world_name, "\"", "\"\"");
+        std::string message_copy = utils::str_replace(entry.message, "\"", "\"\"");
 
         // time
-        log_file << '"' << str_from_time() << "\",";
+        log_file << '"' << utils::str_from_time() << "\",";
 
         // log_level
         switch (entry.log_level)
