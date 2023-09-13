@@ -5,13 +5,13 @@
 #include "utils.h"
 
 // Transform component
-struct c_transform : tef::component_t
+struct c_transform : tef::base_component_t
 {
     glm::vec2 pos;
 };
 
 // Circle component
-struct c_circle : tef::component_t
+struct c_circle : tef::base_component_t
 {
     float radius;
 };
