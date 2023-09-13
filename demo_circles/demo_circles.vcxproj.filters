@@ -39,6 +39,9 @@
     <ClCompile Include="..\tef\src\tef_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\tef\src\tef_csv_logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\components.h">
@@ -909,6 +912,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\tef\src\tef_utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\tef\src\tef_csv_logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

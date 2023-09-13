@@ -94,11 +94,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\tef_csv_logger.cpp" />
     <ClCompile Include="src\tef_prng.cpp" />
     <ClCompile Include="src\tef.cpp" />
     <ClCompile Include="src\tef_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\tef_csv_logger.h" />
     <ClInclude Include="src\tef_log.h" />
     <ClInclude Include="src\tef_prng.h" />
     <ClInclude Include="src\tef.h" />
