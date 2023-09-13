@@ -12,24 +12,13 @@
 #include "systems.h"
 #include "utils.h"
 
-static std::shared_ptr<tef::csv_logger_t> logger;
-
-void cb_log(
-    tef::log_level_t log_level,
-    const std::string& world_name,
-    std::thread::id thread_id,
-    const std::string& message)
-{
-    logger->add(log_level, world_name, thread_id, message);
-}
-
 void app_t::run()
 {
-    // Log file
-    logger = std::make_shared<tef::csv_logger_t>("./log.csv");
-
     // Create a world
-    tef::world_t world("Circles", cb_log);
+    tef::world_t world(
+        "Circles",
+        std::make_shared<tef::ostream_logger_t>(std::cout)
+    );
 
     // Add entities
     for (size_t i = 0; i < 5; i++)
@@ -52,9 +41,9 @@ void app_t::run()
     // Add systems
     {
         world.add_system(std::make_shared<s_movement>("Movement"));
-        world.add_system(std::make_shared<s_circle_renderer>("Circle Renderer"));
+        //world.add_system(std::make_shared<s_circle_renderer>("Circle Renderer"));
     }
 
     // Run
-    world.run(10, 10);
+    world.run(10, 1);
 }
