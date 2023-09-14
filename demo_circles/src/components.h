@@ -1,7 +1,7 @@
 #pragma once
 
 // TEF
-#include "tef.h"
+#include "tef/tef.h"
 
 // GLM
 #include "glm/glm.hpp"

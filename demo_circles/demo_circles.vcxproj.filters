@@ -30,16 +30,16 @@
     <ClCompile Include="include\glm\detail\glm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\tef\src\tef.cpp">
+    <ClCompile Include="include\tef\tef.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\tef\src\tef_prng.cpp">
+    <ClCompile Include="include\tef\tef_log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\tef\src\tef_utils.cpp">
+    <ClCompile Include="include\tef\tef_prng.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\tef\src\tef_log.cpp">
+    <ClCompile Include="include\tef\tef_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -902,16 +902,16 @@
     <ClInclude Include="src\app.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\tef\src\tef.h">
+    <ClInclude Include="include\tef\tef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\tef\src\tef_log.h">
+    <ClInclude Include="include\tef\tef_log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\tef\src\tef_prng.h">
+    <ClInclude Include="include\tef\tef_prng.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\tef\src\tef_utils.h">
+    <ClInclude Include="include\tef\tef_utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

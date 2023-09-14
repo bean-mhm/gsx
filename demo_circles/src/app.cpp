@@ -8,7 +8,7 @@
 #include <cstdint>
 
 // TEF
-#include "tef.h"
+#include "tef/tef.h"
 
 // Internal
 #include "components.h"

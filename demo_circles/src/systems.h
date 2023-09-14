@@ -1,7 +1,7 @@
 #pragma once
 
 // TEF
-#include "tef.h"
+#include "tef/tef.h"
 
 // Movement system
 struct s_movement : tef::base_system_t
