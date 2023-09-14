@@ -1,11 +1,7 @@
 #pragma once
 
-// OpenGL
-#ifndef GLEW_STATIC
-#define GLEW_STATIC
-#endif
-#include "GL/glew.h"
-#include "GLFW/glfw3.h"
+// OpenGL utils
+#include "gl_utils.h"
 
 // GLM
 #include "glm/glm.hpp"
@@ -17,13 +13,24 @@ public:
     void run();
 
 private:
+    static constexpr const char* initial_title = "Boids";
+    static constexpr int initial_width = 800;
+    static constexpr int initial_height = 600;
+
     GLFWwindow* window;
 
-    void init_context();
-    void init_rendering();
+    GLuint vao = 0;
+    GLuint vbo = 0;
+    GLuint vert_shader = 0;
+    GLuint frag_shader = 0;
+    GLuint shader_program = 0;
+
+    void init();
     void main_loop();
     void cleanup();
 
+    void init_context();
+    void init_rendering();
     void render();
 
 };
