@@ -1,8 +1,20 @@
+// STD
 #include <iostream>
+
+// App
+#include "app.h"
 
 int main()
 {
-    std::cout << "Hello\n";
-
-    return 0;
+	try
+	{
+		app_t app;
+		app.run();
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		return -1;
+	}
+	return 0;
 }
