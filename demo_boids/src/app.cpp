@@ -79,6 +79,17 @@ void app_t::main_loop()
 
 void app_t::cleanup()
 {
+    // OpenGL objects
+    {
+        glDeleteProgram(shader_program);
+        glDeleteShader(frag_shader);
+        glDeleteShader(vert_shader);
+
+        glDeleteBuffers(1, &vbo);
+
+        glDeleteVertexArrays(1, &vao);
+    }
+
     glfwDestroyWindow(window);
     glfwTerminate();
 }
