@@ -10,6 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demo_circles", "demo_circle
 		{A58D4610-02F7-4BD6-8EDE-4311D68972F0} = {A58D4610-02F7-4BD6-8EDE-4311D68972F0}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demo_boids", "demo_boids\demo_boids.vcxproj", "{691E2134-43D3-446B-B286-318D1FE6A736}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -24,6 +26,10 @@ Global
 		{606E78CD-8C32-465C-9CD8-725F8EA602F2}.Debug|x64.Build.0 = Debug|x64
 		{606E78CD-8C32-465C-9CD8-725F8EA602F2}.Release|x64.ActiveCfg = Release|x64
 		{606E78CD-8C32-465C-9CD8-725F8EA602F2}.Release|x64.Build.0 = Release|x64
+		{691E2134-43D3-446B-B286-318D1FE6A736}.Debug|x64.ActiveCfg = Debug|x64
+		{691E2134-43D3-446B-B286-318D1FE6A736}.Debug|x64.Build.0 = Debug|x64
+		{691E2134-43D3-446B-B286-318D1FE6A736}.Release|x64.ActiveCfg = Release|x64
+		{691E2134-43D3-446B-B286-318D1FE6A736}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
