@@ -231,7 +231,7 @@ namespace tef
                 }
                 else if (group.systems.size() == 1)
                 {
-                    tef_log(log_level_t::verbose,name,
+                    tef_log(log_level_t::verbose, name,
                         "Updating the one system at order " + std::to_string(group.update_order)
                     );
 
