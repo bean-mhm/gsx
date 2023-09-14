@@ -4,13 +4,8 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
-
-// OpenGL
-#ifndef GLEW_STATIC
-#define GLEW_STATIC
-#endif
-#include <GL/glew.h>
-#include "GLFW/glfw3.h"
+#include <cmath>
+#include <cstdint>
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -27,12 +22,13 @@ static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int act
 
 void app_t::run()
 {
-    init();
+    init_context();
+    init_rendering();
     main_loop();
     cleanup();
 }
 
-void app_t::init()
+void app_t::init_context()
 {
     // Initialize GLFW
     glfwSetErrorCallback(glfw_error_callback);
@@ -75,14 +71,18 @@ void app_t::init()
     }
 }
 
+void app_t::init_rendering()
+{
+    //
+}
+
 void app_t::main_loop()
 {
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window))
     {
-        // Render here
-        glClearColor(.3, .4, .5, 1);
-        glClear(GL_COLOR_BUFFER_BIT);
+        // Render
+        render();
 
         // Swap front and back buffers
         glfwSwapBuffers(window);
@@ -96,4 +96,27 @@ void app_t::cleanup()
 {
     glfwDestroyWindow(window);
     glfwTerminate();
+}
+
+void app_t::render()
+{
+    // Render dimensions
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    glViewport(0, 0, width, height);
+    float aspect = width / (float)height;
+
+    // Time
+    float t = glfwGetTime();
+
+    // Calculate the clear color
+    static constexpr float freq = .5f;
+    glm::vec3 col(2.f * glm::pi<float>() * freq * t);
+    col += 2.f * glm::pi<float>() * glm::vec3(0, .333f, .667f);
+    col = glm::cos(col) * .5f + .5f;
+    col = glm::pow(col, glm::vec3(1.f / 2.2f));
+
+    // Clear the screen
+    glClearColor(col.r, col.g, col.b, 1.f);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
