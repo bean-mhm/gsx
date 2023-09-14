@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tef", "tef\tef.vcxproj", "{A58D4610-02F7-4BD6-8EDE-4311D68972F0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demo_circles", "demo_circles\demo_circles.vcxproj", "{606E78CD-8C32-465C-9CD8-725F8EA602F2}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A58D4610-02F7-4BD6-8EDE-4311D68972F0} = {A58D4610-02F7-4BD6-8EDE-4311D68972F0}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demo_boids", "demo_boids\demo_boids.vcxproj", "{691E2134-43D3-446B-B286-318D1FE6A736}"
 EndProject
