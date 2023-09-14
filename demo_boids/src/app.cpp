@@ -17,6 +17,14 @@ static void glfw_error_callback(int error, const char* description)
     std::cerr << "GLFW error " << error << ": " << description << '\n';
 }
 
+static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
+}
+
 void app_t::run()
 {
     init();
@@ -53,6 +61,9 @@ void app_t::init()
 
     // Enable VSync
     glfwSwapInterval(1);
+
+    // Key callback
+    glfwSetKeyCallback(window, glfw_key_callback);
 
     // Initialize GLEW for loading OpenGL extensions
     glewExperimental = GL_TRUE;
