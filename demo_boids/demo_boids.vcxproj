@@ -94,6 +94,7 @@
     <ClCompile Include="include\tef\tef_prng.cpp" />
     <ClCompile Include="include\tef\tef_utils.cpp" />
     <ClCompile Include="src\app.cpp" />
+    <ClCompile Include="src\gl_utils.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -390,6 +391,7 @@
     <ClInclude Include="include\tef\tef_prng.h" />
     <ClInclude Include="include\tef\tef_utils.h" />
     <ClInclude Include="src\app.h" />
+    <ClInclude Include="src\gl_utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\glm\detail\func_common.inl" />
