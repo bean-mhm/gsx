@@ -1,7 +1,9 @@
 #pragma once
 
+// TEF
 #include "tef.h"
 
+// GLM
 #include "glm/glm.hpp"
 
 // Transform component

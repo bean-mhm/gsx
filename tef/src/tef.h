@@ -1,5 +1,6 @@
 #pragma once
 
+// STD
 #include <string>
 #include <vector>
 #include <set>
@@ -14,6 +15,7 @@
 #include <thread>
 #include <cstdint>
 
+// Internal
 #include "tef_log.h"
 #include "tef_prng.h"
 #include "tef_utils.h"

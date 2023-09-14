@@ -1,11 +1,13 @@
 #pragma once
 
+// STD
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <thread>
 #include <mutex>
 
+// Internal
 #include "tef_utils.h"
 
 namespace tef

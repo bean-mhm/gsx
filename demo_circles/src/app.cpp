@@ -1,13 +1,16 @@
 #include "app.h"
 
+// STD
 #include <iostream>
 #include <string>
 #include <thread>
 #include <memory>
 #include <cstdint>
 
+// TEF
 #include "tef.h"
 
+// Internal
 #include "components.h"
 #include "systems.h"
 #include "utils.h"
