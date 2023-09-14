@@ -59,7 +59,7 @@ void app_t::init()
     GLenum glewInitResult = glewInit();
     if (glewInitResult != GLEW_OK)
     {
-        glfwTerminate();
+        cleanup();
         throw std::runtime_error("Failed to initialize GLEW: " + std::to_string(glewInitResult));
     }
 }
@@ -83,5 +83,6 @@ void app_t::main_loop()
 
 void app_t::cleanup()
 {
+    glfwDestroyWindow(window);
     glfwTerminate();
 }
