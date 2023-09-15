@@ -8,42 +8,62 @@
 #include <cstdint>
 
 static const char* src_vert = R"glsl(
-    #version 330 core
-    
-    uniform vec2 offs;
-    
-    in vec2 pos;
-    in vec3 col;
-    
-    out vec3 v_col;
-    
-    void main()
-    {
-        v_col = col;
-        gl_Position = vec4(pos + offs, 0.0, 1.0);
-    }
+#version 330 core
+
+precision highp float;
+
+uniform vec2 resolution;
+
+in vec2 pos;
+in vec2 uv01;
+
+out vec2 v_coord;
+
+void main()
+{
+    v_coord = uv01 * resolution;
+    gl_Position = vec4(pos, 0.0, 1.0);
+}
 )glsl";
 
 static const char* src_frag = R"glsl(
-    #version 330 core
+#version 330 core
+
+precision highp float;
+
+uniform vec2 resolution;
+
+in vec2 v_coord;
+
+out vec4 out_col;
+
+vec2 screen_to_uv(vec2 coord)
+{
+    return (2. * coord - resolution) / min(resolution.x, resolution.y);
+}
+
+void main()
+{
+    // UV
+    vec2 uv = screen_to_uv(v_coord);
     
-    in vec3 v_col;
+    // Render
+    vec3 col = vec3(uv, .02);
     
-    out vec4 out_col;
+    // OETF
+    col = pow(col, vec3(1. / 2.2));
     
-    void main()
-    {
-        vec3 col = pow(v_col, vec3(1. / 2.2));
-        out_col = vec4(col, 1.);
-    }
+    // Output
+    out_col = vec4(col, 1.);
+}
 )glsl";
 
 static const float plane_vertices[]{
-    // vec2 pos, vec3 col
-    -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,  // Top-left
-    0.5f, 0.5f, 0.0f, 1.0f, 0.0f,   // Top-right
-    0.5f, -0.5f, 0.0f, 0.0f, 1.0f,  // Bottom-right
-    -0.5f, -0.5f, 1.0f, 1.0f, 1.0f  // Bottom-left
+    // vec2 pos, vec2 uv
+    -1.f, 1.f, 0.f, 1.f,   // Top-left
+    1.f, 1.f, 1.f, 1.f,    // Top-right
+    1.f, -1.f, 1.f, 0.f,   // Bottom-right
+    -1.f, -1.f, 0.f, 0.f,  // Bottom-left
 };
 
 static const GLuint plane_elements[] = {
@@ -176,13 +196,13 @@ void app_t::init_rendering()
         GLint location = glGetAttribLocation(plane_shader_program, "pos");
         glEnableVertexAttribArray(location);
         glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE,
-            5 * sizeof(float), 0);
+            4 * sizeof(float), 0);
     }
     {
-        GLint location = glGetAttribLocation(plane_shader_program, "col");
+        GLint location = glGetAttribLocation(plane_shader_program, "uv01");
         glEnableVertexAttribArray(location);
-        glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE,
-            5 * sizeof(float), (void*)(2 * sizeof(float)));
+        glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE,
+            4 * sizeof(float), (void*)(2 * sizeof(float)));
     }
 }
 
@@ -212,8 +232,8 @@ void app_t::render()
 
     // Plane uniforms
     {
-        GLint location = glGetUniformLocation(plane_shader_program, "offs");
-        glUniform2f(location, .2f * cos(time * 2.f), .2f * sin(time * 2.f));
+        GLint location = glGetUniformLocation(plane_shader_program, "resolution");
+        glUniform2f(location, width, height);
     }
 
     // Draw the plane
