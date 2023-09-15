@@ -116,6 +116,12 @@ void app_t::init_context()
 
 void app_t::init_rendering()
 {
+    // Enable alpha blending
+    // Note: Blending will happen in sRGB and that's not good at all. However, in this case I only
+    // use it for anti-aliasing at the edges of the boid shape.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     // Plane VAO
     glGenVertexArrays(1, &plane_vao);
 
@@ -232,10 +238,21 @@ void app_t::render()
     // Bind the boids shader program
     glUseProgram(boids_shader_program);
 
+    // Boid size
+    float square_radius = .1f;
+
     // Boids uniforms
     {
-        GLint location = glGetUniformLocation(plane_shader_program, "aspect");
+        GLint location = glGetUniformLocation(boids_shader_program, "aspect");
         glUniform2f(location, (float)width / std::min(width, height), (float)height / std::min(width, height));
+    }
+    {
+        GLint location = glGetUniformLocation(boids_shader_program, "radius");
+        glUniform1f(location, square_radius);
+    }
+    {
+        GLint location = glGetUniformLocation(boids_shader_program, "px2uv");
+        glUniform1f(location, (2.f / std::min(width, height)) / square_radius);
     }
 
     // Bind the boids VAO

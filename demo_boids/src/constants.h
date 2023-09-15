@@ -38,7 +38,7 @@ static const char* plane_src_frag = R"glsl(
         return clamp((inp - inp_start) / (inp_end - inp_start), 0., 1.);
     }
     
-    // Signed distance from the colliders
+    // Signed distance of the colliders
     float sd_colliders(vec2 p)
     {
         float d = 1e9;
@@ -114,6 +114,7 @@ static const char* boids_src_geo = R"glsl(
     layout(triangle_strip, max_vertices = 6) out;
     
     uniform vec2 aspect;
+    uniform float square_radius = .1;
     
     in vec2 v_pos[];
     in vec2 v_vel[];
@@ -138,42 +139,39 @@ static const char* boids_src_geo = R"glsl(
     // Generate a square centered around v_pos and rotated based on v_vel
     void main()
     {
-        // Square radius (boid size)
-        const float radius = .1;
-        
         // Calculate the rotation angle based on the velocity
         vec2 dir = normalize(v_vel[0]);
         float angle = atan(-dir.y, -dir.x) + PI;
         
         // Top left
-        gl_Position = gen_vertex(vec2(-radius, radius), angle);
+        gl_Position = gen_vertex(vec2(-square_radius, square_radius), angle);
         g_uv = vec2(-1, 1);
         EmitVertex();
         
         // Top right
-        gl_Position = gen_vertex(vec2(radius, radius), angle);
+        gl_Position = gen_vertex(vec2(square_radius, square_radius), angle);
         g_uv = vec2(1, 1);
         EmitVertex();
         
         // Bottom left
-        gl_Position = gen_vertex(vec2(-radius, -radius), angle);
+        gl_Position = gen_vertex(vec2(-square_radius, -square_radius), angle);
         g_uv = vec2(-1, -1);
         EmitVertex();
         
         EndPrimitive();
         
         // Bottom left
-        gl_Position = gen_vertex(vec2(-radius, -radius), angle);
+        gl_Position = gen_vertex(vec2(-square_radius, -square_radius), angle);
         g_uv = vec2(-1, -1);
         EmitVertex();
         
         // Top right
-        gl_Position = gen_vertex(vec2(radius, radius), angle);
+        gl_Position = gen_vertex(vec2(square_radius, square_radius), angle);
         g_uv = vec2(1, 1);
         EmitVertex();
         
         // Bottom right
-        gl_Position = gen_vertex(vec2(radius, -radius), angle);
+        gl_Position = gen_vertex(vec2(square_radius, -square_radius), angle);
         g_uv = vec2(1, -1);
         EmitVertex();
         
@@ -185,20 +183,37 @@ static const char* boids_src_frag = R"glsl(
     #version 330 core
     precision highp float;
     
+    uniform float px2uv;
+    
     in vec2 g_uv;
     
     out vec4 out_col;
     
+    float remap01(float inp, float inp_start, float inp_end)
+    {
+        return clamp((inp - inp_start) / (inp_end - inp_start), 0., 1.);
+    }
+    
+    // Signed distance of the boid shape
+    float sd_boid(vec2 p)
+    {
+        return length(g_uv) - .9;
+    }
+    
     void main()
     {
+        // Signed distance from the edges of the boid shape
+        float dist = sd_boid(g_uv);
+        
         // Render
-        vec3 col = vec3(g_uv, 0);
+        vec3 col = vec3(1, 0, 0);
         
         // OETF
         col = pow(col, vec3(1. / 2.2));
         
         // Output
-        out_col = vec4(col, 1);
+        float alpha = remap01(dist, px2uv, 0.);
+        out_col = vec4(col, alpha);
     }
 )glsl";
 
