@@ -9,46 +9,72 @@
 
 static const char* src_vert = R"glsl(
 #version 330 core
-
 precision highp float;
 
-uniform vec2 resolution;
+// Uniforms
+uniform vec2 aspect;
 
+// Inputs
 in vec2 pos;
-in vec2 uv01;
 
-out vec2 v_coord;
+// Outputs
+out vec2 v_uv;
 
 void main()
 {
-    v_coord = uv01 * resolution;
+    v_uv = pos * aspect;
     gl_Position = vec4(pos, 0.0, 1.0);
 }
 )glsl";
 
 static const char* src_frag = R"glsl(
 #version 330 core
-
 precision highp float;
 
-uniform vec2 resolution;
+// Uniforms
+uniform float px2uv;
+uniform float time;
 
-in vec2 v_coord;
+// Inputs
+in vec2 v_uv;
 
+// Outputs
 out vec4 out_col;
 
-vec2 screen_to_uv(vec2 coord)
+// Remap to [0, 1] (clamped)
+float remap01(float inp, float inp_start, float inp_end)
 {
-    return (2. * coord - resolution) / min(resolution.x, resolution.y);
+    return clamp((inp - inp_start) / (inp_end - inp_start), 0., 1.);
+}
+
+// Signed distance from the colliders
+float sd_colliders(vec2 p)
+{
+    float d = 1e9;
+    
+    // Walls (bounds)
+    const vec2 min_pos = vec2(-.9);
+    const vec2 max_pos = vec2(.9);
+    d = min(d, p.x - min_pos.x);
+    d = min(d, p.y - min_pos.y);
+    d = min(d, max_pos.x - p.x);
+    d = min(d, max_pos.y - p.y);
+    
+    // Circle
+    vec2 center = vec2(sin(time) * .4, 0.);
+    d = min(d, length(p - center) - .15);
+    
+    return d;
 }
 
 void main()
 {
-    // UV
-    vec2 uv = screen_to_uv(v_coord);
-    
     // Render
-    vec3 col = vec3(uv, .02);
+    vec3 col = mix(
+        vec3(.2, .6, 1.),
+        vec3(.2, .8, .1),
+        remap01(sd_colliders(v_uv), px2uv, 0.)
+    );
     
     // OETF
     col = pow(col, vec3(1. / 2.2));
@@ -59,11 +85,11 @@ void main()
 )glsl";
 
 static const float plane_vertices[]{
-    // vec2 pos, vec2 uv
-    -1.f, 1.f, 0.f, 1.f,   // Top-left
-    1.f, 1.f, 1.f, 1.f,    // Top-right
-    1.f, -1.f, 1.f, 0.f,   // Bottom-right
-    -1.f, -1.f, 0.f, 0.f,  // Bottom-left
+    // vec2 pos
+    -1.f, 1.f,  // Top-left
+    1.f, 1.f,   // Top-right
+    1.f, -1.f,  // Bottom-right
+    -1.f, -1.f  // Bottom-left
 };
 
 static const GLuint plane_elements[] = {
@@ -196,13 +222,7 @@ void app_t::init_rendering()
         GLint location = glGetAttribLocation(plane_shader_program, "pos");
         glEnableVertexAttribArray(location);
         glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE,
-            4 * sizeof(float), 0);
-    }
-    {
-        GLint location = glGetAttribLocation(plane_shader_program, "uv01");
-        glEnableVertexAttribArray(location);
-        glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE,
-            4 * sizeof(float), (void*)(2 * sizeof(float)));
+            2 * sizeof(float), 0);
     }
 }
 
@@ -218,7 +238,7 @@ void app_t::render()
     float aspect = width / (float)height;
 
     // Clear the screen
-    glClearColor(0.f, 0.f, 0.f, 0.f);
+    glClearColor(0.f, 0.f, 0.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Bind the plane shader program
@@ -232,8 +252,16 @@ void app_t::render()
 
     // Plane uniforms
     {
-        GLint location = glGetUniformLocation(plane_shader_program, "resolution");
-        glUniform2f(location, width, height);
+        GLint location = glGetUniformLocation(plane_shader_program, "aspect");
+        glUniform2f(location, (float)width / std::min(width, height), (float)height / std::min(width, height));
+    }
+    {
+        GLint location = glGetUniformLocation(plane_shader_program, "px2uv");
+        glUniform1f(location, 2.f / std::min(width, height));
+    }
+    {
+        GLint location = glGetUniformLocation(plane_shader_program, "time");
+        glUniform1f(location, time);
     }
 
     // Draw the plane
