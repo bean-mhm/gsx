@@ -38,11 +38,16 @@ static const char* src_frag = R"glsl(
     }
 )glsl";
 
-static const float vertices[]{
+static const float plane_vertices[]{
     // vec2 pos, vec3 col
-    0.0f, 0.5f, 1.0f, 0.0f, 0.0f,   // Vertex 1: Red
-    0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  // Vertex 2: Green
-    -0.5f, -0.5f, 0.0f, 0.0f, 1.0f  // Vertex 3: Blue
+    -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,  // Top-left
+    0.5f, 0.5f, 0.0f, 1.0f, 0.0f,   // Top-right
+    0.5f, -0.5f, 0.0f, 0.0f, 1.0f,  // Bottom-right
+    -0.5f, -0.5f, 1.0f, 1.0f, 1.0f  // Bottom-left
+};
+
+static const GLuint plane_elements[] = {
+    0, 1, 2, 2, 3, 0
 };
 
 static void glfw_error_callback(int error, const char* description);
@@ -81,13 +86,14 @@ void app_t::cleanup()
 {
     // OpenGL objects
     {
-        glDeleteProgram(shader_program);
-        glDeleteShader(frag_shader);
-        glDeleteShader(vert_shader);
+        glDeleteProgram(plane_shader_program);
+        glDeleteShader(plane_frag_shader);
+        glDeleteShader(plane_vert_shader);
 
-        glDeleteBuffers(1, &vbo);
+        glDeleteBuffers(1, &plane_ebo);
+        glDeleteBuffers(1, &plane_vbo);
 
-        glDeleteVertexArrays(1, &vao);
+        glDeleteVertexArrays(1, &plane_vao);
     }
 
     glfwDestroyWindow(window);
@@ -139,37 +145,44 @@ void app_t::init_context()
 
 void app_t::init_rendering()
 {
-    // VAO
-    glGenVertexArrays(1, &vao);
+    // Plane VAO
+    glGenVertexArrays(1, &plane_vao);
 
-    // VBO
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // Plane VBO
+    glGenBuffers(1, &plane_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, plane_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(plane_vertices), plane_vertices, GL_STATIC_DRAW);
 
-    // Shaders
-    make_shader(vert_shader, "vertex shader", GL_VERTEX_SHADER, src_vert);
-    make_shader(frag_shader, "fragment shader", GL_FRAGMENT_SHADER, src_frag);
+    // Plane EBO
+    glGenBuffers(1, &plane_ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, plane_ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(plane_elements), plane_elements, GL_STATIC_DRAW);
 
-    // Program
-    shader_program = glCreateProgram();
-    glAttachShader(shader_program, vert_shader);
-    glAttachShader(shader_program, frag_shader);
-    glBindFragDataLocation(shader_program, 0, "out_col");
-    glLinkProgram(shader_program);
+    // Plane shaders
+    make_shader(plane_vert_shader, "plane vertex shader", GL_VERTEX_SHADER, src_vert);
+    make_shader(plane_frag_shader, "plane fragment shader", GL_FRAGMENT_SHADER, src_frag);
 
-    // Vertex attributes
-    glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    // Plane shader program
+    plane_shader_program = glCreateProgram();
+    glAttachShader(plane_shader_program, plane_vert_shader);
+    glAttachShader(plane_shader_program, plane_frag_shader);
+    glBindFragDataLocation(plane_shader_program, 0, "out_col");
+    glLinkProgram(plane_shader_program);
+
+    // Plane vertex attributes
+    glBindVertexArray(plane_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, plane_vbo);
     {
-        GLint location = glGetAttribLocation(shader_program, "pos");
+        GLint location = glGetAttribLocation(plane_shader_program, "pos");
         glEnableVertexAttribArray(location);
-        glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), 0);
+        glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE,
+            5 * sizeof(float), 0);
     }
     {
-        GLint location = glGetAttribLocation(shader_program, "col");
+        GLint location = glGetAttribLocation(plane_shader_program, "col");
         glEnableVertexAttribArray(location);
-        glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+        glVertexAttribPointer(location, 3, GL_FLOAT, GL_FALSE,
+            5 * sizeof(float), (void*)(2 * sizeof(float)));
     }
 }
 
@@ -188,20 +201,23 @@ void app_t::render()
     glClearColor(0.f, 0.f, 0.f, 0.f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Activate the shader program
-    glUseProgram(shader_program);
+    // Bind the plane shader program
+    glUseProgram(plane_shader_program);
 
-    // Activate the VAO
-    glBindVertexArray(vao);
+    // Bind the plane VAO
+    glBindVertexArray(plane_vao);
 
-    // Uniforms
+    // Bind the plane EBO
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, plane_ebo);
+
+    // Plane uniforms
     {
-        GLint location = glGetUniformLocation(shader_program, "offs");
+        GLint location = glGetUniformLocation(plane_shader_program, "offs");
         glUniform2f(location, .2f * cos(time * 2.f), .2f * sin(time * 2.f));
     }
 
-    // Draw
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    // Draw the plane
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 static void glfw_error_callback(int error, const char* description)

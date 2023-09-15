@@ -19,11 +19,12 @@ private:
 
     GLFWwindow* window;
 
-    GLuint vao = 0;
-    GLuint vbo = 0;
-    GLuint vert_shader = 0;
-    GLuint frag_shader = 0;
-    GLuint shader_program = 0;
+    GLuint plane_vao = 0;
+    GLuint plane_vbo = 0;
+    GLuint plane_ebo = 0;
+    GLuint plane_vert_shader = 0;
+    GLuint plane_frag_shader = 0;
+    GLuint plane_shader_program = 0;
 
     void init();
     void main_loop();
