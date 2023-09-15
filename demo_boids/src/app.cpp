@@ -7,7 +7,7 @@
 #include <cmath>
 #include <cstdint>
 
-static const char* src_vert = R"glsl(
+static const char* plane_src_vert = R"glsl(
 #version 330 core
 precision highp float;
 
@@ -27,7 +27,7 @@ void main()
 }
 )glsl";
 
-static const char* src_frag = R"glsl(
+static const char* plane_src_frag = R"glsl(
 #version 330 core
 precision highp float;
 
@@ -71,8 +71,8 @@ void main()
 {
     // Render
     vec3 col = mix(
-        vec3(.2, .6, 1.),
-        vec3(.2, .8, .1),
+        vec3(.3, .7, 1.),
+        vec3(.08, .6, .03),
         remap01(sd_colliders(v_uv), px2uv, 0.)
     );
     
@@ -205,8 +205,8 @@ void app_t::init_rendering()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(plane_elements), plane_elements, GL_STATIC_DRAW);
 
     // Plane shaders
-    make_shader(plane_vert_shader, "plane vertex shader", GL_VERTEX_SHADER, src_vert);
-    make_shader(plane_frag_shader, "plane fragment shader", GL_FRAGMENT_SHADER, src_frag);
+    make_shader(plane_vert_shader, "plane vertex shader", GL_VERTEX_SHADER, plane_src_vert);
+    make_shader(plane_frag_shader, "plane fragment shader", GL_FRAGMENT_SHADER, plane_src_frag);
 
     // Plane shader program
     plane_shader_program = glCreateProgram();
