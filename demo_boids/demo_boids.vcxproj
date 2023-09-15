@@ -392,6 +392,7 @@
     <ClInclude Include="include\tef\tef_utils.h" />
     <ClInclude Include="src\app.h" />
     <ClInclude Include="src\gl_utils.h" />
+    <ClInclude Include="src\constants.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\glm\detail\func_common.inl" />

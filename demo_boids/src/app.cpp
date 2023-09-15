@@ -7,94 +7,8 @@
 #include <cmath>
 #include <cstdint>
 
-static const char* plane_src_vert = R"glsl(
-#version 330 core
-precision highp float;
-
-// Uniforms
-uniform vec2 aspect;
-
-// Inputs
-in vec2 pos;
-
-// Outputs
-out vec2 v_uv;
-
-void main()
-{
-    v_uv = pos * aspect;
-    gl_Position = vec4(pos, 0.0, 1.0);
-}
-)glsl";
-
-static const char* plane_src_frag = R"glsl(
-#version 330 core
-precision highp float;
-
-// Uniforms
-uniform float px2uv;
-uniform float time;
-
-// Inputs
-in vec2 v_uv;
-
-// Outputs
-out vec4 out_col;
-
-// Remap to [0, 1] (clamped)
-float remap01(float inp, float inp_start, float inp_end)
-{
-    return clamp((inp - inp_start) / (inp_end - inp_start), 0., 1.);
-}
-
-// Signed distance from the colliders
-float sd_colliders(vec2 p)
-{
-    float d = 1e9;
-    
-    // Walls (bounds)
-    const vec2 min_pos = vec2(-.9);
-    const vec2 max_pos = vec2(.9);
-    d = min(d, p.x - min_pos.x);
-    d = min(d, p.y - min_pos.y);
-    d = min(d, max_pos.x - p.x);
-    d = min(d, max_pos.y - p.y);
-    
-    // Circle
-    vec2 center = vec2(sin(time) * .4, 0.);
-    d = min(d, length(p - center) - .15);
-    
-    return d;
-}
-
-void main()
-{
-    // Render
-    vec3 col = mix(
-        vec3(.3, .7, 1.),
-        vec3(.08, .6, .03),
-        remap01(sd_colliders(v_uv), px2uv, 0.)
-    );
-    
-    // OETF
-    col = pow(col, vec3(1. / 2.2));
-    
-    // Output
-    out_col = vec4(col, 1.);
-}
-)glsl";
-
-static const float plane_vertices[]{
-    // vec2 pos
-    -1.f, 1.f,  // Top-left
-    1.f, 1.f,   // Top-right
-    1.f, -1.f,  // Bottom-right
-    -1.f, -1.f  // Bottom-left
-};
-
-static const GLuint plane_elements[] = {
-    0, 1, 2, 2, 3, 0
-};
+// Internal
+#include "constants.h"
 
 static void glfw_error_callback(int error, const char* description);
 static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -132,14 +46,25 @@ void app_t::cleanup()
 {
     // OpenGL objects
     {
+        // Plane
+
         glDeleteProgram(plane_shader_program);
         glDeleteShader(plane_frag_shader);
         glDeleteShader(plane_vert_shader);
 
         glDeleteBuffers(1, &plane_ebo);
         glDeleteBuffers(1, &plane_vbo);
-
         glDeleteVertexArrays(1, &plane_vao);
+
+        // Boids
+
+        glDeleteProgram(boids_shader_program);
+        glDeleteShader(boids_frag_shader);
+        glDeleteShader(boids_geo_shader);
+        glDeleteShader(boids_vert_shader);
+
+        glDeleteBuffers(1, &boids_vbo);
+        glDeleteVertexArrays(1, &boids_vao);
     }
 
     glfwDestroyWindow(window);
@@ -224,6 +149,43 @@ void app_t::init_rendering()
         glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE,
             2 * sizeof(float), 0);
     }
+
+    // Boids VAO
+    glGenVertexArrays(1, &boids_vao);
+
+    // Boids VBO
+    glGenBuffers(1, &boids_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, boids_vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(boids_points), boids_points, GL_DYNAMIC_DRAW);
+
+    // Boids shaders
+    make_shader(boids_vert_shader, "boids vertex shader", GL_VERTEX_SHADER, boids_src_vert);
+    make_shader(boids_geo_shader, "boids geometry shader", GL_GEOMETRY_SHADER, boids_src_geo);
+    make_shader(boids_frag_shader, "boids fragment shader", GL_FRAGMENT_SHADER, boids_src_frag);
+
+    // Boids shader program
+    boids_shader_program = glCreateProgram();
+    glAttachShader(boids_shader_program, boids_vert_shader);
+    glAttachShader(boids_shader_program, boids_geo_shader);
+    glAttachShader(boids_shader_program, boids_frag_shader);
+    glBindFragDataLocation(boids_shader_program, 0, "out_col");
+    glLinkProgram(boids_shader_program);
+
+    // Boids vertex attributes
+    glBindVertexArray(boids_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, boids_vbo);
+    {
+        GLint location = glGetAttribLocation(boids_shader_program, "pos");
+        glEnableVertexAttribArray(location);
+        glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE,
+            4 * sizeof(float), 0);
+    }
+    {
+        GLint location = glGetAttribLocation(boids_shader_program, "vel");
+        glEnableVertexAttribArray(location);
+        glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE,
+            4 * sizeof(float), (void*)(2 * sizeof(float)));
+    }
 }
 
 void app_t::render()
@@ -244,12 +206,6 @@ void app_t::render()
     // Bind the plane shader program
     glUseProgram(plane_shader_program);
 
-    // Bind the plane VAO
-    glBindVertexArray(plane_vao);
-
-    // Bind the plane EBO
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, plane_ebo);
-
     // Plane uniforms
     {
         GLint location = glGetUniformLocation(plane_shader_program, "aspect");
@@ -264,8 +220,29 @@ void app_t::render()
         glUniform1f(location, time);
     }
 
+    // Bind the plane VAO
+    glBindVertexArray(plane_vao);
+
+    // Bind the plane EBO
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, plane_ebo);
+
     // Draw the plane
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    // Bind the boids shader program
+    glUseProgram(boids_shader_program);
+
+    // Boids uniforms
+    {
+        GLint location = glGetUniformLocation(plane_shader_program, "aspect");
+        glUniform2f(location, (float)width / std::min(width, height), (float)height / std::min(width, height));
+    }
+
+    // Bind the boids VAO
+    glBindVertexArray(boids_vao);
+
+    // Draw the boids
+    glDrawArrays(GL_POINTS, 0, (sizeof(boids_points) / sizeof(boids_points[0])) / 4);
 }
 
 static void glfw_error_callback(int error, const char* description)
