@@ -7,7 +7,7 @@
 #include "glm/glm.hpp"
 
 // Boid component
-struct c_boid : tef::base_component_t
+struct c_boid
 {
     glm::vec2 pos;
     glm::vec2 vel;

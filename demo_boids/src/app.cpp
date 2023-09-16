@@ -35,7 +35,6 @@ void app_t::run()
     {
         // Add a boid component
         c_boid boid;
-        boid.owner = i;
         boid.pos = glm::vec2(
             world.prng.next_float(boids_min_pos.x, boids_max_pos.x),
             world.prng.next_float(boids_min_pos.y, boids_max_pos.y)
