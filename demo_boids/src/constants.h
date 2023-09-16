@@ -7,14 +7,13 @@
 
 static const char* plane_src_vert = R"glsl(
     #version 330 core
-    precision highp float;
-    
+
     uniform vec2 aspect;
-    
+
     in vec2 pos;
-    
+
     out vec2 v_uv;
-    
+
     void main()
     {
         v_uv = pos * aspect;
@@ -24,25 +23,24 @@ static const char* plane_src_vert = R"glsl(
 
 static const char* plane_src_frag = R"glsl(
     #version 330 core
-    precision highp float;
-    
+
     uniform float px2uv;
     uniform float time;
-    
+
     in vec2 v_uv;
-    
+
     out vec4 out_col;
-    
+
     float remap01(float inp, float inp_start, float inp_end)
     {
         return clamp((inp - inp_start) / (inp_end - inp_start), 0., 1.);
     }
-    
-    // Signed distance of the colliders
+
+    // Signed distance from the edges of the colliders
     float sd_colliders(vec2 p)
     {
         float d = 1e9;
-        
+
         // Walls (bounds)
         const vec2 min_pos = vec2(-.9);
         const vec2 max_pos = vec2(.9);
@@ -50,26 +48,32 @@ static const char* plane_src_frag = R"glsl(
         d = min(d, p.y - min_pos.y);
         d = min(d, max_pos.x - p.x);
         d = min(d, max_pos.y - p.y);
-        
+
         // Circle
         vec2 center = vec2(sin(time) * .4, 0.);
         d = min(d, length(p - center) - .15);
-        
+
         return d;
     }
-    
+
     void main()
     {
         // Render
+        float dist = sd_colliders(v_uv);
         vec3 col = mix(
-            vec3(.3, .7, 1),
             vec3(.08, .6, .03),
-            remap01(sd_colliders(v_uv), px2uv, 0.)
+            vec3(.005, .29, 0),
+            remap01(dist, -.015 - px2uv, -.015)
         );
-        
+        col = mix(
+            col,
+            vec3(.3, .7, 1),
+            remap01(dist, -px2uv, 0.)
+        );
+
         // OETF
         col = pow(col, vec3(1. / 2.2));
-        
+
         // Output
         out_col = vec4(col, 1);
     }
@@ -91,14 +95,13 @@ static const GLuint plane_elements[] = {
 
 static const char* boids_src_vert = R"glsl(
     #version 330 core
-    precision highp float;
-    
+
     in vec2 pos;
     in vec2 vel;
-    
+
     out vec2 v_pos;
     out vec2 v_vel;
-    
+
     void main()
     {
         v_pos = pos;
@@ -108,106 +111,170 @@ static const char* boids_src_vert = R"glsl(
 
 static const char* boids_src_geo = R"glsl(
     #version 330 core
-    precision highp float;
-    
+
     layout(points) in;
     layout(triangle_strip, max_vertices = 6) out;
-    
+
     uniform vec2 aspect;
     uniform float square_radius = .1;
-    
+
     in vec2 v_pos[];
     in vec2 v_vel[];
-    
+
     out vec2 g_uv;
-    
+
     #define PI 3.14159265358979
-    
+
     vec2 rotate(vec2 v, float a) {
         float s = sin(a);
         float c = cos(a);
         mat2 m = mat2(c, s, -s, c);
         return m * v;
     }
-    
+
     vec4 gen_vertex(vec2 offs, float angle)
     {
         vec2 p = rotate(v_pos[0] + offs, angle);
         return vec4(p / aspect, 0, 1);
     }
-    
+
     // Generate a square centered around v_pos and rotated based on v_vel
     void main()
     {
         // Calculate the rotation angle based on the velocity
         vec2 dir = normalize(v_vel[0]);
         float angle = atan(-dir.y, -dir.x) + PI;
-        
+
         // Top left
         gl_Position = gen_vertex(vec2(-square_radius, square_radius), angle);
         g_uv = vec2(-1, 1);
         EmitVertex();
-        
+
         // Top right
         gl_Position = gen_vertex(vec2(square_radius, square_radius), angle);
         g_uv = vec2(1, 1);
         EmitVertex();
-        
+
         // Bottom left
         gl_Position = gen_vertex(vec2(-square_radius, -square_radius), angle);
         g_uv = vec2(-1, -1);
         EmitVertex();
-        
+
         EndPrimitive();
-        
+
         // Bottom left
         gl_Position = gen_vertex(vec2(-square_radius, -square_radius), angle);
         g_uv = vec2(-1, -1);
         EmitVertex();
-        
+
         // Top right
         gl_Position = gen_vertex(vec2(square_radius, square_radius), angle);
         g_uv = vec2(1, 1);
         EmitVertex();
-        
+
         // Bottom right
         gl_Position = gen_vertex(vec2(square_radius, -square_radius), angle);
         g_uv = vec2(1, -1);
         EmitVertex();
-        
+
         EndPrimitive();
     }
 )glsl";
 
 static const char* boids_src_frag = R"glsl(
     #version 330 core
-    precision highp float;
-    
+
     uniform float px2uv;
-    
+
     in vec2 g_uv;
-    
+
     out vec4 out_col;
-    
+
     float remap01(float inp, float inp_start, float inp_end)
     {
         return clamp((inp - inp_start) / (inp_end - inp_start), 0., 1.);
     }
-    
-    // Signed distance of the boid shape
+
+    // https://www.shadertoy.com/view/clXBW4
+    const int n_sides = 4;
+    float sd_polygon(vec2 p, vec2[n_sides] v)
+    {
+        // Minimum distance
+        float m = 1e9;
+
+        // How many segments intersect a half line from p to (+inf, p.y)
+        int num_intersections = 0;
+
+        // The segments
+        for (int i = 0; i < n_sides; i++)
+        {
+            // Line segment vertices
+            vec2 a = v[i];
+            vec2 b = v[(i + 1) % n_sides];
+
+            // Slope and intercept
+            float temp = b.x - a.x;
+            if (temp == 0.) temp = 1e-9;
+            float slope = (b.y - a.y) / temp;
+            float intercept = a.y - slope * a.x;
+
+            // Should we use the endpoints or the line?
+            if (min(dot(p - a, b - a), dot(p - b, a - b)) < 0.)
+            {
+                // Distance from the endpoints
+                m = min(m, min(distance(p, a), distance(p, b)));
+            }
+            else
+            {
+                // Distance from the line
+                m = min(m, abs(slope * p.x - p.y + intercept) / sqrt(slope * slope + 1.));
+            }
+
+            // Intersect AB with half line from p to (+inf, p.y)
+            // (only if p.y is between a.y and b.y)
+            if (p.y > min(a.y, b.y) && p.y < max(a.y, b.y))
+            {
+                float x_where_y_equals_py = (p.y - intercept) / slope;
+                if (x_where_y_equals_py > p.x)
+                {
+                    num_intersections++;
+                }
+            }
+        }
+
+        // Is num_intersections odd?
+        if (num_intersections % 2 == 1) m = -m;
+
+        return m;
+    }
+
+    // Signed distance from the edges of the boid shape
     float sd_boid(vec2 p)
     {
-        return length(g_uv) - .9;
+        const vec2[4] vertices = vec2[](
+            vec2(-.9, -1),
+            vec2(0, 1),
+            vec2(.9, -1),
+            vec2(0, -.5)
+        );
+        return sd_polygon(p, vertices);
     }
-    
+
     void main()
     {
-        // Signed distance from the edges of the boid shape
-        float dist = sd_boid(g_uv);
-        
         // Render
-        vec3 col = vec3(1, 0, 0);
-        
+        float dist = sd_boid(g_uv);
+        vec3 col = mix(
+            vec3(.617, .075, .075),
+            vec3(1, .684, .442),
+            remap01(dist, -.2 + px2uv, -.2)
+        );
+        col = mix(
+            col,
+            vec3(.882, .226, .028),
+            remap01(dist, -.33 + px2uv, -.33)
+        );
+
         // OETF
         col = pow(col, vec3(1. / 2.2));
         
