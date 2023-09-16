@@ -105,8 +105,8 @@ namespace tef
         // A name for the world
         const std::string name;
 
-        // Logger
-        std::shared_ptr<base_logger_t> logger;
+        // Maximum log level to use
+        const log_level_t max_log_level;
 
         // Mutex for the components
         // Note: Not used internally, can optionally be used by the developer for synchronization.
@@ -120,9 +120,12 @@ namespace tef
         prng_t prng;
 
         // Create a world with a given name and a logger.
-        world_t(const std::string& name, std::shared_ptr<base_logger_t> logger);
+        world_t(const std::string& name, log_level_t max_log_level, std::shared_ptr<base_logger_t> logger);
         no_default_copy_move_constructor(world_t);
         ~world_t();
+
+        // Add a custom log message.
+        void log(log_level_t log_level, const std::string& message);
 
         // Enqueue a given event.
         void enqueue_event(const event_t& event);
@@ -133,20 +136,19 @@ namespace tef
         template <typename T>
         T* get_component_of_type_owned_by(entity_t owner)
         {
-            ptrdiff_t offset = find_entity_index_for_component_bytes<T>(owner);
-            if (offset < 0)
+            std::vector<byte_t>& bytes = get_components_of_type_bytes<T>();
+            for (size_t i = 0; i < bytes.size(); i += sizeof(T))
             {
-                return nullptr;
+                T* elem = (T*)(&bytes[i]);
+                if (elem->owner == owner)
+                {
+                    return elem;
+                }
             }
-            else
-            {
-                std::vector<byte_t>& bytes = get_components_of_type_bytes<T>();
-                return (T*)(&bytes[offset]);
-            }
+            return nullptr;
         }
 
         // Get a list of all components of type T.
-        // Note: T must be derived from base_component_t.
         template <typename T>
         void get_components_of_type(T*& out_components, size_t& out_size)
         {
@@ -158,15 +160,12 @@ namespace tef
         // Add a component of type T with given initial values. You cannot use initial_values to
         // modify the component afterward. Instead, a pointer to the new copy in the component
         // list will be returned.
-        // Note: Do not add two components of the same type with identical owners.
-        // Note: T must be derived from base_component_t.
         template <typename T>
         T* add_component_of_type(const T& initial_values)
         {
-            tef_log(log_level_t::verbose, name, utils::str_format(
-                "Adding a new component of type \"%s\" owned by %s",
-                typeid(T).name(),
-                std::to_string(initial_values.owner).c_str()
+            tef_log(this, log_level_t::verbose, utils::str_format(
+                "Adding a new component of type \"%s\"",
+                typeid(T).name()
             ));
 
             // Component list for T
@@ -187,12 +186,12 @@ namespace tef
             return (T*)(bytes.data() + old_size);
         }
 
-        // Remove the first component of type T owned by a given entity, if any.
+        // Remove the first component of type T owned by a given entity.
         // Note: T must be derived from base_component_t.
         template <typename T>
         void remove_component_of_type_owned_by(entity_t owner)
         {
-            tef_log(log_level_t::verbose, name, str_format(
+            tef_log(this, log_level_t::verbose, utils::str_format(
                 "Removing the first component of type \"%s\" owned by %s",
                 typeid(T).name(),
                 std::to_string(owner).c_str()
@@ -201,26 +200,59 @@ namespace tef
             // Component list for T
             std::vector<byte_t>& bytes = get_components_of_type_bytes<T>();
 
-            // Find the index of entity
-            ptrdiff_t offset = find_entity_index_for_component_bytes<T>(owner);
+            // Remove the first element owned by the owner
+            for (size_t i = 0; i < bytes.size(); i += sizeof(T))
+            {
+                T* elem = (T*)(&bytes[i]);
+                if (elem->owner == owner)
+                {
+                    bytes.erase(bytes.begin() + i, bytes.begin() + i + sizeof(T));
+                    break;
+                }
+            }
+        }
 
-            // No component of type T is attached to the entity
-            if (offset < 0)
-                return;
+        // Remove all components of type T owned by a given entity.
+        // Note: T must be derived from base_component_t.
+        template <typename T>
+        void remove_components_of_type_owned_by(entity_t owner)
+        {
+            tef_log(this, log_level_t::verbose, utils::str_format(
+                "Removing all components of type \"%s\" owned by %s",
+                typeid(T).name(),
+                std::to_string(owner).c_str()
+            ));
 
-            // Erase
-            bytes.erase(bytes.begin() + offset, bytes.begin() + offset + sizeof(T));
+            // Component list for T
+            std::vector<byte_t>& bytes = get_components_of_type_bytes<T>();
+
+            // Iterate over the components
+            for (size_t i = 0; i < bytes.size();)
+            {
+                // Check the owner
+                T* elem = (T*)(&bytes[i]);
+                if (elem->owner == owner)
+                {
+                    // Erase
+                    bytes.erase(bytes.begin() + i, bytes.begin() + i + sizeof(T));
+                }
+                else
+                {
+                    // Continue iterating
+                    i += sizeof(T);
+                }
+            }
         }
 
         // Remove all components of all types owned by a given entity.
+        // Note: T must be derived from base_component_t.
         void remove_components_owned_by(entity_t owner);
 
         // Remove all components of type T.
-        // Note: T must be derived from base_component_t.
         template <typename T>
         void remove_components_of_type()
         {
-            tef_log(log_level_t::verbose, name, str_format(
+            tef_log(this, log_level_t::verbose, utils::str_format(
                 "Removing all components of type \"%s\"",
                 typeid(T).name()
             ));
@@ -245,7 +277,7 @@ namespace tef
         // Add a system to the world. Avoid adding two worlds with identical names.
         void add_system(const std::shared_ptr<base_system_t>& system);
 
-        // Remove the first system in the list with a given name, if any.
+        // Remove the first system in the list with a given name.
         void remove_system(const std::string& name);
 
         // Remove all systems in the world.
@@ -262,6 +294,9 @@ namespace tef
         void stop(bool wait);
 
     private:
+        // Logger
+        std::shared_ptr<base_logger_t> logger;
+
         // Internal mutex for running the world
         std::mutex mutex_run;
 
@@ -291,17 +326,16 @@ namespace tef
         bool should_stop = false;
 
         // Get a byte array of all components of type T.
-        // Note: T must be derived from base_component_t.
         template <typename T>
         std::vector<byte_t>& get_components_of_type_bytes()
         {
             // Type index
             const std::type_index ti = std::type_index(typeid(T));
 
-            // See if there's no list for this type
+            // If there's no list for this type, create one
             if (!comp_map.contains(ti))
             {
-                tef_log(log_level_t::verbose, name, utils::str_format(
+                tef_log(this, log_level_t::verbose, utils::str_format(
                     "Creating a new component list for type \"%s\"",
                     typeid(T).name()
                 ));
@@ -312,23 +346,6 @@ namespace tef
 
             // Return
             return comp_map[ti].data;
-        }
-
-        // Find the index (in bytes) of the first component of type T owned by a given entity.
-        // Note: T must be derived from base_component_t.
-        template <typename T>
-        ptrdiff_t find_entity_index_for_component_bytes(entity_t entity)
-        {
-            std::vector<byte_t>& bytes = get_components_of_type_bytes<T>();
-            for (size_t i = 0; i < bytes.size(); i += sizeof(T))
-            {
-                T* elem = (T*)(&bytes[i]);
-                if (elem->owner == entity)
-                {
-                    return i;
-                }
-            }
-            return -1;
         }
 
     };
