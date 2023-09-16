@@ -117,7 +117,7 @@ namespace tef
         systems.push_back(system);
     }
 
-    void world_t::remove_system(const std::string& sname)
+    void world_t::remove_system_named(const std::string& sname)
     {
         tef_log(this, log_level_t::verbose, utils::str_format(
             "Removing the first system named \"%s\"",
@@ -130,6 +130,26 @@ namespace tef
             {
                 utils::vec_remove(systems, i);
                 break;
+            }
+        }
+    }
+
+    void world_t::remove_systems_named(const std::string& sname)
+    {
+        tef_log(this, log_level_t::verbose, utils::str_format(
+            "Removing all systems named \"%s\"",
+            sname.c_str()
+        ));
+
+        for (size_t i = 0; i < systems.size();)
+        {
+            if (systems[i]->name == sname)
+            {
+                utils::vec_remove(systems, i);
+            }
+            else
+            {
+                i++;
             }
         }
     }

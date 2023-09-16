@@ -45,15 +45,20 @@ namespace tef
         event_t(event_type_t type, const std::any& data);
     };
 
-    // Abstract struct for a component. Subclasses should not allocate heap memory. A component
-    // has no functionality, it only ever stores data.
+    // Abstract struct for a component
+    // Note: A component should never allocate heap memory. For example, don't use std::vector.
+    // Note: A component has no functionality, it only ever stores data.
+    // Note: Component types don't necessarily have to be derived from base_component_t, but look
+    // out for templated functions that specifically mention the need for T to be derived from
+    // base_component_t.
     struct base_component_t
     {
         entity_t owner;
     };
 
-    // Abstract struct for a system. The abstract functions will be called at appropriate times
-    // by the parent world while it is running.
+    // Abstract struct for a system
+    // Note: The abstract functions will be called at appropriate times by the parent world while
+    // it is running.
     struct base_system_t
     {
         // A unique name for the system
@@ -110,10 +115,14 @@ namespace tef
 
         // Mutex for the components
         // Note: Not used internally, can optionally be used by the developer for synchronization.
+        // You might want to use this when adding/removing components from several threads for
+        // example.
         std::mutex mutex_components;
 
         // Mutex for the systems
         // Note: Not used internally, can optionally be used by the developer for synchronization.
+        // You might want to use this when adding/removing systems from several threads for
+        // example.
         std::mutex mutex_systems;
 
         // A PRNG (Pseudo-Random Number Generator) for the world
@@ -274,11 +283,14 @@ namespace tef
         // will be returned.
         std::shared_ptr<base_system_t> get_system_named(const std::string& name);
 
-        // Add a system to the world. Avoid adding two worlds with identical names.
+        // Add a system to the world.
         void add_system(const std::shared_ptr<base_system_t>& system);
 
         // Remove the first system in the list with a given name.
-        void remove_system(const std::string& name);
+        void remove_system_named(const std::string& name);
+
+        // Remove all systems with a given name.
+        void remove_systems_named(const std::string& name);
 
         // Remove all systems in the world.
         void remove_systems();
