@@ -20,6 +20,7 @@ void app_t::run()
     // Create a world
     tef::world_t world(
         "Circles",
+        tef::log_level_t::verbose,
         std::make_shared<tef::csv_logger_t>("./log.csv")
     );
 
