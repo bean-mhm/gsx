@@ -22,9 +22,6 @@ namespace tef
         verbose
     };
 
-    // Maximum log level to ever use (global)
-    static constexpr log_level_t max_log_level = log_level_t::error;
-
     // Log entry
     struct log_entry_t
     {
@@ -88,6 +85,7 @@ namespace tef
 
 }
 
-// Log macro (used internally)
-#define tef_log(log_level, world_name, message) if constexpr(log_level <= max_log_level) \
-logger->log(log_entry_t(log_level, world_name, std::this_thread::get_id(), message))
+// Log macro
+// Note: For internal use only. Do not use this, use world_t::log() instead.
+#define tef_log(world_ptr, log_level, message) if (log_level <= world_ptr->max_log_level) \
+logger->log(log_entry_t(log_level, world_ptr->name, std::this_thread::get_id(), message))
