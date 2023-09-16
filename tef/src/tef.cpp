@@ -1,8 +1,6 @@
 #include "tef.h"
 
 // STD
-#include <algorithm>
-#include <execution>
 #include <stdexcept>
 
 namespace tef
@@ -270,7 +268,7 @@ namespace tef
                         std::to_string(group.update_order).c_str()
                     ));
 
-                    // Just a single system to update
+                    // Just a single system to update (no parallelization)
                     group.systems[0]->on_update(*this, iter);
                 }
                 else
@@ -281,22 +279,48 @@ namespace tef
                         std::to_string(group.update_order).c_str()
                     ));
 
-                    // Update in parallel
-                    std::for_each(
-                        std::execution::par,
-                        std::begin(group.systems),
-                        std::end(group.systems),
-                        [this, &iter, &group](std::shared_ptr<base_system_t>& system)
-                        {
-                            tef_log(this, log_level_t::verbose, utils::str_format(
-                                "Updating system named \"%s\" at order %s",
-                                system->name.c_str(),
-                                std::to_string(group.update_order).c_str()
-                            ));
+                    // Spawn new threads for parallelization
+                    std::vector<std::shared_ptr<std::jthread>> threads;
+                    for (size_t i = 1; i < group.systems.size(); i++)
+                    {
+                        threads.push_back(std::make_shared<std::jthread>(
+                            [this, &iter, &group, i]()
+                            {
+                                std::shared_ptr<tef::base_system_t>& system = group.systems[i];
 
-                            system->on_update(*this, iter);
+                                tef_log(this, log_level_t::verbose, utils::str_format(
+                                    "Updating system named \"%s\" at order %s",
+                                    system->name.c_str(),
+                                    std::to_string(group.update_order).c_str()
+                                ));
+
+                                system->on_update(*this, iter);
+                            }
+                        ));
+                    }
+
+                    // Update the first system on this thread
+                    {
+                        tef_log(this, log_level_t::verbose, utils::str_format(
+                            "Updating system named \"%s\" at order %s",
+                            group.systems[0]->name.c_str(),
+                            std::to_string(group.update_order).c_str()
+                        ));
+
+                        group.systems[0]->on_update(*this, iter);
+                    }
+
+                    // Join the threads (wait for them to finish their job)
+                    for (auto& thread : threads)
+                    {
+                        if (thread->joinable())
+                        {
+                            thread->join();
                         }
-                    );
+                    }
+
+                    // Get rid of the threads
+                    utils::vec_clear(threads);
                 }
             }
 
