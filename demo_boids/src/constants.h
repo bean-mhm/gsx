@@ -1,5 +1,8 @@
 #pragma once
 
+// GLM
+#include "glm/glm.hpp"
+
 // Internal
 #include "gl_utils.h"
 
@@ -93,6 +96,10 @@ static const GLuint plane_elements[] = {
 
 // Boids
 
+static constexpr float boids_size = .06f;
+static constexpr glm::vec2 boids_min_pos(-.9f, -.9f);
+static constexpr glm::vec2 boids_max_pos(.9f, .9f);
+
 static const char* boids_src_vert = R"glsl(
     #version 330 core
 
@@ -116,7 +123,7 @@ static const char* boids_src_geo = R"glsl(
     layout(triangle_strip, max_vertices = 6) out;
 
     uniform vec2 aspect;
-    uniform float square_radius = .1;
+    uniform float boids_size;
 
     in vec2 v_pos[];
     in vec2 v_vel[];
@@ -134,7 +141,7 @@ static const char* boids_src_geo = R"glsl(
 
     vec4 gen_vertex(vec2 offs, float angle)
     {
-        vec2 p = rotate(v_pos[0] + offs, angle);
+        vec2 p = v_pos[0] + rotate(offs, angle);
         return vec4(p / aspect, 0, 1);
     }
 
@@ -142,38 +149,37 @@ static const char* boids_src_geo = R"glsl(
     void main()
     {
         // Calculate the rotation angle based on the velocity
-        vec2 dir = normalize(v_vel[0]);
-        float angle = atan(-dir.y, -dir.x) + PI;
+        float angle = atan(v_vel[0].x, -v_vel[0].y) + PI;
 
         // Top left
-        gl_Position = gen_vertex(vec2(-square_radius, square_radius), angle);
+        gl_Position = gen_vertex(vec2(-boids_size, boids_size), angle);
         g_uv = vec2(-1, 1);
         EmitVertex();
 
         // Top right
-        gl_Position = gen_vertex(vec2(square_radius, square_radius), angle);
+        gl_Position = gen_vertex(vec2(boids_size, boids_size), angle);
         g_uv = vec2(1, 1);
         EmitVertex();
 
         // Bottom left
-        gl_Position = gen_vertex(vec2(-square_radius, -square_radius), angle);
+        gl_Position = gen_vertex(vec2(-boids_size, -boids_size), angle);
         g_uv = vec2(-1, -1);
         EmitVertex();
 
         EndPrimitive();
 
         // Bottom left
-        gl_Position = gen_vertex(vec2(-square_radius, -square_radius), angle);
+        gl_Position = gen_vertex(vec2(-boids_size, -boids_size), angle);
         g_uv = vec2(-1, -1);
         EmitVertex();
 
         // Top right
-        gl_Position = gen_vertex(vec2(square_radius, square_radius), angle);
+        gl_Position = gen_vertex(vec2(boids_size, boids_size), angle);
         g_uv = vec2(1, 1);
         EmitVertex();
 
         // Bottom right
-        gl_Position = gen_vertex(vec2(square_radius, -square_radius), angle);
+        gl_Position = gen_vertex(vec2(boids_size, -boids_size), angle);
         g_uv = vec2(1, -1);
         EmitVertex();
 
@@ -283,11 +289,3 @@ static const char* boids_src_frag = R"glsl(
         out_col = vec4(col, alpha);
     }
 )glsl";
-
-static const float boids_points[]{
-    // vec2 pos, vec2 vel
-    0.f, 0.f, 1.f, 1.f,
-    .6f, 0.f, .1f, 1.f,
-    -.5f, 0.f, -.4f, 0.f,
-    .3f, -.2f, .2f, -.4f
-};

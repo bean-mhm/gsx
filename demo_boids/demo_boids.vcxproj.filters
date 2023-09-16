@@ -39,6 +39,9 @@
     <ClCompile Include="src\gl_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\systems.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\glm\detail\_features.hpp">
@@ -924,6 +927,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\components.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\systems.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

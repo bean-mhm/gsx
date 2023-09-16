@@ -19,26 +19,7 @@ private:
 
     GLFWwindow* window;
 
-    GLuint plane_vao = 0;
-    GLuint plane_vbo = 0;
-    GLuint plane_ebo = 0;
-    GLuint plane_vert_shader = 0;
-    GLuint plane_frag_shader = 0;
-    GLuint plane_shader_program = 0;
-
-    GLuint boids_vao = 0;
-    GLuint boids_vbo = 0;
-    GLuint boids_vert_shader = 0;
-    GLuint boids_geo_shader = 0;
-    GLuint boids_frag_shader = 0;
-    GLuint boids_shader_program = 0;
-
-    void init();
-    void main_loop();
-    void cleanup();
-
     void init_context();
-    void init_rendering();
-    void render();
+    void cleanup_context();
 
 };

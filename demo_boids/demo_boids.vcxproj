@@ -96,6 +96,7 @@
     <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\gl_utils.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\systems.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\GLFW\glfw3.h" />
@@ -391,8 +392,10 @@
     <ClInclude Include="include\tef\tef_prng.h" />
     <ClInclude Include="include\tef\tef_utils.h" />
     <ClInclude Include="src\app.h" />
+    <ClInclude Include="src\components.h" />
     <ClInclude Include="src\gl_utils.h" />
     <ClInclude Include="src\constants.h" />
+    <ClInclude Include="src\systems.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\glm\detail\func_common.inl" />
