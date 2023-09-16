@@ -23,7 +23,7 @@ namespace tef
     };
 
     // Maximum log level to ever use (global)
-    static constexpr log_level_t max_log_level = log_level_t::verbose;
+    static constexpr log_level_t max_log_level = log_level_t::error;
 
     // Log entry
     struct log_entry_t
