@@ -39,7 +39,7 @@ void app_t::run()
             world.prng.next_float(boids_min_pos.x, boids_max_pos.x),
             world.prng.next_float(boids_min_pos.y, boids_max_pos.y)
         );
-        boid.vel = glm::vec2(-.1f, 0.05f);
+        boid.vel = glm::vec2(.05f, 0.02f);
         world.add_component_of_type<c_boid>(boid);
     }
 
