@@ -183,23 +183,11 @@ namespace tef
         // original list will not affect this run.
         auto systems_copy = systems;
 
-        // Start the systems
-        for (auto& system : systems_copy)
-        {
-            tef_log(this, log_level_t::info, utils::str_format(
-                "Starting system named \"%s\"",
-                system->name.c_str()
-            ));
+        // Mapping from a system pointer to a worker used to run (start, update, trigger, stop)
+        // that system. If the worker is nullptr, then the system must run on this thread.
+        std::unordered_map<base_system_t*, std::shared_ptr<utils::worker_t>> worker_map;
 
-            system->on_start(*this);
-        }
-
-        // Iteration info
-        world_iteration_t iter;
-        auto time_start = high_resolution_clock::now();
-        auto time_last_iter = time_start;
-
-        tef_log(this, log_level_t::info, "Preparing system groups");
+        tef_log(this, log_level_t::info, "Preparing system groups and workers");
 
         // A group of systems with identical update order values, all to be updated in parallel
         struct system_group_t
@@ -208,17 +196,14 @@ namespace tef
             std::vector<std::shared_ptr<base_system_t>> systems;
         };
 
-        // A list of system groups to run in serial
+        // A list of system groups to update in serial
         std::vector<system_group_t> system_groups;
 
-        // A list of workers for parallelization
-        std::vector<std::shared_ptr<utils::worker_t>> workers;
-
-        // Prepare the system groups
+        // Prepare system groups and workers
         {
             // Make a sorted and unique set of the update order values of all systems
             std::set<int32_t, std::less<int32_t>> update_orders;
-            for (auto& system : systems_copy)
+            for (const auto& system : systems_copy)
             {
                 update_orders.insert(system->update_order);
             }
@@ -240,17 +225,27 @@ namespace tef
                 }
 
                 // Prepare a worker for every system in the group, unless it wants to be updated
-                // on the same thread that's running the world. If the group contains less than 2
-                // systems, then there will be no paralellization and no need for a worker.
+                // on the same thread that's running the world. If the group contains only 1
+                // system, then there will also be no paralellization and no need for a worker.
                 if (group.systems.size() > 1)
                 {
                     for (const auto& system : group.systems)
                     {
-                        if (!system->run_on_caller_thread)
+                        if (system->run_on_caller_thread)
                         {
-                            workers.push_back(std::make_shared<utils::worker_t>());
+                            worker_map[system.get()] = nullptr;
+                        }
+                        else
+                        {
+                            worker_map[system.get()] = std::make_shared<utils::worker_t>(
+                                worker_map.size()
+                            );
                         }
                     }
+                }
+                else if (group.systems.size() == 1)
+                {
+                    worker_map[group.systems[0].get()] = nullptr;
                 }
 
                 // Add the group to the list
@@ -265,7 +260,43 @@ namespace tef
         // Think of each step as a system group. Notice how the system groups are run in serial,
         // but the systems inside each group are updated together in parallel.
 
+        // Start the systems in serial in the order in which they were added
+        for (const auto& system : systems_copy)
+        {
+            const auto& worker = worker_map[system.get()];
+            if (worker)
+            {
+                worker->enqueue(
+                    [this, &system, &worker]()
+                    {
+                        tef_log(this, log_level_t::info, utils::str_format(
+                            "Starting system named \"%s\" on worker thread #%s",
+                            system->name.c_str(),
+                            std::to_string(worker->id).c_str()
+                        ));
+
+                        system->on_start(*this);
+                    }
+                );
+                worker->wait();
+            }
+            else
+            {
+                tef_log(this, log_level_t::info, utils::str_format(
+                    "Starting system named \"%s\" on the world runner thread",
+                    system->name.c_str()
+                ));
+
+                system->on_start(*this);
+            }
+        }
+
         tef_log(this, log_level_t::info, "Starting the loop");
+
+        // Iteration info
+        world_iteration_t iter;
+        auto time_start = high_resolution_clock::now();
+        auto time_last_iter = time_start;
 
         // Loop
         while (!should_stop)
@@ -274,11 +305,6 @@ namespace tef
                 "Loop iteration %llu (elapsed = %.3f s, dt = %.3f s)",
                 iter.i, iter.elapsed, iter.dt
             ));
-
-            // Index of the current worker to be used for updating a system. This index is global
-            // throughout all system groups. This means that each individual system will always be
-            // updated on the same thread.
-            size_t worker_index = 0;
 
             // Update the systems
             for (const auto& group : system_groups)
@@ -289,67 +315,49 @@ namespace tef
                     std::to_string(group.update_order).c_str()
                 ));
 
-                if (group.systems.size() < 1)
+                // First, update every system in the group that needs to run on a worker thread.
+                for (const auto& system : group.systems)
                 {
-                    continue;
-                }
-                else if (group.systems.size() == 1)
-                {
-                    tef_log(this, log_level_t::verbose, utils::str_format(
-                        "Updating system named \"%s\" at order %s on the world runner thread",
-                        group.systems[0]->name.c_str(),
-                        std::to_string(group.update_order).c_str()
-                    ));
-
-                    // Just a single system to update (no parallelization)
-                    group.systems[0]->on_update(*this, iter);
-                }
-                else
-                {
-                    // Use the workers to update the systems in parallel
-                    for (const auto& system : group.systems)
+                    const auto& worker = worker_map[system.get()];
+                    if (worker)
                     {
-                        // If a system wants to be updated on the same thread that's running the
-                        // world, don't use a worker for it.
-                        if (!system->run_on_caller_thread)
-                        {
-                            // Get the next worker
-                            auto& worker = workers[worker_index++];
+                        worker->enqueue(
+                            [this, &iter, &group, &system, &worker]()
+                            {
+                                tef_log(this, log_level_t::verbose, utils::str_format(
+                                    "Updating system named \"%s\" at order %s on worker thread #%s",
+                                    system->name.c_str(),
+                                    std::to_string(group.update_order).c_str(),
+                                    std::to_string(worker->id).c_str()
+                                ));
 
-                            // Tell the worker to update the system
-                            worker->enqueue(
-                                [this, &iter, &group, &system]()
-                                {
-                                    tef_log(this, log_level_t::verbose, utils::str_format(
-                                        "Updating system named \"%s\" at order %s on a worker",
-                                        system->name.c_str(),
-                                        std::to_string(group.update_order).c_str()
-                                    ));
-
-                                    system->on_update(*this, iter);
-                                }
-                            );
-                        }
+                                system->on_update(*this, iter);
+                            }
+                        );
                     }
+                }
 
-                    // Use this thread to update systems which want to be updated on the same
-                    // thread that's running the world.
-                    for (const auto& system : group.systems)
+                // Then, update every system in the group that needs to run on this thread.
+                for (const auto& system : group.systems)
+                {
+                    const auto& worker = worker_map[system.get()];
+                    if (!worker)
                     {
-                        if (system->run_on_caller_thread)
-                        {
-                            tef_log(this, log_level_t::verbose, utils::str_format(
-                                "Updating system named \"%s\" at order %s on the world runner thread",
-                                system->name.c_str(),
-                                std::to_string(group.update_order).c_str()
-                            ));
+                        tef_log(this, log_level_t::verbose, utils::str_format(
+                            "Updating system named \"%s\" at order %s on the world runner thread",
+                            system->name.c_str(),
+                            std::to_string(group.update_order).c_str()
+                        ));
 
-                            system->on_update(*this, iter);
-                        }
+                        system->on_update(*this, iter);
                     }
+                }
 
-                    // Wait for all the workers to finish their job
-                    for (auto& worker : workers)
+                // Wait for all the workers to finish their job
+                for (const auto& v : worker_map)
+                {
+                    const auto& worker = v.second;
+                    if (worker)
                     {
                         worker->wait();
                     }
@@ -368,12 +376,36 @@ namespace tef
                 {
                     if (system->triggers.contains(event.type))
                     {
-                        tef_log(this, log_level_t::verbose, utils::str_format(
-                            "Using event of type %s to trigger system named \"%s\"",
-                            std::to_string(event.type).c_str(),
-                            system->name.c_str()
-                        ));
-                        system->on_trigger(*this, iter, event);
+                        const auto& worker = worker_map[system.get()];
+                        if (worker)
+                        {
+                            worker->enqueue(
+                                [this, &iter, &system, &event, &worker]()
+                                {
+                                    tef_log(this, log_level_t::verbose, utils::str_format(
+                                        "Using event of type %s to trigger system named \"%s\" "
+                                        "on worker thread #%s",
+                                        std::to_string(event.type).c_str(),
+                                        system->name.c_str(),
+                                        std::to_string(worker->id).c_str()
+                                    ));
+
+                                    system->on_trigger(*this, iter, event);
+                                }
+                            );
+                            worker->wait();
+                        }
+                        else
+                        {
+                            tef_log(this, log_level_t::verbose, utils::str_format(
+                                "Using event of type %s to trigger system named \"%s\" on the "
+                                "world runner thread",
+                                std::to_string(event.type).c_str(),
+                                system->name.c_str()
+                            ));
+
+                            system->on_trigger(*this, iter, event);
+                        }
                     }
                 }
             }
@@ -401,20 +433,41 @@ namespace tef
             }
         }
 
-        // Get rid of the workers
-        utils::vec_clear(workers);
-
-        // Stop the systems in reverse order. The first system added will be started first and it
-        // will be stopped at the end.
+        // Stop the systems in serial in the order opposite to that in which they were added. The
+        // first system added will be started first and it will be stopped at the end.
         for (int64_t i = systems_copy.size() - 1; i >= 0; i--)
         {
-            tef_log(this, log_level_t::info, utils::str_format(
-                "Stopping system named \"%s\"",
-                systems_copy[i]->name.c_str()
-            ));
+            const auto& system = systems_copy[i];
+            const auto& worker = worker_map[system.get()];
+            if (worker)
+            {
+                worker->enqueue(
+                    [this, &iter, &system, &worker]()
+                    {
+                        tef_log(this, log_level_t::info, utils::str_format(
+                            "Stopping system named \"%s\" on worker thread #%s",
+                            system->name.c_str(),
+                            std::to_string(worker->id).c_str()
+                        ));
 
-            systems_copy[i]->on_stop(*this, iter);
+                        system->on_stop(*this, iter);
+                    }
+                );
+                worker->wait();
+            }
+            else
+            {
+                tef_log(this, log_level_t::info, utils::str_format(
+                    "Stopping system named \"%s\" on the world runner thread",
+                    system->name.c_str()
+                ));
+
+                system->on_stop(*this, iter);
+            }
         }
+
+        // Get rid of the workers
+        worker_map.clear();
 
         tef_log(this, log_level_t::info, "Stopped running");
     }
