@@ -306,6 +306,52 @@ namespace tef
                 iter.i, iter.elapsed, iter.dt
             ));
 
+            // Events
+            while (!events.empty())
+            {
+                mutex_events.lock();
+                auto event = events.front();
+                events.pop_front();
+                mutex_events.unlock();
+
+                for (const auto& system : systems_copy)
+                {
+                    if (system->triggers.contains(event.type))
+                    {
+                        const auto& worker = worker_map[system.get()];
+                        if (worker)
+                        {
+                            worker->enqueue(
+                                [this, &iter, &system, &event, &worker]()
+                                {
+                                    tef_log(this, log_level_t::verbose, utils::str_format(
+                                        "Using event of type %s to trigger system named \"%s\" "
+                                        "on worker thread #%s",
+                                        std::to_string(event.type).c_str(),
+                                        system->name.c_str(),
+                                        std::to_string(worker->id).c_str()
+                                    ));
+
+                                    system->on_trigger(*this, iter, event);
+                                }
+                            );
+                            worker->wait();
+                        }
+                        else
+                        {
+                            tef_log(this, log_level_t::verbose, utils::str_format(
+                                "Using event of type %s to trigger system named \"%s\" on the "
+                                "world runner thread",
+                                std::to_string(event.type).c_str(),
+                                system->name.c_str()
+                            ));
+
+                            system->on_trigger(*this, iter, event);
+                        }
+                    }
+                }
+            }
+
             // Update the systems
             for (const auto& group : system_groups)
             {
@@ -360,52 +406,6 @@ namespace tef
                     if (worker)
                     {
                         worker->wait();
-                    }
-                }
-            }
-
-            // Events
-            while (!events.empty())
-            {
-                mutex_events.lock();
-                auto event = events.front();
-                events.pop_front();
-                mutex_events.unlock();
-
-                for (const auto& system : systems_copy)
-                {
-                    if (system->triggers.contains(event.type))
-                    {
-                        const auto& worker = worker_map[system.get()];
-                        if (worker)
-                        {
-                            worker->enqueue(
-                                [this, &iter, &system, &event, &worker]()
-                                {
-                                    tef_log(this, log_level_t::verbose, utils::str_format(
-                                        "Using event of type %s to trigger system named \"%s\" "
-                                        "on worker thread #%s",
-                                        std::to_string(event.type).c_str(),
-                                        system->name.c_str(),
-                                        std::to_string(worker->id).c_str()
-                                    ));
-
-                                    system->on_trigger(*this, iter, event);
-                                }
-                            );
-                            worker->wait();
-                        }
-                        else
-                        {
-                            tef_log(this, log_level_t::verbose, utils::str_format(
-                                "Using event of type %s to trigger system named \"%s\" on the "
-                                "world runner thread",
-                                std::to_string(event.type).c_str(),
-                                system->name.c_str()
-                            ));
-
-                            system->on_trigger(*this, iter, event);
-                        }
                     }
                 }
             }
