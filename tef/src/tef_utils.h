@@ -93,8 +93,10 @@ namespace tef::utils
     class worker_t
     {
     public:
-        worker_t();
-        no_copy_move_constructor(worker_t);
+        const uint64_t id;
+
+        worker_t(uint64_t id);
+        no_default_copy_move_constructor(worker_t);
         ~worker_t();
 
         // Enqueue a new job to be processed by the worker thread.

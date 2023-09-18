@@ -57,8 +57,8 @@ namespace tef::utils
         return 1e-9f * std::chrono::duration_cast<std::chrono::nanoseconds>(t_end - t_start).count();
     }
 
-    worker_t::worker_t()
-        : thread(
+    worker_t::worker_t(uint64_t id)
+        : id(id), thread(
             [this](std::stop_token stop_token)
             {
                 loop(stop_token);
