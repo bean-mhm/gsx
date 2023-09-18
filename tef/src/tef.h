@@ -25,8 +25,7 @@ namespace tef
 
     // Type definitions
     using byte_t = uint8_t;
-    using id_t = uint64_t;
-    using entity_t = id_t;
+    using entity_t = uint64_t;
     using event_type_t = uint64_t;
 
     // Forward declerations
@@ -70,7 +69,7 @@ namespace tef
         // Note: Avoid modifying this value when the parent world is running.
         int32_t update_order = 0;
 
-        // Force the parent world to invoke the on_update() function of this system using the same
+        // Force the parent world to invoke the abstract functions of this system using the same
         // thread that is running the world. If multiple systems with identical update orders have
         // this option enabled, they will not be parallelized, but the other systems at their
         // order will be updated together in parallel.
