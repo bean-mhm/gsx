@@ -70,6 +70,12 @@ namespace tef
         // Note: Avoid modifying this value when the parent world is running.
         int32_t update_order = 0;
 
+        // Force the parent world to invoke the on_update() function of this system using the same
+        // thread that is running the world. If multiple systems with identical update orders have
+        // this option enabled, they will not be parallelized, but the other systems at their
+        // order will be updated together in parallel.
+        bool run_on_caller_thread = false;
+
         // Which event types will trigger this system?
         std::set<event_type_t> triggers;
 
@@ -115,13 +121,13 @@ namespace tef
 
         // Mutex for the components
         // Note: Not used internally, can optionally be used by the developer for synchronization.
-        // You might want to use this when adding/removing components from several threads for
+        // You might want to use this when adding/removing components using several threads for
         // example.
         std::mutex mutex_components;
 
         // Mutex for the systems
         // Note: Not used internally, can optionally be used by the developer for synchronization.
-        // You might want to use this when adding/removing systems from several threads for
+        // You might want to use this when adding/removing systems using several threads for
         // example.
         std::mutex mutex_systems;
 
@@ -129,7 +135,11 @@ namespace tef
         prng_t prng;
 
         // Create a world with a given name and a logger.
-        world_t(const std::string& name, log_level_t max_log_level, std::shared_ptr<base_logger_t> logger);
+        world_t(
+            const std::string& name,
+            log_level_t max_log_level,
+            std::shared_ptr<base_logger_t> logger
+        );
         no_default_copy_move_constructor(world_t);
         ~world_t();
 
@@ -297,8 +307,11 @@ namespace tef
 
         // Start the main loop with a given maximum update rate. This will call the abstract
         // functions of the systems present in the world.
+        // Note: Avoid adding or removing systems while the world is running, as it will have no
+        // effect.
+        // Note: Only a single thread can be running the world at a time.
         // Note: Use a max_update_rate of 0 for uncapped update rate.
-        // Note: Only a single thread can be running the main loop at a time.
+        // Note: Use a max_run_time of 0 for uncapped run time.
         void run(const float max_update_rate = 0, const float max_run_time = 0);
 
         // Signal the runner thread to stop, and optionally wait for it if calling from a separate
