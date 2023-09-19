@@ -27,7 +27,7 @@ void s_movement::on_update(tef::world_t& world, const tef::world_iteration_t& it
     {
         c_transform& transform = components[i];
 
-        float theta = .5f * (i + 1.f) * iter.elapsed;
+        float theta = .5f * (i + 1.f) * iter.time;
         transform.pos = 3.f * glm::vec2(std::cos(theta), std::sin(theta));
     }
 }
