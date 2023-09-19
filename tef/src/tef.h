@@ -60,7 +60,7 @@ namespace tef
     // it is running.
     struct base_system_t
     {
-        // A unique name for the system
+        // A name for the system
         const std::string name;
 
         // Update order. A system with a higher order value will have its on_update() function
@@ -306,8 +306,8 @@ namespace tef
 
         // Start the main loop with a given maximum update rate. This will call the abstract
         // functions of the systems present in the world.
-        // Note: Avoid adding or removing systems while the world is running, as it will have no
-        // effect.
+        // Note: Avoid adding or removing systems while the world is running, as it will not
+        // affect the current run.
         // Note: Only a single thread can be running the world at a time.
         // Note: Use a max_update_rate of 0 for uncapped update rate.
         // Note: Use a max_run_time of 0 for uncapped run time.
@@ -318,15 +318,6 @@ namespace tef
         void stop(bool wait);
 
     private:
-        // Logger
-        std::shared_ptr<base_logger_t> logger;
-
-        // Internal mutex for running the world
-        std::mutex mutex_run;
-
-        // Internal mutex for the event queue
-        std::mutex mutex_events;
-
         // Wrapper for a byte array holding a list of components of the same type
         struct component_list_t
         {
@@ -336,6 +327,33 @@ namespace tef
             // Byte array
             std::vector<byte_t> data;
         };
+
+        // A group of systems with identical update order values, all to be updated in parallel.
+        // If you're confused, here's an example of how the systems could be updated:
+        // 1. Update the movement system, the jump system, and the physics system all in parallel.
+        // 2. After step 1 is finished, update the collision system.
+        // 3. Update the audio system and the render system in parallel.
+        // Think of each step as a system group. Notice how the system groups are run in serial,
+        // but the systems inside each group are updated together in parallel.
+        struct system_group_t
+        {
+            int32_t update_order;
+            std::vector<std::shared_ptr<base_system_t>> systems;
+        };
+
+        // Mapping from a system pointer to a worker thread used to invoke the abtract functions
+        // of that system. If the worker is nullptr, then the system must run on the same thread
+        // that is running the world.
+        using worker_map_t = std::unordered_map<base_system_t*, std::shared_ptr<utils::worker_t>>;
+
+        // Logger
+        std::shared_ptr<base_logger_t> logger;
+
+        // Internal mutex for running the world
+        std::mutex mutex_run;
+
+        // Internal mutex for the event queue
+        std::mutex mutex_events;
 
         // Event queue
         std::deque<event_t> events;
@@ -371,6 +389,35 @@ namespace tef
             // Return
             return comp_map[ti].data;
         }
+
+        void prepare_system_groups_and_workers(
+            const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
+            std::vector<system_group_t>& out_system_groups,
+            worker_map_t& out_worker_map
+        );
+
+        void start_systems(
+            const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
+            worker_map_t& worker_map
+        );
+
+        void process_events(
+            const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
+            worker_map_t& worker_map,
+            const world_iteration_t& iter
+        );
+
+        void update_systems(
+            std::vector<system_group_t>& system_groups,
+            worker_map_t& worker_map,
+            const world_iteration_t& iter
+        );
+
+        void stop_systems(
+            const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
+            worker_map_t& worker_map,
+            const world_iteration_t& iter
+        );
 
     };
 
