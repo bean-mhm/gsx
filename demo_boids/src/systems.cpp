@@ -3,12 +3,15 @@
 // STD
 #include <string>
 #include <algorithm>
-#include <cmath>
+#include <execution>
 #include <cstdint>
 
 // GLM
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
+
+// OpenMP
+#include <omp.h>
 
 // Internal
 #include "constants.h"
@@ -63,7 +66,9 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
 
     c_boid* boids; size_t num_boids;
     world.get_components_of_type<c_boid>(boids, num_boids);
-    for (size_t i = 0; i < num_boids; i++)
+
+#pragma omp parallel for
+    for (int i = 0; i < num_boids; i++)
     {
         c_boid& boid = boids[i];
 
@@ -71,7 +76,7 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
         glm::vec2 avg_vel(0);
 
         // Iterate through the neighbors
-        for (size_t j = 0; j < num_boids; j++)
+        for (int j = 0; j < num_boids; j++)
         {
             if (i == j) continue;
 
@@ -262,11 +267,11 @@ void s_rendering::on_update(tef::world_t& world, const tef::world_iteration_t& i
     // Plane uniforms
     {
         GLint location = glGetUniformLocation(plane_shader_program, "aspect");
-        glUniform2f(location, (float)width / std::min(width, height), (float)height / std::min(width, height));
+        glUniform2f(location, (float)width / glm::min(width, height), (float)height / glm::min(width, height));
     }
     {
         GLint location = glGetUniformLocation(plane_shader_program, "px2uv");
-        glUniform1f(location, 2.f / std::min(width, height));
+        glUniform1f(location, 2.f / glm::min(width, height));
     }
     {
         GLint location = glGetUniformLocation(plane_shader_program, "time");
@@ -288,7 +293,7 @@ void s_rendering::on_update(tef::world_t& world, const tef::world_iteration_t& i
     // Boids uniforms
     {
         GLint location = glGetUniformLocation(boids_shader_program, "aspect");
-        glUniform2f(location, (float)width / std::min(width, height), (float)height / std::min(width, height));
+        glUniform2f(location, (float)width / glm::min(width, height), (float)height / glm::min(width, height));
     }
     {
         GLint location = glGetUniformLocation(boids_shader_program, "boids_size");
@@ -296,7 +301,7 @@ void s_rendering::on_update(tef::world_t& world, const tef::world_iteration_t& i
     }
     {
         GLint location = glGetUniformLocation(boids_shader_program, "px2uv");
-        glUniform1f(location, (2.f / std::min(width, height)) / boids_size);
+        glUniform1f(location, (2.f / glm::min(width, height)) / boids_size);
     }
 
     // Bind the boids VAO
