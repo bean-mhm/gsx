@@ -430,7 +430,7 @@ namespace tef
         uint64_t i = 0;
 
         // Seconds elapsed since the start
-        float elapsed = 0;
+        float time = 0;
 
         // Seconds elapsed since the last iteration
         float dt = 0;

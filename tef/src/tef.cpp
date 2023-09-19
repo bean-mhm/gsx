@@ -201,7 +201,7 @@ namespace tef
         {
             tef_log(this, log_level_t::verbose, utils::str_format(
                 "Loop iteration %llu (elapsed = %.3f s, dt = %.3f s)",
-                iter.i, iter.elapsed, iter.dt
+                iter.i, iter.time, iter.dt
             ));
 
             process_events(systems_copy, worker_map, iter);
@@ -219,12 +219,12 @@ namespace tef
 
             // Iteration info
             iter.i++;
-            iter.elapsed = utils::elapsed_sec(time_start);
+            iter.time = utils::elapsed_sec(time_start);
             iter.dt = utils::elapsed_sec(time_last_iter);
             time_last_iter = std::chrono::high_resolution_clock::now();
 
             // Stop running if the maximum run time is exceeded
-            if (max_run_time != 0 && iter.elapsed > max_run_time)
+            if (max_run_time != 0 && iter.time > max_run_time)
             {
                 tef_log(this, log_level_t::info,
                     "Breaking the loop because the maximum run time was exceeded");
