@@ -95,14 +95,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\tef_log.cpp" />
-    <ClCompile Include="src\tef_prng.cpp" />
     <ClCompile Include="src\tef.cpp" />
     <ClCompile Include="src\tef_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\tef_log.h" />
-    <ClInclude Include="src\tef_prng.h" />
     <ClInclude Include="src\tef.h" />
+    <ClInclude Include="src\tef_structure.h" />
     <ClInclude Include="src\tef_utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

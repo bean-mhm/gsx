@@ -17,7 +17,6 @@
 
 // Internal
 #include "tef_log.h"
-#include "tef_prng.h"
 #include "tef_utils.h"
 
 namespace tef
@@ -132,7 +131,7 @@ namespace tef
         std::mutex mutex_systems;
 
         // A PRNG (Pseudo-Random Number Generator) for the world
-        prng_t prng;
+        utils::prng_t prng;
 
         // Create a world with a given name and a logger.
         world_t(
