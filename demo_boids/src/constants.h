@@ -1,5 +1,8 @@
 #pragma once
 
+// STD
+#include <cstdint>
+
 // GLM
 #include "glm/glm.hpp"
 
@@ -40,6 +43,7 @@ static const char* plane_src_frag = R"glsl(
     }
 
     // Signed distance from the edges of the colliders
+    // Note: This function must be identical to its C++ version in systems.cpp.
     float sd_colliders(vec2 p)
     {
         float d = 1e9;
@@ -96,9 +100,12 @@ static const GLuint plane_elements[] = {
 
 // Boids
 
-static constexpr float boids_size = .06f;
 static constexpr glm::vec2 boids_min_pos(-.9f, -.9f);
 static constexpr glm::vec2 boids_max_pos(.9f, .9f);
+static constexpr float boids_speed = .6f;
+static constexpr float boids_attention = .2f;
+static constexpr float boids_attention_sqr = boids_attention * boids_attention;
+static constexpr float boids_size = .03f;
 
 static const char* boids_src_vert = R"glsl(
     #version 330 core
@@ -132,16 +139,15 @@ static const char* boids_src_geo = R"glsl(
 
     #define PI 3.14159265358979
 
-    vec2 rotate(vec2 v, float a) {
+    mat2 rotate2D(float a) {
         float s = sin(a);
         float c = cos(a);
-        mat2 m = mat2(c, s, -s, c);
-        return m * v;
+        return mat2(c, s, -s, c);
     }
 
     vec4 gen_vertex(vec2 offs, float angle)
     {
-        vec2 p = v_pos[0] + rotate(offs, angle);
+        vec2 p = v_pos[0] + rotate2D(angle) * offs;
         return vec4(p / aspect, 0, 1);
     }
 
