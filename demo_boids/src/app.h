@@ -1,9 +1,5 @@
 #pragma once
 
-// GLM
-#include "glm/glm.hpp"
-#include "glm/ext.hpp"
-
 // Internal
 #include "gl_utils.h"
 
