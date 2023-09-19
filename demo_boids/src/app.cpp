@@ -30,7 +30,7 @@ void app_t::run()
     // Create a world
     tef::world_t world(
         "Boids",
-        tef::log_level_t::verbose,
+        tef::log_level_t::info,
         std::make_shared<tef::ostream_logger_t>(std::cout)
     );
 
