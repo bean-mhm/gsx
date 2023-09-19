@@ -9,7 +9,7 @@
 // Boid simulation system
 struct s_boids : tef::base_system_t
 {
-    s_boids(const std::string& name, int32_t update_order);
+    s_boids(const std::string& name, int32_t update_order, bool run_on_caller_thread);
     virtual ~s_boids();
 
     virtual void on_update(tef::world_t& world, const tef::world_iteration_t& iter) override;
@@ -18,7 +18,12 @@ struct s_boids : tef::base_system_t
 // OpenGL rendering system
 struct s_rendering : tef::base_system_t
 {
-    s_rendering(const std::string& name, int32_t update_order, GLFWwindow* window);
+    s_rendering(
+        const std::string& name,
+        int32_t update_order,
+        bool run_on_caller_thread,
+        GLFWwindow* window
+    );
     virtual ~s_rendering();
 
     virtual void on_start(tef::world_t& world) override;

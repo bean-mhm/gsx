@@ -9,8 +9,8 @@
 
 // s_movement
 
-s_movement::s_movement(const std::string& name, int32_t update_order)
-    : tef::base_system_t(name, update_order)
+s_movement::s_movement(const std::string& name, int32_t update_order, bool run_on_caller_thread)
+    : tef::base_system_t(name, update_order, run_on_caller_thread)
 {}
 
 s_movement::~s_movement()
@@ -34,8 +34,12 @@ void s_movement::on_update(tef::world_t& world, const tef::world_iteration_t& it
 
 // s_circle_renderer
 
-s_circle_renderer::s_circle_renderer(const std::string& name, int32_t update_order)
-    : tef::base_system_t(name, update_order)
+s_circle_renderer::s_circle_renderer(
+    const std::string& name,
+    int32_t update_order,
+    bool run_on_caller_thread
+)
+    : tef::base_system_t(name, update_order, run_on_caller_thread)
 {}
 
 s_circle_renderer::~s_circle_renderer()

@@ -72,14 +72,15 @@ namespace tef
         // Force the parent world to invoke the abstract functions of this system using the same
         // thread that is running the world. If multiple systems with identical update orders have
         // this option enabled, they will not be parallelized, but the other systems at their
-        // order will be updated together in parallel.
+        // order will be updated together in parallel. This option is especially helpful when
+        // working with single-threaded contexts like in the OpenGL API.
         bool run_on_caller_thread = false;
 
         // Which event types will trigger this system?
         std::set<event_type_t> triggers;
 
-        // Create a system with a given name.
-        base_system_t(const std::string& name, int32_t update_order);
+        // Create a system with given properties.
+        base_system_t(const std::string& name, int32_t update_order, bool run_on_caller_thread);
         no_default_copy_move_constructor(base_system_t);
         virtual ~base_system_t();
 

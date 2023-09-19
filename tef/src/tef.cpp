@@ -10,8 +10,12 @@ namespace tef
         : type(type), data(data)
     {}
 
-    base_system_t::base_system_t(const std::string& name, int32_t update_order)
-        : name(name), update_order(update_order)
+    base_system_t::base_system_t(
+        const std::string& name,
+        int32_t update_order,
+        bool run_on_caller_thread
+    )
+        : name(name), update_order(update_order), run_on_caller_thread(run_on_caller_thread)
     {}
 
     base_system_t::~base_system_t()

@@ -15,8 +15,8 @@
 
 // s_boids
 
-s_boids::s_boids(const std::string& name, int32_t update_order)
-    : tef::base_system_t(name, update_order)
+s_boids::s_boids(const std::string& name, int32_t update_order, bool run_on_caller_thread)
+    : tef::base_system_t(name, update_order, run_on_caller_thread)
 {}
 
 s_boids::~s_boids()
@@ -39,8 +39,13 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
 
 // s_rendering
 
-s_rendering::s_rendering(const std::string& name, int32_t update_order, GLFWwindow* window)
-    : tef::base_system_t(name, update_order), window(window)
+s_rendering::s_rendering(
+    const std::string& name,
+    int32_t update_order,
+    bool run_on_caller_thread,
+    GLFWwindow* window
+)
+    : tef::base_system_t(name, update_order, run_on_caller_thread), window(window)
 {}
 
 s_rendering::~s_rendering()

@@ -45,8 +45,8 @@ void app_t::run()
 
     // Add systems
     {
-        world.add_system(std::make_shared<s_boids>("Boids", 0));
-        world.add_system(std::make_shared<s_rendering>("Rendering", 1, window));
+        world.add_system(std::make_shared<s_boids>("Boids", 0, false));
+        world.add_system(std::make_shared<s_rendering>("Rendering", 1, true, window));
     }
 
     // Run
