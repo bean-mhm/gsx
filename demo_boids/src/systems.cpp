@@ -8,10 +8,45 @@
 
 // GLM
 #include "glm/glm.hpp"
+#include "glm/ext.hpp"
 
 // Internal
 #include "constants.h"
 #include "components.h"
+
+glm::mat2 rotate2D(float a)
+{
+    float s = glm::sin(a);
+    float c = glm::cos(a);
+    return glm::mat2(c, s, -s, c);
+}
+
+glm::vec2 get_point_of_attraction(float time)
+{
+    float a = .8f * time;
+    return .7f * glm::vec2(glm::cos(a), glm::sin(a));
+}
+
+// Signed distance from the edges of the colliders
+// Note: This function must be identical to its GLSL version in plane_src_frag.
+float sd_colliders(glm::vec2 p, float time)
+{
+    float d = 1e9;
+
+    // Walls (bounds)
+    const glm::vec2 min_pos = glm::vec2(-.9);
+    const glm::vec2 max_pos = glm::vec2(.9);
+    d = glm::min(d, p.x - min_pos.x);
+    d = glm::min(d, p.y - min_pos.y);
+    d = glm::min(d, max_pos.x - p.x);
+    d = glm::min(d, max_pos.y - p.y);
+
+    // Circle
+    glm::vec2 center = glm::vec2(glm::sin(time) * .4f, 0);
+    d = glm::min(d, glm::length(p - center) - .15f);
+
+    return d;
+}
 
 // s_boids
 
@@ -24,16 +59,96 @@ s_boids::~s_boids()
 
 void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
 {
-    // Get a list of the boids
+    const float dt = glm::min(iter.dt, 0.02f);
+
     c_boid* boids; size_t num_boids;
     world.get_components_of_type<c_boid>(boids, num_boids);
-
-    // Iterate and update
     for (size_t i = 0; i < num_boids; i++)
     {
         c_boid& boid = boids[i];
 
-        boid.pos += iter.dt * boid.vel;
+        // Weighted average of the neighbor velocities
+        glm::vec2 avg_vel(0);
+
+        // Iterate through the neighbors
+        for (size_t j = 0; j < num_boids; j++)
+        {
+            if (i == j) continue;
+
+            // Info about the other boid
+            const c_boid& other = boids[j];
+            glm::vec2 this_to_other = other.pos - boid.pos;
+            float dist_sqr = glm::dot(this_to_other, this_to_other);
+            if (dist_sqr > boids_attention_sqr) continue;
+            float dist = glm::sqrt(dist_sqr);
+
+            // Steer away from nearby boids
+            if (glm::dot(glm::normalize(boid.vel), glm::normalize(other.vel)) > glm::cos(1.1f))
+            {
+                // How much do I steer away?
+                float fac = 1.f - glm::clamp(dist / boids_attention, 0.f, 1.f);
+
+                // Steer
+                float deg_per_sec = 20.f * fac;
+                boid.vel = rotate2D(glm::radians(deg_per_sec * dt)) * boid.vel;
+
+                // Move away
+                boid.vel -= 5.f * fac * dt * this_to_other;
+            }
+
+            // Update the weighted average velocity
+            float weight = 1.f - glm::clamp(dist / boids_attention, 0.f, 1.f);
+            avg_vel += weight * other.vel;
+        }
+
+        // Try to go in the same direction as the neighbors
+        float lensqr_avg_vel = glm::dot(avg_vel, avg_vel);
+        if (lensqr_avg_vel > 0)
+        {
+            boid.vel = glm::mix(boid.vel, avg_vel, glm::min(.3f * dt, 1.f));
+        }
+
+        // Try to follow the point of attraction
+        glm::vec2 poa = get_point_of_attraction(iter.time);
+        boid.vel = glm::mix(boid.vel, (poa - boid.pos), glm::min(dt, 1.f));
+
+        // Constant speed
+        boid.vel = boids_speed * glm::normalize(boid.vel);
+
+        // Update position
+        boid.pos += boid.vel * dt;
+
+        // Get away from the colliders
+        {
+            // Signed distance
+            float sd = sd_colliders(boid.pos, iter.time);
+
+            // Normal
+            glm::vec2 normal = glm::normalize(glm::vec2(
+                sd_colliders(boid.pos + glm::vec2(.001, 0), iter.time) - sd,
+                sd_colliders(boid.pos + glm::vec2(0, .001), iter.time) - sd
+            ));
+
+            // If inside
+            if (sd < 0)
+            {
+                // Snap to outside
+                boid.pos += (.001f - sd) * normal;
+
+                // Bounce
+                boid.vel = glm::reflect(boid.vel, normal);
+            }
+
+            // Steer away
+            float pd = glm::max(0.f, sd);
+            float deg_per_sec = -50.f * glm::exp(-15.f * pd);
+            float angle = glm::radians(deg_per_sec * dt);
+            boid.vel = rotate2D(angle) * boid.vel;
+
+            // Move away
+            float force = 1. / (100. * pd * pd + .1);
+            boid.vel += force * dt * normal;
+        }
     }
 }
 
@@ -155,7 +270,7 @@ void s_rendering::on_update(tef::world_t& world, const tef::world_iteration_t& i
     }
     {
         GLint location = glGetUniformLocation(plane_shader_program, "time");
-        glUniform1f(location, iter.elapsed);
+        glUniform1f(location, iter.time);
     }
 
     // Bind the plane VAO
