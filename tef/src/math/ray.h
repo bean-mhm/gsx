@@ -15,7 +15,9 @@ namespace tef::math
         vec3 d;
 
         // Constructors
-        ray_t(const vec3& o, const vec3& d);
+        constexpr ray_t(const vec3& o, const vec3& d)
+            : o(o), d(d)
+        {}
 
         // Evaluate point along the ray
         vec3 operator()(float t) const;

@@ -16,19 +16,16 @@ namespace tef::math
 
         // Constructors
 
-        bounds2_base()
-        {
-            T min_num = std::numeric_limits<T>::lowest();
-            T max_num = std::numeric_limits<T>::max();
-            pmin = vec2_base<T>(max_num);
-            pmax = vec2_base<T>(min_num);
-        }
+        constexpr bounds2_base()
+            : pmin(vec2_base<T>(std::numeric_limits<T>::max())),
+            pmax(vec2_base<T>(std::numeric_limits<T>::lowest()))
+        {}
 
-        bounds2_base(const vec2_base<T>& p)
+        constexpr bounds2_base(const vec2_base<T>& p)
             : pmin(p), pmax(p)
         {}
 
-        bounds2_base(const vec2_base<T>& p1, const vec2_base<T>& p2)
+        constexpr bounds2_base(const vec2_base<T>& p1, const vec2_base<T>& p2)
             : pmin(min(p1, p2)), pmax(max(p1, p2))
         {}
 

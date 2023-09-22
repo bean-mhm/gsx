@@ -17,37 +17,37 @@ namespace tef::math
 
         // Constructors
 
-        vec4_base() = default;
+        constexpr vec4_base() = default;
 
-        vec4_base(T x, T y, T z, T w)
+        constexpr vec4_base(T x, T y, T z, T w)
             : x(x), y(y), z(z), w(w)
         {}
 
-        vec4_base(T s)
+        constexpr vec4_base(T s)
             : x(s), y(s), z(s), w(s)
         {}
 
-        vec4_base(vec2_base<T> xy, T z, T w)
+        constexpr vec4_base(vec2_base<T> xy, T z, T w)
             : x(xy.x), y(xy.y), z(z), w(w)
         {}
 
-        vec4_base(T x, vec2_base<T> yz, T w)
+        constexpr vec4_base(T x, vec2_base<T> yz, T w)
             : x(x), y(yz.x), z(yz.y), w(w)
         {}
 
-        vec4_base(T x, T y, vec2_base<T> zw)
+        constexpr vec4_base(T x, T y, vec2_base<T> zw)
             : x(x), y(y), z(zw.x), w(zw.y)
         {}
 
-        vec4_base(vec2_base<T> xy, vec2_base<T> zw)
+        constexpr vec4_base(vec2_base<T> xy, vec2_base<T> zw)
             : x(xy.x), y(xy.y), z(zw.x), w(zw.y)
         {}
 
-        vec4_base(vec3_base<T> xyz, T w)
+        constexpr vec4_base(vec3_base<T> xyz, T w)
             : x(xyz.x), y(xyz.y), z(xyz.z), w(w)
         {}
 
-        vec4_base(T x, vec3_base<T> yzw)
+        constexpr vec4_base(T x, vec3_base<T> yzw)
             : x(x), y(yzw.x), z(yzw.y), w(yzw.z)
         {}
 

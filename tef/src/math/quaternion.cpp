@@ -3,14 +3,6 @@
 namespace tef::math
 {
 
-    quaternion_t::quaternion_t()
-        : v(0, 0, 0, 1)
-    {}
-
-    quaternion_t::quaternion_t(const vec4& v)
-        : v(v)
-    {}
-
     quaternion_t::quaternion_t(const mat4& m)
     {
         float mtrace = m.m[0][0] + m.m[1][1] + m.m[2][2];

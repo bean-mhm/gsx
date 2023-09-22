@@ -16,21 +16,21 @@ namespace tef::math
 
         // Constructors
 
-        vec3_base() = default;
+        constexpr vec3_base() = default;
 
-        vec3_base(T x, T y, T z)
+        constexpr vec3_base(T x, T y, T z)
             : x(x), y(y), z(z)
         {}
 
-        vec3_base(T s)
+        constexpr vec3_base(T s)
             : x(s), y(s), z(s)
         {}
 
-        vec3_base(vec2_base<T> xy, T z)
+        constexpr vec3_base(vec2_base<T> xy, T z)
             : x(xy.x), y(xy.y), z(z)
         {}
 
-        vec3_base(T x, vec2_base<T> yz)
+        constexpr vec3_base(T x, vec2_base<T> yz)
             : x(x), y(yz.x), z(yz.y)
         {}
 

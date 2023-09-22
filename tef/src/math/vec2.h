@@ -15,13 +15,13 @@ namespace tef::math
 
         // Constructors
 
-        vec2_base() = default;
+        constexpr vec2_base() = default;
 
-        vec2_base(T x, T y)
+        constexpr vec2_base(T x, T y)
             : x(x), y(y)
         {}
 
-        vec2_base(T s)
+        constexpr vec2_base(T s)
             : x(s), y(s)
         {}
 

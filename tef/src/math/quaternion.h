@@ -16,8 +16,15 @@ namespace tef::math
         vec4 v;
 
         // Constructors
-        quaternion_t();
-        quaternion_t(const vec4& v);
+
+        constexpr quaternion_t()
+            : v(0, 0, 0, 1)
+        {}
+
+        constexpr quaternion_t(const vec4& v)
+            : v(v)
+        {}
+
         quaternion_t(const mat4& m);
         quaternion_t(const transform_t& t);
 
