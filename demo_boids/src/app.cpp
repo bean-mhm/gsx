@@ -10,10 +10,6 @@
 // TEF
 #include "tef/tef.h"
 
-// GLM
-#include "glm/glm.hpp"
-#include "glm/ext.hpp"
-
 // Internal
 #include "constants.h"
 #include "components.h"
@@ -38,11 +34,15 @@ void app_t::run()
     for (size_t i = 0; i < 100; i++)
     {
         c_boid boid;
-        boid.pos = glm::vec2(
+
+        boid.pos = math::vec2(
             world.prng.next_float(boids_min_pos.x, boids_max_pos.x),
             world.prng.next_float(boids_min_pos.y, boids_max_pos.y)
         );
-        boid.vel = glm::circularRand(boids_speed);
+
+        float angle = world.prng.next_float(0, math::tau);
+        boid.vel = boids_speed * math::vec2(math::cos(angle), math::sin(angle));
+
         world.add_component_of_type<c_boid>(boid);
     }
 

@@ -3,9 +3,6 @@
 // STD
 #include <cstdint>
 
-// GLM
-#include "glm/glm.hpp"
-
 // Internal
 #include "gl_utils.h"
 
@@ -100,8 +97,8 @@ static const GLuint plane_elements[] = {
 
 // Boids
 
-static constexpr glm::vec2 boids_min_pos(-.9f, -.9f);
-static constexpr glm::vec2 boids_max_pos(.9f, .9f);
+static constexpr math::vec2 boids_min_pos(-.9f, -.9f);
+static constexpr math::vec2 boids_max_pos(.9f, .9f);
 static constexpr float boids_speed = .6f;
 static constexpr float boids_attention = .2f;
 static constexpr float boids_attention_sqr = boids_attention * boids_attention;

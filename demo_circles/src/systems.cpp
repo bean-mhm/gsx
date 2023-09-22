@@ -28,7 +28,7 @@ void s_movement::on_update(tef::world_t& world, const tef::world_iteration_t& it
         c_transform& transform = components[i];
 
         float theta = .5f * (i + 1.f) * iter.time;
-        transform.pos = 3.f * glm::vec2(std::cos(theta), std::sin(theta));
+        transform.pos = 3.f * math::vec2(math::cos(theta), sin(theta));
     }
 }
 
@@ -55,14 +55,14 @@ void s_circle_renderer::on_update(tef::world_t& world, const tef::world_iteratio
     world.get_components_of_type<c_circle>(components, size);
 
     // Render (per-pixel shader)
-    constexpr glm::uvec2 res(30, 20);
+    constexpr math::uvec2 res(30, 20);
     float px2uv = get_px2uv_ratio(res);
     for (int y = 0; y < res.y; y++)
     {
         for (int x = 0; x < res.x; x++)
         {
             // UV
-            glm::vec2 uv = screen_to_uv(glm::uvec2(x, y), res);
+            math::vec2 uv = screen_to_uv(math::uvec2(x, y), res);
 
             // Minimum distance from the closest circle
             float dist = 1e9f;
@@ -73,12 +73,12 @@ void s_circle_renderer::on_update(tef::world_t& world, const tef::world_iteratio
                 if (transform)
                 {
                     // Use transform.pos as the center
-                    dist = std::min(dist, sd_circle(uv, transform->pos, circle.radius));
+                    dist = math::min(dist, sd_circle(uv, transform->pos, circle.radius));
                 }
                 else
                 {
                     // Use the origin as the center
-                    dist = std::min(dist, sd_circle(uv, glm::vec2(0), circle.radius));
+                    dist = math::min(dist, sd_circle(uv, math::vec2(0), circle.radius));
                 }
             }
 

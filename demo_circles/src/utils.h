@@ -1,12 +1,10 @@
 #pragma once
 
-// GLM
-#include "glm/glm.hpp"
+// TEF
+#include "tef/tef.h"
 
-glm::vec2 screen_to_uv(glm::uvec2 coord, glm::uvec2 res);
-float get_px2uv_ratio(glm::uvec2 res);
-
-// Signed distance of a circle
-float sd_circle(glm::vec2 p, glm::vec2 center, float radius);
+math::vec2 screen_to_uv(math::uvec2 coord, math::uvec2 res);
+float get_px2uv_ratio(math::uvec2 res);
+float sd_circle(math::vec2 p, math::vec2 center, float radius);
 
 void clear_console();
