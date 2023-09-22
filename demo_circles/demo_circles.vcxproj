@@ -103,9 +103,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="include\glm\detail\glm.cpp" />
+    <ClCompile Include="include\tef\log.cpp" />
+    <ClCompile Include="include\tef\math\mat4.cpp" />
+    <ClCompile Include="include\tef\math\prng.cpp" />
+    <ClCompile Include="include\tef\math\quaternion.cpp" />
+    <ClCompile Include="include\tef\math\ray.cpp" />
+    <ClCompile Include="include\tef\math\transform.cpp" />
+    <ClCompile Include="include\tef\math\utils.cpp" />
+    <ClCompile Include="include\tef\spatial.cpp" />
+    <ClCompile Include="include\tef\str\utils.cpp" />
     <ClCompile Include="include\tef\tef.cpp" />
-    <ClCompile Include="include\tef\tef_log.cpp" />
-    <ClCompile Include="include\tef\tef_utils.cpp" />
+    <ClCompile Include="include\tef\utils.cpp" />
     <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\systems.cpp" />
@@ -394,9 +402,23 @@
     <ClInclude Include="include\glm\vec3.hpp" />
     <ClInclude Include="include\glm\vec4.hpp" />
     <ClInclude Include="include\glm\vector_relational.hpp" />
+    <ClInclude Include="include\tef\log.h" />
+    <ClInclude Include="include\tef\math\bounds2.h" />
+    <ClInclude Include="include\tef\math\bounds3.h" />
+    <ClInclude Include="include\tef\math\mat4.h" />
+    <ClInclude Include="include\tef\math\math.h" />
+    <ClInclude Include="include\tef\math\prng.h" />
+    <ClInclude Include="include\tef\math\quaternion.h" />
+    <ClInclude Include="include\tef\math\ray.h" />
+    <ClInclude Include="include\tef\math\transform.h" />
+    <ClInclude Include="include\tef\math\utils.h" />
+    <ClInclude Include="include\tef\math\vec2.h" />
+    <ClInclude Include="include\tef\math\vec3.h" />
+    <ClInclude Include="include\tef\math\vec4.h" />
+    <ClInclude Include="include\tef\spatial.h" />
+    <ClInclude Include="include\tef\str\utils.h" />
     <ClInclude Include="include\tef\tef.h" />
-    <ClInclude Include="include\tef\tef_log.h" />
-    <ClInclude Include="include\tef\tef_utils.h" />
+    <ClInclude Include="include\tef\utils.h" />
     <ClInclude Include="src\app.h" />
     <ClInclude Include="src\components.h" />
     <ClInclude Include="src\systems.h" />
