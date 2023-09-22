@@ -11,6 +11,7 @@ namespace tef::str
 
     std::string upper(std::string s)
     {
+        std::string p = std::format("{}", 7);
         std::transform(s.begin(), s.end(), s.begin(), std::toupper);
         return s;
     }

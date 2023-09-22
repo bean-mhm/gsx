@@ -1,8 +1,9 @@
 #pragma once
 
+#include <string>
+#include <format>
 #include <iostream>
 #include <iomanip>
-#include <string>
 #include <sstream>
 #include <fstream>
 #include <vector>
@@ -16,21 +17,6 @@
 
 namespace tef::str
 {
-
-    template<typename ... Args>
-    std::string format(const std::string& format, Args ... args)
-    {
-        int size_s = std::snprintf(nullptr, 0, format.c_str(), args ...) + 1;
-        if (size_s <= 0)
-        {
-            // Error during formatting
-            return format;
-        }
-        auto size = static_cast<uint64_t>(size_s);
-        std::unique_ptr<char[]> buf(new char[size]);
-        std::snprintf(buf.get(), size, format.c_str(), args ...);
-        return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
-    }
 
     std::string lower(std::string s);
     std::string upper(std::string s);
@@ -77,7 +63,7 @@ namespace tef::str
     {
         if constexpr (std::is_same_v<T, float> || std::is_same_v<T, double>)
         {
-            return format("%.3f", (float)v);
+            return std::format("{:.3f}", v);
         }
         return std::to_string(v);
     }
@@ -92,7 +78,7 @@ namespace tef::str
         for (size_t i = 0; i < size; i++)
         {
             if (i != 0) result += ", ";
-            result += format("%.3f", arr[i]);
+            result += std::format("{:.3f}", arr[i]);
         }
         return result;
     }
