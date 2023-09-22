@@ -60,6 +60,7 @@ namespace tef
     // it is running.
     class base_system_t
     {
+    public:
         // A name for the system
         const std::string name;
 
@@ -107,6 +108,7 @@ namespace tef
         // Note: Avoid starting separate threads that keep running after returning from this
         // function.
         virtual void on_stop(world_t& world, const world_iteration_t& iter);
+
     };
 
     // A world for holding and managing a collection of components and systems
@@ -132,7 +134,7 @@ namespace tef
         std::mutex mutex_systems;
 
         // A PRNG (Pseudo-Random Number Generator) for the world
-        utils::prng_t prng;
+        math::prng_t prng;
 
         // Create a world with a given name and a logger.
         world_t(
@@ -182,7 +184,7 @@ namespace tef
         template <typename T>
         T* add_component_of_type(const T& initial_values)
         {
-            tef_log(this, log_level_t::verbose, utils::str_format(
+            tef_log(this, log_level_t::verbose, str::format(
                 "Adding a new component of type \"%s\"",
                 typeid(T).name()
             ));
@@ -210,7 +212,7 @@ namespace tef
         template <typename T>
         void remove_component_of_type_owned_by(entity_t owner)
         {
-            tef_log(this, log_level_t::verbose, utils::str_format(
+            tef_log(this, log_level_t::verbose, str::format(
                 "Removing the first component of type \"%s\" owned by %s",
                 typeid(T).name(),
                 std::to_string(owner).c_str()
@@ -236,7 +238,7 @@ namespace tef
         template <typename T>
         void remove_components_of_type_owned_by(entity_t owner)
         {
-            tef_log(this, log_level_t::verbose, utils::str_format(
+            tef_log(this, log_level_t::verbose, str::format(
                 "Removing all components of type \"%s\" owned by %s",
                 typeid(T).name(),
                 std::to_string(owner).c_str()
@@ -271,7 +273,7 @@ namespace tef
         template <typename T>
         void remove_components_of_type()
         {
-            tef_log(this, log_level_t::verbose, utils::str_format(
+            tef_log(this, log_level_t::verbose, str::format(
                 "Removing all components of type \"%s\"",
                 typeid(T).name()
             ));
@@ -378,7 +380,7 @@ namespace tef
             // If there's no list for this type, create one
             if (!comp_map.contains(ti))
             {
-                tef_log(this, log_level_t::verbose, utils::str_format(
+                tef_log(this, log_level_t::verbose, str::format(
                     "Creating a new component list for type \"%s\"",
                     typeid(T).name()
                 ));
