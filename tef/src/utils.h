@@ -1,7 +1,6 @@
 #pragma once
 
 // STD
-#include <string>
 #include <vector>
 #include <deque>
 #include <functional>
@@ -9,38 +8,17 @@
 #include <mutex>
 #include <condition_variable>
 #include <chrono>
-#include <random>
 #include <cstdint>
 
 #define no_default_constructor(CLASS) CLASS() = delete
 #define no_copy_constructor(CLASS) CLASS(const CLASS&) = delete
 #define no_move_constructor(CLASS) CLASS& operator= (const CLASS&) = delete
 #define no_copy_move_constructor(CLASS) no_copy_constructor(CLASS); no_move_constructor(CLASS);
-#define no_default_copy_move_constructor(CLASS) no_default_constructor(CLASS); no_copy_constructor(CLASS); no_move_constructor(CLASS);
+#define no_default_copy_move_constructor(CLASS) no_default_constructor(CLASS); \
+no_copy_constructor(CLASS); no_move_constructor(CLASS);
 
 namespace tef::utils
 {
-
-    template<typename ... Args>
-    std::string str_format(const std::string& format, Args ... args)
-    {
-        int size_s = std::snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
-        if (size_s <= 0)
-        {
-            // Error during formatting
-            return format;
-        }
-        auto size = static_cast<uint64_t>(size_s);
-        std::unique_ptr<char[]> buf(new char[size]);
-        std::snprintf(buf.get(), size, format.c_str(), args ...);
-        return std::string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
-    }
-
-    void str_replace_in_place(std::string& s, const std::string& from, const std::string& to);
-    std::string str_replace(const std::string& s, const std::string& from, const std::string& to);
-    std::string str_from_time();
-
-    const char* cstr_from_bool(bool v);
 
     template <typename T>
     void vec_clear(std::vector<T>& vec)
@@ -116,46 +94,6 @@ namespace tef::utils
         std::condition_variable cond_queue_empty;
 
         void loop(std::stop_token stop_token);
-
-    };
-
-    // Pseudo-Random Number Generator
-    class prng_t
-    {
-    public:
-        prng_t();
-        no_copy_move_constructor(prng_t);
-
-        int32_t next_i32();
-        int32_t next_i32(int32_t min, int32_t max);
-
-        uint32_t next_u32();
-        uint32_t next_u32(uint32_t min, uint32_t max);
-
-        int64_t next_i64();
-        int64_t next_i64(int64_t min, int64_t max);
-
-        uint64_t next_u64();
-        uint64_t next_u64(uint64_t min, uint64_t max);
-
-        float next_float();
-        float next_float(float min, float max);
-
-        double next_double();
-        double next_double(double min, double max);
-
-    private:
-        // Engine
-        std::random_device device;
-        std::mt19937 engine;
-
-        // Distributors
-        std::uniform_int_distribution<int32_t> dist_i32;
-        std::uniform_int_distribution<uint32_t> dist_u32;
-        std::uniform_int_distribution<int64_t> dist_i64;
-        std::uniform_int_distribution<uint64_t> dist_u64;
-        std::uniform_real_distribution<float> dist_float;
-        std::uniform_real_distribution<double> dist_double;
 
     };
 

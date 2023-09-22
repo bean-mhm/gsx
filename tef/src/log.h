@@ -8,7 +8,8 @@
 #include <mutex>
 
 // Internal
-#include "tef_utils.h"
+#include "str/utils.h"
+#include "utils.h"
 
 namespace tef
 {

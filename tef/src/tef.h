@@ -16,8 +16,10 @@
 #include <cstdint>
 
 // Internal
-#include "tef_log.h"
-#include "tef_utils.h"
+#include "math/math.h"
+#include "str/utils.h"
+#include "log.h"
+#include "utils.h"
 
 namespace tef
 {
@@ -44,20 +46,19 @@ namespace tef
     };
 
     // Abstract struct for a component
-    // Note: A component should never allocate heap memory. For example, don't use std::vector.
     // Note: A component has no functionality, it only ever stores data.
-    // Note: Component types don't necessarily have to be derived from base_component_t, but look
-    // out for templated functions that specifically mention the need for T to be derived from
-    // base_component_t.
+    // Note: A component should never allocate heap memory. For example, don't use std::vector.
+    // Note: Component types don't necessarily have to be derived from base_component_t if they
+    // don't care about the owner entity.
     struct base_component_t
     {
         entity_t owner;
     };
 
-    // Abstract struct for a system
+    // Abstract class for a system
     // Note: The abstract functions will be called at appropriate times by the parent world while
     // it is running.
-    struct base_system_t
+    class base_system_t
     {
         // A name for the system
         const std::string name;
