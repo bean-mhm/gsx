@@ -95,7 +95,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\math\mat4.cpp" />
-    <ClCompile Include="src\math\prng.cpp" />
     <ClCompile Include="src\math\quaternion.cpp" />
     <ClCompile Include="src\math\ray.cpp" />
     <ClCompile Include="src\math\transform.cpp" />
