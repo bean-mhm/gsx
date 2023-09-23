@@ -36,7 +36,7 @@ namespace tef::math
         }
 
         // Print
-        friend std::ostream& operator<<(std::ostream& os, const ray_t& v);
+        friend std::ostream& operator<<(std::ostream& os, const ray_t& r);
 
     };
 
