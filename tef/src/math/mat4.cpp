@@ -111,7 +111,7 @@ namespace tef::math
         for (int i = 0; i < 4; i++)
         {
             int irow = 0, icol = 0;
-            float big = 0.0f;
+            float big = 0.f;
             // Choose pivot
             for (int j = 0; j < 4; j++)
             {
@@ -153,8 +153,8 @@ namespace tef::math
             }
 
             // Set $m[icol][icol]$ to one by scaling row _icol_ appropriately
-            float pivinv = 1. / minv[icol][icol];
-            minv[icol][icol] = 1.;
+            float pivinv = 1.f / minv[icol][icol];
+            minv[icol][icol] = 1.f;
             for (int j = 0; j < 4; j++) minv[icol][j] *= pivinv;
 
             // Subtract this row from others to zero out their columns
