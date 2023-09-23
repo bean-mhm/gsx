@@ -10,8 +10,8 @@ namespace tef::math
         dist_u32(std::numeric_limits<uint32_t>::min(), std::numeric_limits<uint32_t>::max()),
         dist_i64(std::numeric_limits<int64_t>::min(), std::numeric_limits<int64_t>::max()),
         dist_u64(std::numeric_limits<uint64_t>::min(), std::numeric_limits<uint64_t>::max()),
-        dist_float(0.0f, 1.0f),
-        dist_double(0.0, 1.0)
+        dist_float(0.f, 1.f),
+        dist_double(0., 1.)
     {}
 
     int32_t prng_t::next_i32()

@@ -243,11 +243,11 @@ namespace tef::str
 
     std::string from_duration(float seconds)
     {
-        if (seconds < 1.0f)
+        if (seconds < 1.f)
         {
             return format("%.3fs", seconds);
         }
-        else if (seconds < 60.0f)
+        else if (seconds < 60.f)
         {
             return format("%.1fs", seconds);
         }
@@ -333,7 +333,7 @@ namespace tef::str
             if (elements.size() == 1)
             {
                 float v = std::stof(elements[0]);
-                return { v, v, v, 1.0f };
+                return { v, v, v, 1.f };
             }
             else if (elements.size() == 3)
             {
@@ -341,7 +341,7 @@ namespace tef::str
                     std::stof(elements[0]),
                     std::stof(elements[1]),
                     std::stof(elements[2]),
-                    1.0f
+                    1.f
                 };
             }
             else if (elements.size() == 4)
