@@ -18,16 +18,20 @@ namespace tef::math
     public:
         constexpr prng_t(uvec2 seed)
         {
-            state[0] = seed.x;
-            state[1] = seed.y;
+            state[0] = (seed.x * 522133279u) ^ (seed.y * 93444155u);
+            state[1] = (seed.x * 720880126u) ^ (seed.y * 1665791465u);
+
             next_u32();
         }
 
         constexpr prng_t(vec2 seed)
         {
-            seed += 7.6476101561702f;
+            seed *= vec2(10.258331f, 31.833125f);
+            seed += 7.6476101531702f;
+
             state[0] = *reinterpret_cast<uint32_t*>(&seed.x);
             state[1] = *reinterpret_cast<uint32_t*>(&seed.y);
+
             next_u32();
         }
 
@@ -50,10 +54,10 @@ namespace tef::math
         {
             uint32_t s0 = state[0];
             uint32_t s1 = state[1];
-            uint32_t result = rot(s0 * 0x9e3779bbu, 5) * 5u;
+            uint32_t result = rot(s0 * 0x9e3779bbu, 5u) * 5u;
             s1 ^= s0;
-            state[0] = rot(s0, 26) ^ s1 ^ (s1 << 9);
-            state[1] = rot(s1, 13);
+            state[0] = rot(s0, 26u) ^ s1 ^ (s1 << 9u);
+            state[1] = rot(s1, 13u);
             return *reinterpret_cast<int32_t*>(&result);
         }
 
@@ -68,10 +72,10 @@ namespace tef::math
         {
             uint32_t s0 = state[0];
             uint32_t s1 = state[1];
-            uint32_t result = rot(s0 * 0x9e3779bbu, 5) * 5u;
+            uint32_t result = rot(s0 * 0x9e3779bbu, 5u) * 5u;
             s1 ^= s0;
-            state[0] = rot(s0, 26) ^ s1 ^ (s1 << 9);
-            state[1] = rot(s1, 13);
+            state[0] = rot(s0, 26u) ^ s1 ^ (s1 << 9u);
+            state[1] = rot(s1, 13u);
             return result;
         }
 
@@ -175,7 +179,7 @@ namespace tef::math
 
         constexpr uint32_t rot(uint32_t x, uint32_t k)
         {
-            return (x << k) | (x >> (32 - k));
+            return (x << k) | (x >> (32u - k));
         }
 
     };
