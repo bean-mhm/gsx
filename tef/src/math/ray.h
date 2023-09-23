@@ -20,13 +20,23 @@ namespace tef::math
         {}
 
         // Evaluate point along the ray
-        vec3 operator()(float t) const;
+        constexpr vec3 operator()(float t) const
+        {
+            return o + d * t;
+        }
 
         // String
-        operator std::string() const;
+        constexpr std::string to_string() const
+        {
+            return std::format(
+                "[o={}, d={}]",
+                o.to_string(),
+                d.to_string()
+            );
+        }
 
         // Print
-        friend std::ostream& operator<<(std::ostream& os, const ray_t& r);
+        friend std::ostream& operator<<(std::ostream& os, const ray_t& v);
 
     };
 
