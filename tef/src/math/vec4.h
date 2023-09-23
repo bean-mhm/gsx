@@ -71,7 +71,7 @@ namespace tef::math
         }
 
         // Print
-        friend std::ostream& operator<<(std::ostream& os, const vec2_base<T>& v)
+        friend std::ostream& operator<<(std::ostream& os, const vec4_base<T>& v)
         {
             os << v.to_string();
             return os;
