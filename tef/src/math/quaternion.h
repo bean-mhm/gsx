@@ -1,7 +1,7 @@
 #pragma once
 
 #include "vec4.h"
-#include "mat4.h"
+#include "matrix.h"
 #include "transform.h"
 #include "utils.h"
 
