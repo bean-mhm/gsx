@@ -9,31 +9,31 @@ namespace tef::math
 {
 
     template <typename T>
-    class bounds2_base
+    class base_bounds2
     {
     public:
-        vec2_base<T> pmin, pmax;
+        base_vec2<T> pmin, pmax;
 
         // Constructors
 
-        constexpr bounds2_base()
-            : pmin(vec2_base<T>(std::numeric_limits<T>::max())),
-            pmax(vec2_base<T>(std::numeric_limits<T>::lowest()))
+        constexpr base_bounds2()
+            : pmin(base_vec2<T>(std::numeric_limits<T>::max())),
+            pmax(base_vec2<T>(std::numeric_limits<T>::lowest()))
         {}
 
-        constexpr bounds2_base(const vec2_base<T>& p)
+        constexpr base_bounds2(const base_vec2<T>& p)
             : pmin(p), pmax(p)
         {}
 
-        constexpr bounds2_base(const vec2_base<T>& p1, const vec2_base<T>& p2)
+        constexpr base_bounds2(const base_vec2<T>& p1, const base_vec2<T>& p2)
             : pmin(min(p1, p2)), pmax(max(p1, p2))
         {}
 
         // Type casting
         template <typename U>
-        constexpr operator bounds2_base<U>() const
+        constexpr operator base_bounds2<U>() const
         {
-            return bounds2_base<U>((vec2_base<U>)pmin, (vec2_base<U>)pmax);
+            return base_bounds2<U>((base_vec2<U>)pmin, (base_vec2<U>)pmax);
         }
 
         // String
@@ -47,28 +47,28 @@ namespace tef::math
         }
 
         // Print
-        friend std::ostream& operator<<(std::ostream& os, const bounds2_base<T>& b)
+        friend std::ostream& operator<<(std::ostream& os, const base_bounds2<T>& b)
         {
             os << b.to_string();
             return os;
         }
 
         // Access by index (const reference)
-        constexpr const vec2_base<T>& operator[](int i) const
+        constexpr const base_vec2<T>& operator[](int i) const
         {
             if (i == 0) return pmin;
             return pmax;
         }
 
         // Access by index (reference)
-        constexpr vec2_base<T>& operator[](int i)
+        constexpr base_vec2<T>& operator[](int i)
         {
             if (i == 0) return pmin;
             return pmax;
         }
 
         // The vector along the box diagonal from the minimum point to the maximum point
-        constexpr vec2_base<T> diagonal() const
+        constexpr base_vec2<T> diagonal() const
         {
             return pmax - pmin;
         }
@@ -76,14 +76,14 @@ namespace tef::math
         // The area of the box
         constexpr T area() const
         {
-            vec2_base<T> d = diagonal();
+            base_vec2<T> d = diagonal();
             return d.x * d.y;
         }
 
         // The index of which of the axes is longest
         constexpr int max_extent() const
         {
-            vec2_base<T> d = diagonal();
+            base_vec2<T> d = diagonal();
             if (d.x > d.y)
                 return 0;
             else
@@ -91,9 +91,9 @@ namespace tef::math
         }
 
         // Linear interpolation between the corners of the box by the given amount in each dimension
-        constexpr vec2_base<T> lerp(const vec2_base<T>& t) const
+        constexpr base_vec2<T> lerp(const base_vec2<T>& t) const
         {
-            return vec2_base<T>(
+            return base_vec2<T>(
                 mix(pmin.x, pmax.x, t.x),
                 mix(pmin.y, pmax.y, t.y)
             );
@@ -102,16 +102,16 @@ namespace tef::math
         // The continuous position of a point relative to the corners of the box, where a point at
         // the minimum corner has offset (0, 0), a point at the maximum corner has offset (1, 1),
         // and so forth.
-        constexpr vec2_base<T> offset_of(const vec2_base<T>& p) const
+        constexpr base_vec2<T> offset_of(const base_vec2<T>& p) const
         {
-            vec2_base<T> o = p - pmin;
+            base_vec2<T> o = p - pmin;
             if (pmax.x > pmin.x) o.x /= pmax.x - pmin.x;
             if (pmax.y > pmin.y) o.y /= pmax.y - pmin.y;
             return o;
         }
 
         // The center and radius of a sphere that bounds the bounding box
-        constexpr void bounding_sphere(vec2_base<T>& center, float& radius) const
+        constexpr void bounding_sphere(base_vec2<T>& center, float& radius) const
         {
             center = (pmin + pmax) / 2;
             radius = inside(center, *this) ? distance(center, pmax) : 0;
@@ -121,28 +121,28 @@ namespace tef::math
 
     // Bounds + point
     template <typename T>
-    constexpr bounds2_base<T> union_(const bounds2_base<T>& b, const vec2_base<T>& p)
+    constexpr base_bounds2<T> union_(const base_bounds2<T>& b, const base_vec2<T>& p)
     {
-        return bounds2_base<T>(min(b.pmin, p), max(b.pmax, p));
+        return base_bounds2<T>(min(b.pmin, p), max(b.pmax, p));
     }
 
     // Bounds + bounds
     template <typename T>
-    constexpr bounds2_base<T> union_(const bounds2_base<T>& b1, const bounds2_base<T>& b2)
+    constexpr base_bounds2<T> union_(const base_bounds2<T>& b1, const base_bounds2<T>& b2)
     {
-        return bounds2_base<T>(min(b1.pmin, b2.pmin), max(b1.pmax, b2.pmax));
+        return base_bounds2<T>(min(b1.pmin, b2.pmin), max(b1.pmax, b2.pmax));
     }
 
     // Bounds * bounds
     template <typename T>
-    constexpr bounds2_base<T> intersect(const bounds2_base<T>& b1, const bounds2_base<T>& b2)
+    constexpr base_bounds2<T> intersect(const base_bounds2<T>& b1, const base_bounds2<T>& b2)
     {
-        return bounds2_base<T>(max(b1.pmin, b2.pmin), min(b1.pmax, b2.pmax));
+        return base_bounds2<T>(max(b1.pmin, b2.pmin), min(b1.pmax, b2.pmax));
     }
 
     // Check if two bounding boxes overlap
     template <typename T>
-    constexpr bool overlaps(const bounds2_base<T>& b1, const bounds2_base<T>& b2)
+    constexpr bool overlaps(const base_bounds2<T>& b1, const base_bounds2<T>& b2)
     {
         return b1.pmax.x >= b2.pmin.x && b1.pmin.x <= b2.pmax.x
             && b1.pmax.y >= b2.pmin.y && b1.pmin.y <= b2.pmax.y;
@@ -150,7 +150,7 @@ namespace tef::math
 
     // Check if a point is inside a bounding box
     template <typename T>
-    constexpr bool inside(const vec2_base<T>& p, const bounds2_base<T>& b)
+    constexpr bool inside(const base_vec2<T>& p, const base_bounds2<T>& b)
     {
         return p.x >= b.pmin.x && p.x <= b.pmax.x
             && p.y >= b.pmin.y && p.y <= b.pmax.y;
@@ -159,7 +159,7 @@ namespace tef::math
     // The inside_exclusive() variant of inside() doesn't consider points on the upper boundary to
     // be inside the bounds. It is mostly useful with integer-typed bounds.
     template <typename T>
-    constexpr bool inside_exclusive(const vec2_base<T>& p, const bounds2_base<T>& b)
+    constexpr bool inside_exclusive(const base_vec2<T>& p, const base_bounds2<T>& b)
     {
         return p.x >= b.pmin.x && p.x < b.pmax.x
             && p.y >= b.pmin.y && p.y < b.pmax.y;
@@ -167,14 +167,14 @@ namespace tef::math
 
     // Pad the bounding box by a constant factor in all dimensions
     template <typename T, typename U>
-    constexpr bounds2_base<T> expand(const bounds2_base<T>& b, U delta)
+    constexpr base_bounds2<T> expand(const base_bounds2<T>& b, U delta)
     {
-        return bounds2_base<T>(b.pmin - vec2_base<T>(delta), b.pmax + vec2_base<T>(delta));
+        return base_bounds2<T>(b.pmin - base_vec2<T>(delta), b.pmax + base_vec2<T>(delta));
     }
 
     // Type definitions
-    using bounds2 = bounds2_base<float>;
-    using ibounds2 = bounds2_base<int>;
+    using bounds2 = base_bounds2<float>;
+    using ibounds2 = base_bounds2<int>;
 
     // ibounds2 iterator
     class ibounds2_iterator : public std::forward_iterator_tag

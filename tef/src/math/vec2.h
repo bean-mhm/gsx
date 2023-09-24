@@ -8,28 +8,28 @@ namespace tef::math
 {
 
     template <typename T>
-    class vec2_base
+    class base_vec2
     {
     public:
         T x = 0, y = 0;
 
         // Constructors
 
-        constexpr vec2_base() = default;
+        constexpr base_vec2() = default;
 
-        constexpr vec2_base(T x, T y)
+        constexpr base_vec2(T x, T y)
             : x(x), y(y)
         {}
 
-        constexpr vec2_base(T s)
+        constexpr base_vec2(T s)
             : x(s), y(s)
         {}
 
         // Type casting
         template <typename U>
-        constexpr operator vec2_base<U>() const
+        constexpr operator base_vec2<U>() const
         {
-            return vec2_base<U>((U)x, (U)y);
+            return base_vec2<U>((U)x, (U)y);
         }
 
         // String
@@ -43,20 +43,20 @@ namespace tef::math
         }
 
         // Print
-        friend std::ostream& operator<<(std::ostream& os, const vec2_base<T>& v)
+        friend std::ostream& operator<<(std::ostream& os, const base_vec2<T>& v)
         {
             os << v.to_string();
             return os;
         }
 
         // this + vector (may be implicitly converted from a scalar)
-        constexpr vec2_base<T> operator+(const vec2_base<T>& v) const
+        constexpr base_vec2<T> operator+(const base_vec2<T>& v) const
         {
-            return vec2_base<T>(x + v.x, y + v.y);
+            return base_vec2<T>(x + v.x, y + v.y);
         }
 
         // this += vector (may be implicitly converted from a scalar)
-        constexpr vec2_base<T>& operator+=(const vec2_base<T>& v)
+        constexpr base_vec2<T>& operator+=(const base_vec2<T>& v)
         {
             x += v.x;
             y += v.y;
@@ -64,13 +64,13 @@ namespace tef::math
         }
 
         // this - vector (may be implicitly converted from a scalar)
-        constexpr vec2_base<T> operator-(const vec2_base<T>& v) const
+        constexpr base_vec2<T> operator-(const base_vec2<T>& v) const
         {
-            return vec2_base<T>(x - v.x, y - v.y);
+            return base_vec2<T>(x - v.x, y - v.y);
         }
 
         // this -= vector (may be implicitly converted from a scalar)
-        constexpr vec2_base<T>& operator-=(const vec2_base<T>& v)
+        constexpr base_vec2<T>& operator-=(const base_vec2<T>& v)
         {
             x -= v.x;
             y -= v.y;
@@ -78,13 +78,13 @@ namespace tef::math
         }
 
         // this * scalar
-        constexpr vec2_base<T> operator*(T s) const
+        constexpr base_vec2<T> operator*(T s) const
         {
-            return vec2_base<T>(s * x, s * y);
+            return base_vec2<T>(s * x, s * y);
         }
 
         // this *= scalar
-        constexpr vec2_base<T>& operator*=(T s)
+        constexpr base_vec2<T>& operator*=(T s)
         {
             x *= s;
             y *= s;
@@ -92,13 +92,13 @@ namespace tef::math
         }
 
         // this * vector (component-wise multiplication)
-        constexpr vec2_base<T> operator*(vec2_base<T> v) const
+        constexpr base_vec2<T> operator*(base_vec2<T> v) const
         {
-            return vec2_base<T>(x * v.x, y * v.y);
+            return base_vec2<T>(x * v.x, y * v.y);
         }
 
         // this *= vector (component-wise multiplication)
-        constexpr vec2_base<T>& operator*=(vec2_base<T> v)
+        constexpr base_vec2<T>& operator*=(base_vec2<T> v)
         {
             x *= v.x;
             y *= v.y;
@@ -106,14 +106,14 @@ namespace tef::math
         }
 
         // this / scalar
-        constexpr vec2_base<T> operator/(T s) const
+        constexpr base_vec2<T> operator/(T s) const
         {
             float inv = 1.f / (float)s;
-            return vec2_base<T>(x * inv, y * inv);
+            return base_vec2<T>(x * inv, y * inv);
         }
 
         // this /= scalar
-        constexpr vec2_base<T>& operator/=(T s)
+        constexpr base_vec2<T>& operator/=(T s)
         {
             float inv = 1.f / (float)s;
             x *= inv;
@@ -122,13 +122,13 @@ namespace tef::math
         }
 
         // this / vector (component-wise division)
-        constexpr vec2_base<T> operator/(vec2_base<T> v) const
+        constexpr base_vec2<T> operator/(base_vec2<T> v) const
         {
-            return vec2_base<T>(x / v.x, y / v.y);
+            return base_vec2<T>(x / v.x, y / v.y);
         }
 
         // this /= vector (component-wise division)
-        constexpr vec2_base<T>& operator/=(vec2_base<T> v)
+        constexpr base_vec2<T>& operator/=(base_vec2<T> v)
         {
             x /= v.x;
             y /= v.y;
@@ -136,21 +136,21 @@ namespace tef::math
         }
 
         // this == vector
-        constexpr bool operator==(const vec2_base<T>& v) const
+        constexpr bool operator==(const base_vec2<T>& v) const
         {
             return x == v.x && y == v.y;
         }
 
         // this != vector
-        constexpr bool operator!=(const vec2_base<T>& v) const
+        constexpr bool operator!=(const base_vec2<T>& v) const
         {
             return x != v.x || y != v.y;
         }
 
         // (-1) * this
-        constexpr vec2_base<T> operator-() const
+        constexpr base_vec2<T> operator-() const
         {
-            return vec2_base<T>(-x, -y);
+            return base_vec2<T>(-x, -y);
         }
 
         // Access by index (copy)
@@ -168,272 +168,272 @@ namespace tef::math
         }
 
         // Permute by indices
-        constexpr vec2_base<T> permute(int x, int y) const
+        constexpr base_vec2<T> permute(int x, int y) const
         {
-            return vec2_base<T>((*this)[x], (*this)[y]);
+            return base_vec2<T>((*this)[x], (*this)[y]);
         }
 
         // Swapped components
-        constexpr vec2_base<T> yx() const
+        constexpr base_vec2<T> yx() const
         {
-            return vec2_base<T>(y, x);
+            return base_vec2<T>(y, x);
         }
 
     };
 
     // Scalar + vector
     template <typename T>
-    constexpr vec2_base<T> operator+(T s, const vec2_base<T>& v)
+    constexpr base_vec2<T> operator+(T s, const base_vec2<T>& v)
     {
         return v + s;
     }
 
     // Scalar - vector
     template <typename T>
-    constexpr vec2_base<T> operator-(T s, const vec2_base<T>& v)
+    constexpr base_vec2<T> operator-(T s, const base_vec2<T>& v)
     {
         return (-v) + s;
     }
 
     // Scalar * vector
     template <typename T>
-    constexpr vec2_base<T> operator*(T s, const vec2_base<T>& v)
+    constexpr base_vec2<T> operator*(T s, const base_vec2<T>& v)
     {
         return v * s;
     }
 
     // Scalar / vector
     template <typename T>
-    constexpr vec2_base<T> operator/(T s, const vec2_base<T>& v)
+    constexpr base_vec2<T> operator/(T s, const base_vec2<T>& v)
     {
-        return vec2_base<T>(s / v.x, s / v.y);
+        return base_vec2<T>(s / v.x, s / v.y);
     }
 
     template <typename T>
-    constexpr vec2_base<T> radians(const vec2_base<T>& degrees)
+    constexpr base_vec2<T> radians(const base_vec2<T>& degrees)
     {
         return degrees * deg2rad;
     }
 
     template <typename T>
-    constexpr vec2_base<T> degrees(const vec2_base<T>& radians)
+    constexpr base_vec2<T> degrees(const base_vec2<T>& radians)
     {
         return radians * rad2deg;
     }
 
     template <typename T>
-    constexpr vec2_base<T> sin(const vec2_base<T>& v)
+    constexpr base_vec2<T> sin(const base_vec2<T>& v)
     {
-        return vec2_base<T>(sin(v.x), sin(v.y));
+        return base_vec2<T>(sin(v.x), sin(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> cos(const vec2_base<T>& v)
+    constexpr base_vec2<T> cos(const base_vec2<T>& v)
     {
-        return vec2_base<T>(cos(v.x), cos(v.y));
+        return base_vec2<T>(cos(v.x), cos(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> tan(const vec2_base<T>& v)
+    constexpr base_vec2<T> tan(const base_vec2<T>& v)
     {
-        return vec2_base<T>(tan(v.x), tan(v.y));
+        return base_vec2<T>(tan(v.x), tan(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> asin(const vec2_base<T>& v)
+    constexpr base_vec2<T> asin(const base_vec2<T>& v)
     {
-        return vec2_base<T>(asin(v.x), asin(v.y));
+        return base_vec2<T>(asin(v.x), asin(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> acos(const vec2_base<T>& v)
+    constexpr base_vec2<T> acos(const base_vec2<T>& v)
     {
-        return vec2_base<T>(acos(v.x), acos(v.y));
+        return base_vec2<T>(acos(v.x), acos(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> atan(const vec2_base<T>& v)
+    constexpr base_vec2<T> atan(const base_vec2<T>& v)
     {
-        return vec2_base<T>(atan(v.x), atan(v.y));
+        return base_vec2<T>(atan(v.x), atan(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> sinh(const vec2_base<T>& v)
+    constexpr base_vec2<T> sinh(const base_vec2<T>& v)
     {
-        return vec2_base<T>(sinh(v.x), sinh(v.y));
+        return base_vec2<T>(sinh(v.x), sinh(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> cosh(const vec2_base<T>& v)
+    constexpr base_vec2<T> cosh(const base_vec2<T>& v)
     {
-        return vec2_base<T>(cosh(v.x), cosh(v.y));
+        return base_vec2<T>(cosh(v.x), cosh(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> tanh(const vec2_base<T>& v)
+    constexpr base_vec2<T> tanh(const base_vec2<T>& v)
     {
-        return vec2_base<T>(tanh(v.x), tanh(v.y));
+        return base_vec2<T>(tanh(v.x), tanh(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> asinh(const vec2_base<T>& v)
+    constexpr base_vec2<T> asinh(const base_vec2<T>& v)
     {
-        return vec2_base<T>(asinh(v.x), asinh(v.y));
+        return base_vec2<T>(asinh(v.x), asinh(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> acosh(const vec2_base<T>& v)
+    constexpr base_vec2<T> acosh(const base_vec2<T>& v)
     {
-        return vec2_base<T>(acosh(v.x), acosh(v.y));
+        return base_vec2<T>(acosh(v.x), acosh(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> atanh(const vec2_base<T>& v)
+    constexpr base_vec2<T> atanh(const base_vec2<T>& v)
     {
-        return vec2_base<T>(atanh(v.x), atanh(v.y));
+        return base_vec2<T>(atanh(v.x), atanh(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> pow(const vec2_base<T>& v1, const vec2_base<T>& v2)
+    constexpr base_vec2<T> pow(const base_vec2<T>& v1, const base_vec2<T>& v2)
     {
-        return vec2_base<T>(pow(v1.x, v2.x), pow(v1.y, v2.y));
+        return base_vec2<T>(pow(v1.x, v2.x), pow(v1.y, v2.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> exp(const vec2_base<T>& v)
+    constexpr base_vec2<T> exp(const base_vec2<T>& v)
     {
-        return vec2_base<T>(exp(v.x), exp(v.y));
+        return base_vec2<T>(exp(v.x), exp(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> log(const vec2_base<T>& v)
+    constexpr base_vec2<T> log(const base_vec2<T>& v)
     {
-        return vec2_base<T>(log(v.x), log(v.y));
+        return base_vec2<T>(log(v.x), log(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> exp2(const vec2_base<T>& v)
+    constexpr base_vec2<T> exp2(const base_vec2<T>& v)
     {
-        return vec2_base<T>(exp2(v.x), exp2(v.y));
+        return base_vec2<T>(exp2(v.x), exp2(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> log2(const vec2_base<T>& v)
+    constexpr base_vec2<T> log2(const base_vec2<T>& v)
     {
-        return vec2_base<T>(log2(v.x), log2(v.y));
+        return base_vec2<T>(log2(v.x), log2(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> sqrt(const vec2_base<T>& v)
+    constexpr base_vec2<T> sqrt(const base_vec2<T>& v)
     {
-        return vec2_base<T>(sqrt(v.x), sqrt(v.y));
+        return base_vec2<T>(sqrt(v.x), sqrt(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> inversesqrt(const vec2_base<T>& v)
+    constexpr base_vec2<T> inversesqrt(const base_vec2<T>& v)
     {
-        return vec2_base<T>(inversesqrt(v.x), inversesqrt(v.y));
+        return base_vec2<T>(inversesqrt(v.x), inversesqrt(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> abs(const vec2_base<T>& v)
+    constexpr base_vec2<T> abs(const base_vec2<T>& v)
     {
-        return vec2_base<T>(abs(v.x), abs(v.y));
+        return base_vec2<T>(abs(v.x), abs(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> sign(const vec2_base<T>& v)
+    constexpr base_vec2<T> sign(const base_vec2<T>& v)
     {
-        return vec2_base<T>(sign(v.x), sign(v.y));
+        return base_vec2<T>(sign(v.x), sign(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> floor(const vec2_base<T>& v)
+    constexpr base_vec2<T> floor(const base_vec2<T>& v)
     {
-        return vec2_base<T>(floor(v.x), floor(v.y));
+        return base_vec2<T>(floor(v.x), floor(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> ceil(const vec2_base<T>& v)
+    constexpr base_vec2<T> ceil(const base_vec2<T>& v)
     {
-        return vec2_base<T>(ceil(v.x), ceil(v.y));
+        return base_vec2<T>(ceil(v.x), ceil(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> trunc(const vec2_base<T>& v)
+    constexpr base_vec2<T> trunc(const base_vec2<T>& v)
     {
-        return vec2_base<T>(trunc(v.x), trunc(v.y));
+        return base_vec2<T>(trunc(v.x), trunc(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> fract(const vec2_base<T>& v)
+    constexpr base_vec2<T> fract(const base_vec2<T>& v)
     {
-        return vec2_base<T>(fract(v.x), fract(v.y));
+        return base_vec2<T>(fract(v.x), fract(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> mod(const vec2_base<T>& v1, const vec2_base<T>& v2)
+    constexpr base_vec2<T> mod(const base_vec2<T>& v1, const base_vec2<T>& v2)
     {
-        return vec2_base<T>(mod(v1.x, v2.x), mod(v1.y, v2.y));
+        return base_vec2<T>(mod(v1.x, v2.x), mod(v1.y, v2.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> mod(const vec2_base<T>& v1, float v2)
+    constexpr base_vec2<T> mod(const base_vec2<T>& v1, float v2)
     {
-        return vec2_base<T>(mod(v1.x, v2), mod(v1.y, v2));
+        return base_vec2<T>(mod(v1.x, v2), mod(v1.y, v2));
     }
 
     template <typename T>
-    constexpr vec2_base<T> modf(const vec2_base<T>& v, vec2_base<T>& i)
+    constexpr base_vec2<T> modf(const base_vec2<T>& v, base_vec2<T>& i)
     {
-        return vec2_base<T>(modf(v.x, i.x), modf(v.y, i.y));
+        return base_vec2<T>(modf(v.x, i.x), modf(v.y, i.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> wrap(const vec2_base<T>& v, float start, float end)
+    constexpr base_vec2<T> wrap(const base_vec2<T>& v, float start, float end)
     {
         return start + mod(v - start, end - start);
     }
 
     template <typename T>
-    constexpr vec2_base<T> min(const vec2_base<T>& v1, const vec2_base<T>& v2)
+    constexpr base_vec2<T> min(const base_vec2<T>& v1, const base_vec2<T>& v2)
     {
-        return vec2_base<T>(
+        return base_vec2<T>(
             min(v1.x, v2.x),
             min(v1.y, v2.y)
         );
     }
 
     template <typename T>
-    constexpr vec2_base<T> max(const vec2_base<T>& v1, const vec2_base<T>& v2)
+    constexpr base_vec2<T> max(const base_vec2<T>& v1, const base_vec2<T>& v2)
     {
-        return vec2_base<T>(
+        return base_vec2<T>(
             max(v1.x, v2.x),
             max(v1.y, v2.y)
         );
     }
 
     template <typename T>
-    constexpr vec2_base<T> clamp(const vec2_base<T>& v, float min, float max)
+    constexpr base_vec2<T> clamp(const base_vec2<T>& v, float min, float max)
     {
-        return vec2_base<T>(clamp(v.x, min, max), clamp(v.y, min, max));
+        return base_vec2<T>(clamp(v.x, min, max), clamp(v.y, min, max));
     }
 
     template <typename T>
-    constexpr vec2_base<T> clamp01(const vec2_base<T>& v)
+    constexpr base_vec2<T> clamp01(const base_vec2<T>& v)
     {
-        return vec2_base<T>(clamp01(v.x), clamp01(v.y));
+        return base_vec2<T>(clamp01(v.x), clamp01(v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> mix(const vec2_base<T>& v1, const vec2_base<T>& v2, float a)
+    constexpr base_vec2<T> mix(const base_vec2<T>& v1, const base_vec2<T>& v2, float a)
     {
         return v1 + a * (v2 - v1);
     }
 
     template <typename T>
-    constexpr vec2_base<T> remap(
-        const vec2_base<T>& v,
+    constexpr base_vec2<T> remap(
+        const base_vec2<T>& v,
         float a_start,
         float a_end,
         float b_start,
@@ -444,77 +444,77 @@ namespace tef::math
     }
 
     template <typename T>
-    constexpr vec2_base<T> remap_clamp(
-        const vec2_base<T>& v,
+    constexpr base_vec2<T> remap_clamp(
+        const base_vec2<T>& v,
         float a_start,
         float a_end,
         float b_start,
         float b_end
     )
     {
-        vec2_base<T> t = clamp01((v - a_start) / (a_end - a_start));
+        base_vec2<T> t = clamp01((v - a_start) / (a_end - a_start));
         return b_start + t * (b_end - b_start);
     }
 
     template <typename T>
-    constexpr vec2_base<T> remap01(const vec2_base<T>& v, float a_start, float a_end)
+    constexpr base_vec2<T> remap01(const base_vec2<T>& v, float a_start, float a_end)
     {
         return clamp01((v - a_start) / (a_end - a_start));
     }
 
     template <typename T>
-    constexpr vec2_base<T> step(float edge, const vec2_base<T>& v)
+    constexpr base_vec2<T> step(float edge, const base_vec2<T>& v)
     {
-        return vec2_base<T>(step(edge, v.x), step(edge, v.y));
+        return base_vec2<T>(step(edge, v.x), step(edge, v.y));
     }
 
     template <typename T>
-    constexpr vec2_base<T> smoothstep(float edge0, float edge1, const vec2_base<T>& v)
+    constexpr base_vec2<T> smoothstep(float edge0, float edge1, const base_vec2<T>& v)
     {
-        return vec2_base<T>(smoothstep(edge0, edge1, v.x), smoothstep(edge0, edge1, v.y));
+        return base_vec2<T>(smoothstep(edge0, edge1, v.x), smoothstep(edge0, edge1, v.y));
     }
 
     template <typename T>
-    constexpr float length_squared(const vec2_base<T>& v)
+    constexpr float length_squared(const base_vec2<T>& v)
     {
         return v.x * v.x + v.y * v.y;
     }
 
     template <typename T>
-    constexpr float length(const vec2_base<T>& v)
+    constexpr float length(const base_vec2<T>& v)
     {
         return sqrt(length_squared(v));
     }
 
     template <typename T>
-    constexpr float distance_squared(const vec2_base<T>& v1, const vec2_base<T>& v2)
+    constexpr float distance_squared(const base_vec2<T>& v1, const base_vec2<T>& v2)
     {
         return length_squared(v1 - v2);
     }
 
     template <typename T>
-    constexpr float distance(const vec2_base<T>& v1, const vec2_base<T>& v2)
+    constexpr float distance(const base_vec2<T>& v1, const base_vec2<T>& v2)
     {
         return length(v1 - v2);
     }
 
     template <typename T>
-    constexpr T dot(const vec2_base<T>& v1, const vec2_base<T>& v2)
+    constexpr T dot(const base_vec2<T>& v1, const base_vec2<T>& v2)
     {
         return v1.x * v2.x + v1.y * v2.y;
     }
 
     template <typename T>
-    constexpr vec2_base<T> normalize(const vec2_base<T>& v)
+    constexpr base_vec2<T> normalize(const base_vec2<T>& v)
     {
         return v / length(v);
     }
 
     template <typename T>
-    constexpr vec2_base<T> faceforward(
-        const vec2_base<T>& N,
-        const vec2_base<T>& I,
-        const vec2_base<T>& Nref
+    constexpr base_vec2<T> faceforward(
+        const base_vec2<T>& N,
+        const base_vec2<T>& I,
+        const base_vec2<T>& Nref
     )
     {
         if (dot(Nref, I) < 0)
@@ -523,13 +523,13 @@ namespace tef::math
     }
 
     template <typename T>
-    constexpr vec2_base<T> reflect(const vec2_base<T>& I, const vec2_base<T>& N)
+    constexpr base_vec2<T> reflect(const base_vec2<T>& I, const base_vec2<T>& N)
     {
         return I - 2 * dot(N, I) * N;
     }
 
     template <typename T>
-    constexpr vec2_base<T> refract(const vec2_base<T>& I, const vec2_base<T>& N, float eta)
+    constexpr base_vec2<T> refract(const base_vec2<T>& I, const base_vec2<T>& N, float eta)
     {
         float dp = dot(N, I);
         float k = 1 - eta * eta * (1 - dp * dp);
@@ -541,32 +541,32 @@ namespace tef::math
     }
 
     template <typename T>
-    constexpr T min_component(const vec2_base<T>& v)
+    constexpr T min_component(const base_vec2<T>& v)
     {
         return min(v.x, v.y);
     }
 
     template <typename T>
-    constexpr T max_component(const vec2_base<T>& v)
+    constexpr T max_component(const base_vec2<T>& v)
     {
         return max(v.x, v.y);
     }
 
     template <typename T>
-    constexpr int min_component_index(const vec2_base<T>& v)
+    constexpr int min_component_index(const base_vec2<T>& v)
     {
         return (v.x < v.y) ? 0 : 1;
     }
 
     template <typename T>
-    constexpr int max_component_index(const vec2_base<T>& v)
+    constexpr int max_component_index(const base_vec2<T>& v)
     {
         return (v.x > v.y) ? 0 : 1;
     }
 
     // Type definitions
-    using vec2 = vec2_base<float>;
-    using ivec2 = vec2_base<int32_t>;
-    using uvec2 = vec2_base<uint32_t>;
+    using vec2 = base_vec2<float>;
+    using ivec2 = base_vec2<int32_t>;
+    using uvec2 = base_vec2<uint32_t>;
 
 }
