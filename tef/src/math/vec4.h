@@ -645,8 +645,8 @@ namespace tef::math
     }
 
     // Type definitions
-    typedef vec4_base<float> vec4;
-    typedef vec4_base<int32_t> ivec4;
-    typedef vec4_base<uint32_t> uvec4;
+    using vec4 = vec4_base<float>;
+    using ivec4 = vec4_base<int32_t>;
+    using uvec4 = vec4_base<uint32_t>;
 
 }

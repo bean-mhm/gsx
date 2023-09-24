@@ -617,8 +617,8 @@ namespace tef::math
     }
 
     // Type definitions
-    typedef vec3_base<float> vec3;
-    typedef vec3_base<int32_t> ivec3;
-    typedef vec3_base<uint32_t> uvec3;
+    using vec3 = vec3_base<float>;
+    using ivec3 = vec3_base<int32_t>;
+    using uvec3 = vec3_base<uint32_t>;
 
 }

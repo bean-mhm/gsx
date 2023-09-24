@@ -565,8 +565,8 @@ namespace tef::math
     }
 
     // Type definitions
-    typedef vec2_base<float> vec2;
-    typedef vec2_base<int32_t> ivec2;
-    typedef vec2_base<uint32_t> uvec2;
+    using vec2 = vec2_base<float>;
+    using ivec2 = vec2_base<int32_t>;
+    using uvec2 = vec2_base<uint32_t>;
 
 }

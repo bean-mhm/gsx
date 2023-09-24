@@ -173,8 +173,8 @@ namespace tef::math
     }
 
     // Type definitions
-    typedef bounds2_base<float> bounds2;
-    typedef bounds2_base<int> ibounds2;
+    using bounds2 = bounds2_base<float>;
+    using ibounds2 = bounds2_base<int>;
 
     // ibounds2 iterator
     class ibounds2_iterator : public std::forward_iterator_tag

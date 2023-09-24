@@ -196,7 +196,7 @@ namespace tef::math
     }
 
     // Type definitions
-    typedef bounds3_base<float> bounds3;
-    typedef bounds3_base<int> ibounds3;
+    using bounds3 = bounds3_base<float>;
+    using ibounds3 = bounds3_base<int>;
 
 }
