@@ -94,7 +94,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\math\mat4.cpp" />
     <ClCompile Include="src\math\quaternion.cpp" />
     <ClCompile Include="src\math\ray.cpp" />
     <ClCompile Include="src\math\transform.cpp" />
@@ -108,7 +107,7 @@
   <ItemGroup>
     <ClInclude Include="src\math\bounds2.h" />
     <ClInclude Include="src\math\bounds3.h" />
-    <ClInclude Include="src\math\mat4.h" />
+    <ClInclude Include="src\math\matrix.h" />
     <ClInclude Include="src\math\prng.h" />
     <ClInclude Include="src\math\quaternion.h" />
     <ClInclude Include="src\math\ray.h" />

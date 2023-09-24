@@ -7,7 +7,7 @@
 #include "bounds2.h"
 #include "bounds3.h"
 #include "ray.h"
-#include "mat4.h"
+#include "matrix.h"
 #include "transform.h"
 #include "prng.h"
 #include "utils.h"

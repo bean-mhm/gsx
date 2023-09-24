@@ -27,9 +27,6 @@
     <ClCompile Include="src\spatial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\math\mat4.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\math\quaternion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -65,7 +62,7 @@
     <ClInclude Include="src\math\bounds3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\math\mat4.h">
+    <ClInclude Include="src\math\matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\math\quaternion.h">

@@ -1,0 +1,443 @@
+#pragma once
+
+#include "utils.h"
+
+#include "../str/utils.h"
+
+namespace tef::math
+{
+
+    // Row-major matrix
+    template <size_t n_row, size_t n_col>
+    class mat_base
+    {
+    public:
+        float m[n_row][n_col];
+
+        // Constructors
+
+        constexpr mat_base()
+        {
+            for (size_t row = 0; row < n_row; row++)
+            {
+                for (size_t col = 0; col < n_col; col++)
+                {
+                    m[row][col] = (row == col) ? 1.f : 0.f;
+                }
+            }
+        }
+
+        constexpr mat_base(float mat[n_row][n_col])
+        {
+            std::copy(&mat[0][0], &mat[0][0] + (n_row * n_col), &m[0][0]);
+        }
+
+        constexpr mat_base(float* mat)
+        {
+            std::copy(mat, mat + (n_row * n_col), &m[0][0]);
+        }
+
+        // String
+        constexpr std::string to_string() const
+        {
+            std::string s("[");
+            for (size_t row = 0; row < n_row; row++)
+            {
+                s += (row > 0 ? " [ " : "[ ");
+                for (size_t col = 0; col < n_col; col++)
+                {
+                    s += str::from_number(m[row][col]);
+                    if (col != n_col - 1)
+                        s += "  ";
+                }
+                s += (row != n_row - 1 ? " ]\n" : " ]]");
+            }
+            return s;
+        }
+
+        // Print
+        friend std::ostream& operator<<(std::ostream& os, const mat_base& m)
+        {
+            os << m.to_string();
+            return os;
+        }
+
+        // this * scalar
+        constexpr mat_base operator*(float s) const
+        {
+            mat_base r;
+            for (size_t row = 0; row < n_row; row++)
+            {
+                for (size_t col = 0; col < n_col; col++)
+                {
+                    r(row, col) = (*this)(row, col) * s;
+                }
+            }
+            return r;
+        }
+
+        // this *= scalar
+        constexpr mat_base& operator*=(float s)
+        {
+            for (size_t row = 0; row < n_row; row++)
+            {
+                for (size_t col = 0; col < n_col; col++)
+                {
+                    (*this)(row, col) *= s;
+                }
+            }
+            return *this;
+        }
+
+        // this / scalar
+        constexpr mat_base operator/(float s) const
+        {
+            mat_base r;
+            for (size_t row = 0; row < n_row; row++)
+            {
+                for (size_t col = 0; col < n_col; col++)
+                {
+                    r(row, col) = (*this)(row, col) / s;
+                }
+            }
+            return r;
+        }
+
+        // this /= scalar
+        constexpr mat_base& operator/=(float s)
+        {
+            for (size_t row = 0; row < n_row; row++)
+            {
+                for (size_t col = 0; col < n_col; col++)
+                {
+                    (*this)(row, col) /= s;
+                }
+            }
+            return *this;
+        }
+
+        // this + matrix
+        constexpr mat_base operator+(const mat_base& m) const
+        {
+            mat_base r;
+            for (size_t row = 0; row < n_row; row++)
+            {
+                for (size_t col = 0; col < n_col; col++)
+                {
+                    r(row, col) = (*this)(row, col) + m(row, col);
+                }
+            }
+            return r;
+        }
+
+        // this += matrix
+        constexpr mat_base& operator+=(const mat_base& m)
+        {
+            for (size_t row = 0; row < n_row; row++)
+            {
+                for (size_t col = 0; col < n_col; col++)
+                {
+                    (*this)(row, col) += m(row, col);
+                }
+            }
+            return *this;
+        }
+
+        // this - matrix
+        constexpr mat_base operator-(const mat_base& m) const
+        {
+            mat_base r;
+            for (size_t row = 0; row < n_row; row++)
+            {
+                for (size_t col = 0; col < n_col; col++)
+                {
+                    r(row, col) = (*this)(row, col) - m(row, col);
+                }
+            }
+            return r;
+        }
+
+        // this -= matrix
+        constexpr mat_base& operator-=(const mat_base& m)
+        {
+            for (size_t row = 0; row < n_row; row++)
+            {
+                for (size_t col = 0; col < n_col; col++)
+                {
+                    (*this)(row, col) -= m(row, col);
+                }
+            }
+            return *this;
+        }
+
+        // this * matrix
+        template <size_t n2>
+        constexpr mat_base<n_row, n2> operator*(const mat_base<n_col, n2>& m)
+        {
+            mat_base<n_row, n2> r;
+            for (size_t row = 0; row < n_row; row++)
+            {
+                for (size_t col = 0; col < n2; col++)
+                {
+                    float dot = 0.f;
+                    for (size_t i = 0; i < n_col; i++)
+                    {
+                        dot += (*this)(row, i) * m(i, col);
+                    }
+                    r(row, col) = dot;
+                }
+            }
+            return r;
+        }
+
+        // this == other matrix
+        constexpr bool operator==(const mat_base& m2) const
+        {
+            for (size_t row = 0; row < n_row; row++)
+            {
+                for (size_t col = 0; col < n_col; col++)
+                {
+                    if (m[row][col] != m2.m[row][col])
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        // this != other matrix
+        constexpr bool operator!=(const mat_base& m2) const
+        {
+            for (size_t row = 0; row < n_row; row++)
+            {
+                for (size_t col = 0; col < n_col; col++)
+                {
+                    if (m[row][col] != m2.m[row][col])
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        // Access by indices (copy)
+        constexpr float operator()(size_t row, size_t col) const
+        {
+            return m[row][col];
+        }
+
+        // Access by indices (reference)
+        constexpr float& operator()(size_t row, size_t col)
+        {
+            return m[row][col];
+        }
+
+        // Total number of elements (n_rows * n_col)
+        constexpr size_t n_total() const
+        {
+            return n_row * n_col;
+        }
+
+    };
+
+    // Scalar * matrix
+    template <size_t n_row, size_t n_col>
+    constexpr mat_base<n_row, n_col> operator*(float s, const mat_base<n_row, n_col>& m)
+    {
+        return m * s;
+    }
+
+    // Cofactor of m[p][q]
+    // https://www.geeksforgeeks.org/adjoint-inverse-matrix/
+    template <size_t n>
+    constexpr mat_base<n - 1, n - 1> cofactor(const mat_base<n, n>& m, size_t p, size_t q)
+    {
+        size_t i = 0, j = 0;
+        mat_base<n - 1, n - 1> r;
+        for (size_t row = 0; row < n; row++)
+        {
+            for (size_t col = 0; col < n; col++)
+            {
+                // Copy into the result matrix only those elements which are not in the current
+                // row and column
+                if (row != p && col != q)
+                {
+                    r(i, j++) = m(row, col);
+
+                    // Row is filled, so increase the row index and reset the col index
+                    if (j == n - 1)
+                    {
+                        j = 0;
+                        i++;
+                    }
+                }
+            }
+        }
+        return r;
+    }
+
+    // Determinant of a square matrix
+    // https://www.geeksforgeeks.org/determinant-of-a-matrix/
+    template <size_t n>
+    constexpr float determinant(mat_base<n, n> m)
+    {
+        if constexpr (n == 1)
+            return m(0, 0);
+
+        float det = 1;
+        float total = 1;
+
+        // Temporary array for storing row
+        float temp[n + 1]{};
+
+        // Traverse the diagonal elements
+        for (size_t i = 0; i < n; i++)
+        {
+            size_t index = i;
+
+            // Find the index which has non zero value
+            while (index < n && m(index, i) == 0)
+            {
+                index++;
+            }
+
+            if (index == n)
+            {
+                continue;
+            }
+
+            if (index != i)
+            {
+                // Swap the diagonal element row and index row
+                for (size_t j = 0; j < n; j++)
+                {
+                    std::swap(m(index, j), m(i, j));
+                }
+
+                // The determinant sign changes when we shift rows
+                det *= pow(-1, index - i);
+            }
+
+            // Store the diagonal row elements
+            for (size_t j = 0; j < n; j++)
+            {
+                temp[j] = m(i, j);
+            }
+
+            // Traverse every row below the diagonal element
+            for (size_t j = i + 1; j < n; j++)
+            {
+                // Value of diagonal element
+                float num1 = temp[i];
+
+                // Value of next row element
+                float num2 = m(j, i);
+
+                // Traverse every column of row and multiply to every row
+                for (size_t k = 0; k < n; k++)
+                {
+                    // Multiply to make the diagonal element and next row element equal
+                    m(j, k) = (num1 * m(j, k)) - (num2 * temp[k]);
+                }
+
+                // Det(kA)=kDet(A);
+                total *= num1;
+            }
+        }
+
+        // Multiply the diagonal elements to get the determinant
+        for (size_t i = 0; i < n; i++)
+        {
+            det *= m(i, i);
+        }
+
+        // Det(kA)/k=Det(A);
+        return (det / total);
+    }
+
+    // Adjoint of a square matrix
+    // https://www.geeksforgeeks.org/adjoint-inverse-matrix/
+    template <size_t n>
+    constexpr mat_base<n, n> adjoint(const mat_base<n, n>& m)
+    {
+        if constexpr (n == 1)
+            return mat_base<n, n>();
+
+        mat_base<n, n> r;
+        for (size_t i = 0; i < n; i++)
+        {
+            for (size_t j = 0; j < n; j++)
+            {
+                // Get cofactor of m[i][j]
+                mat_base<n - 1, n - 1> cf = cofactor(m, i, j);
+
+                // Sign of adj[j][i] positive if the sum of the row and column indices is even.
+                float sign = ((i + j) % 2 == 0) ? 1.f : -1.f;
+
+                // Interchanging rows and columns to get the transpose of the cofactor matrix
+                r(j, i) = sign * determinant(cf);
+            }
+        }
+        return r;
+    }
+
+    // Inverted copy of a square matrix
+    template <size_t n>
+    constexpr bool inverse(const mat_base<n, n>& m, mat_base<n, n>& out_inverse)
+    {
+        // Determinant
+        float det = determinant(m);
+        if (det == 0)
+            return false;
+
+        // Adjoint
+        mat_base<n, n> adj = adjoint(m);
+
+        // inverse(A) = adj(A)/det(A)
+        out_inverse = adj / det;
+        return true;
+    }
+
+    // Transposed copy of a matrix
+    template <size_t n_row, size_t n_col>
+    constexpr mat_base<n_col, n_row> transpose(const mat_base<n_row, n_col>& m)
+    {
+        mat_base<n_col, n_row> r;
+        for (size_t row = 0; row < n_row; row++)
+        {
+            for (size_t col = 0; col < n_col; col++)
+            {
+                r(col, row) = m(row, col);
+            }
+        }
+        return r;
+    }
+
+    // Type definitions
+
+    using mat1x2 = mat_base<1, 2>;
+    using mat2x1 = mat_base<2, 1>;
+
+    using mat1x3 = mat_base<1, 3>;
+    using mat3x1 = mat_base<3, 1>;
+
+    using mat1x4 = mat_base<1, 4>;
+    using mat4x1 = mat_base<4, 1>;
+
+    using mat2x2 = mat_base<2, 2>;
+    using mat2 = mat_base<2, 2>;
+
+    using mat2x3 = mat_base<2, 3>;
+    using mat3x2 = mat_base<3, 2>;
+
+    using mat2x4 = mat_base<2, 4>;
+    using mat4x2 = mat_base<4, 2>;
+
+    using mat3x3 = mat_base<3, 3>;
+    using mat3 = mat_base<3, 3>;
+
+    using mat3x4 = mat_base<3, 4>;
+    using mat4x3 = mat_base<4, 3>;
+
+    using mat4x4 = mat_base<4, 4>;
+    using mat4 = mat_base<4, 4>;
+
+}
