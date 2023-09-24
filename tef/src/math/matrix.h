@@ -223,6 +223,18 @@ namespace tef::math
             return false;
         }
 
+        // Access by 1D index (copy)
+        constexpr float operator()(size_t index) const
+        {
+            return (&m[0][0])[index];
+        }
+
+        // Access by 1D index (reference)
+        constexpr float& operator()(size_t index)
+        {
+            return (&m[0][0])[index];
+        }
+
         // Access by indices (copy)
         constexpr float operator()(size_t row, size_t col) const
         {
