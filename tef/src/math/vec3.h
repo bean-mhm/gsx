@@ -34,11 +34,32 @@ namespace tef::math
             : x(x), y(yz.x), z(yz.y)
         {}
 
-        // Type casting
+        // Explicit type conversion
         template <typename U>
-        constexpr operator base_vec3<U>() const
+        explicit constexpr base_vec3(const base_vec3<U>& v)
+            : x((T)v.x), y((T)v.y), z((T)v.z)
+        {}
+
+        // Construct from matrix
+
+        constexpr base_vec3(const mat1x3& m)
+            : x((T)m(0)), y((T)m(1)), z((T)m(2))
+        {}
+
+        constexpr base_vec3(const mat3x1& m)
+            : x((T)m(0)), y((T)m(1)), z((T)m(2))
+        {}
+
+        // Cast to matrix
+
+        constexpr operator mat1x3() const
         {
-            return base_vec3<U>((U)x, (U)y, (U)z);
+            return mat1x3({ (float)x, (float)y, (float)z });
+        }
+
+        constexpr operator mat3x1() const
+        {
+            return mat3x1({ (float)x, (float)y, (float)z });
         }
 
         // String

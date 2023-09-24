@@ -51,11 +51,32 @@ namespace tef::math
             : x(x), y(yzw.x), z(yzw.y), w(yzw.z)
         {}
 
-        // Type casting
+        // Explicit type conversion
         template <typename U>
-        constexpr operator base_vec4<U>() const
+        explicit constexpr base_vec4(const base_vec4<U>& v)
+            : x((T)v.x), y((T)v.y), z((T)v.z), w((T)v.w)
+        {}
+
+        // Construct from matrix
+
+        constexpr base_vec4(const mat1x4& m)
+            : x((T)m(0)), y((T)m(1)), z((T)m(2)), w((T)m(3))
+        {}
+
+        constexpr base_vec4(const mat4x1& m)
+            : x((T)m(0)), y((T)m(1)), z((T)m(2)), w((T)m(3))
+        {}
+
+        // Cast to matrix
+
+        constexpr operator mat1x4() const
         {
-            return base_vec4<U>((U)x, (U)y, (U)z, (U)w);
+            return mat1x4({ (float)x, (float)y, (float)z, (float)w });
+        }
+
+        constexpr operator mat4x1() const
+        {
+            return mat4x1({ (float)x, (float)y, (float)z, (float)w });
         }
 
         // String

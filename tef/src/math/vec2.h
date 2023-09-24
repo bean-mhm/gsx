@@ -1,5 +1,6 @@
 #pragma once
 
+#include "matrix.h"
 #include "utils.h"
 
 #include "../str/utils.h"
@@ -25,11 +26,32 @@ namespace tef::math
             : x(s), y(s)
         {}
 
-        // Type casting
+        // Explicit type conversion
         template <typename U>
-        constexpr operator base_vec2<U>() const
+        explicit constexpr base_vec2(const base_vec2<U>& v)
+            : x((T)v.x), y((T)v.y)
+        {}
+
+        // Construct from matrix
+
+        constexpr base_vec2(const mat1x2& m)
+            : x((T)m(0)), y((T)m(1))
+        {}
+
+        constexpr base_vec2(const mat2x1& m)
+            : x((T)m(0)), y((T)m(1))
+        {}
+
+        // Cast to matrix
+
+        constexpr operator mat1x2() const
         {
-            return base_vec2<U>((U)x, (U)y);
+            return mat1x2({ (float)x, (float)y });
+        }
+
+        constexpr operator mat2x1() const
+        {
+            return mat2x1({ (float)x, (float)y });
         }
 
         // String
