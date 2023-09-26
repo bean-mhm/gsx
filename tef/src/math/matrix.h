@@ -1,16 +1,18 @@
 #pragma once
 
+// STD
 #include <array>
+#include <cstdint>
 
+// Internal
 #include "utils.h"
-
 #include "../str/utils.h"
 
 namespace tef::math
 {
 
     // Row-major matrix
-    template <size_t n_row, size_t n_col>
+    template <int32_t n_row, int32_t n_col>
     class base_mat
     {
     public:
@@ -18,9 +20,9 @@ namespace tef::math
 
         constexpr base_mat()
         {
-            for (size_t row = 0; row < n_row; row++)
+            for (int32_t row = 0; row < n_row; row++)
             {
-                for (size_t col = 0; col < n_col; col++)
+                for (int32_t col = 0; col < n_col; col++)
                 {
                     m[row][col] = (row == col) ? 1.f : 0.f;
                 }
@@ -46,10 +48,10 @@ namespace tef::math
         std::string to_string() const
         {
             std::string s("[");
-            for (size_t row = 0; row < n_row; row++)
+            for (int32_t row = 0; row < n_row; row++)
             {
                 s += (row > 0 ? " [ " : "[ ");
-                for (size_t col = 0; col < n_col; col++)
+                for (int32_t col = 0; col < n_col; col++)
                 {
                     s += str::from_number(m[row][col]);
                     if (col != n_col - 1)
@@ -71,9 +73,9 @@ namespace tef::math
         constexpr base_mat operator*(float s) const
         {
             base_mat r;
-            for (size_t row = 0; row < n_row; row++)
+            for (int32_t row = 0; row < n_row; row++)
             {
-                for (size_t col = 0; col < n_col; col++)
+                for (int32_t col = 0; col < n_col; col++)
                 {
                     r(row, col) = (*this)(row, col) * s;
                 }
@@ -84,9 +86,9 @@ namespace tef::math
         // this *= scalar
         constexpr base_mat& operator*=(float s)
         {
-            for (size_t row = 0; row < n_row; row++)
+            for (int32_t row = 0; row < n_row; row++)
             {
-                for (size_t col = 0; col < n_col; col++)
+                for (int32_t col = 0; col < n_col; col++)
                 {
                     (*this)(row, col) *= s;
                 }
@@ -98,9 +100,9 @@ namespace tef::math
         constexpr base_mat operator/(float s) const
         {
             base_mat r;
-            for (size_t row = 0; row < n_row; row++)
+            for (int32_t row = 0; row < n_row; row++)
             {
-                for (size_t col = 0; col < n_col; col++)
+                for (int32_t col = 0; col < n_col; col++)
                 {
                     r(row, col) = (*this)(row, col) / s;
                 }
@@ -111,9 +113,9 @@ namespace tef::math
         // this /= scalar
         constexpr base_mat& operator/=(float s)
         {
-            for (size_t row = 0; row < n_row; row++)
+            for (int32_t row = 0; row < n_row; row++)
             {
-                for (size_t col = 0; col < n_col; col++)
+                for (int32_t col = 0; col < n_col; col++)
                 {
                     (*this)(row, col) /= s;
                 }
@@ -125,9 +127,9 @@ namespace tef::math
         constexpr base_mat operator+(const base_mat& m) const
         {
             base_mat r;
-            for (size_t row = 0; row < n_row; row++)
+            for (int32_t row = 0; row < n_row; row++)
             {
-                for (size_t col = 0; col < n_col; col++)
+                for (int32_t col = 0; col < n_col; col++)
                 {
                     r(row, col) = (*this)(row, col) + m(row, col);
                 }
@@ -138,9 +140,9 @@ namespace tef::math
         // this += matrix
         constexpr base_mat& operator+=(const base_mat& m)
         {
-            for (size_t row = 0; row < n_row; row++)
+            for (int32_t row = 0; row < n_row; row++)
             {
-                for (size_t col = 0; col < n_col; col++)
+                for (int32_t col = 0; col < n_col; col++)
                 {
                     (*this)(row, col) += m(row, col);
                 }
@@ -152,9 +154,9 @@ namespace tef::math
         constexpr base_mat operator-(const base_mat& m) const
         {
             base_mat r;
-            for (size_t row = 0; row < n_row; row++)
+            for (int32_t row = 0; row < n_row; row++)
             {
-                for (size_t col = 0; col < n_col; col++)
+                for (int32_t col = 0; col < n_col; col++)
                 {
                     r(row, col) = (*this)(row, col) - m(row, col);
                 }
@@ -165,9 +167,9 @@ namespace tef::math
         // this -= matrix
         constexpr base_mat& operator-=(const base_mat& m)
         {
-            for (size_t row = 0; row < n_row; row++)
+            for (int32_t row = 0; row < n_row; row++)
             {
-                for (size_t col = 0; col < n_col; col++)
+                for (int32_t col = 0; col < n_col; col++)
                 {
                     (*this)(row, col) -= m(row, col);
                 }
@@ -176,16 +178,16 @@ namespace tef::math
         }
 
         // this * matrix
-        template <size_t n2>
+        template <int32_t n2>
         constexpr base_mat<n_row, n2> operator*(const base_mat<n_col, n2>& m) const
         {
             base_mat<n_row, n2> r;
-            for (size_t row = 0; row < n_row; row++)
+            for (int32_t row = 0; row < n_row; row++)
             {
-                for (size_t col = 0; col < n2; col++)
+                for (int32_t col = 0; col < n2; col++)
                 {
                     float dot = 0.f;
-                    for (size_t i = 0; i < n_col; i++)
+                    for (int32_t i = 0; i < n_col; i++)
                     {
                         dot += (*this)(row, i) * m(i, col);
                     }
@@ -198,9 +200,9 @@ namespace tef::math
         // this == other matrix
         constexpr bool operator==(const base_mat& m2) const
         {
-            for (size_t row = 0; row < n_row; row++)
+            for (int32_t row = 0; row < n_row; row++)
             {
-                for (size_t col = 0; col < n_col; col++)
+                for (int32_t col = 0; col < n_col; col++)
                 {
                     if (m[row][col] != m2.m[row][col])
                         return false;
@@ -212,9 +214,9 @@ namespace tef::math
         // this != other matrix
         constexpr bool operator!=(const base_mat& m2) const
         {
-            for (size_t row = 0; row < n_row; row++)
+            for (int32_t row = 0; row < n_row; row++)
             {
-                for (size_t col = 0; col < n_col; col++)
+                for (int32_t col = 0; col < n_col; col++)
                 {
                     if (m[row][col] != m2.m[row][col])
                         return true;
@@ -224,25 +226,25 @@ namespace tef::math
         }
 
         // Access by 1D index (copy)
-        constexpr float operator()(size_t index) const
+        constexpr float operator()(int32_t index) const
         {
             return (&m[0][0])[index];
         }
 
         // Access by 1D index (reference)
-        constexpr float& operator()(size_t index)
+        constexpr float& operator()(int32_t index)
         {
             return (&m[0][0])[index];
         }
 
         // Access by indices (copy)
-        constexpr float operator()(size_t row, size_t col) const
+        constexpr float operator()(int32_t row, int32_t col) const
         {
             return m[row][col];
         }
 
         // Access by indices (reference)
-        constexpr float& operator()(size_t row, size_t col)
+        constexpr float& operator()(int32_t row, int32_t col)
         {
             return m[row][col];
         }
@@ -253,13 +255,13 @@ namespace tef::math
         // upper-left 3x3 portion.
         // Note: The value of end_row must not be smaller than the value of start_row, and the
         // same goes for start_col and end_col.
-        template <size_t start_row, size_t start_col, size_t end_row, size_t end_col>
+        template <int32_t start_row, int32_t start_col, int32_t end_row, int32_t end_col>
         constexpr base_mat<end_row - start_row + 1, end_col - start_col + 1> sub() const
         {
             base_mat<end_row - start_row + 1, end_col - start_col + 1> r;
-            for (size_t row = start_row; row <= end_row; row++)
+            for (int32_t row = start_row; row <= end_row; row++)
             {
-                for (size_t col = start_col; col <= end_col; col++)
+                for (int32_t col = start_col; col <= end_col; col++)
                 {
                     r(row - start_row, col - start_col) = (*this)(row, col);
                 }
@@ -269,13 +271,13 @@ namespace tef::math
         // Upper-left n x m sub-matrix
         // Note: n must be smaller than or equal to n_row.
         // Note: m must be smaller than or equal to n_col.
-        template <size_t n, size_t m>
+        template <int32_t n, int32_t m>
         constexpr base_mat<n, m> sub() const
         {
             base_mat<n, m> r;
-            for (size_t row = 0; row < n; row++)
+            for (int32_t row = 0; row < n; row++)
             {
-                for (size_t col = 0; col < m; col++)
+                for (int32_t col = 0; col < m; col++)
                 {
                     r(row, col) = (*this)(row, col);
                 }
@@ -284,13 +286,13 @@ namespace tef::math
 
         // Upper-left n x n sub-matrix
         // Note: n must be smaller than n_row and n_col.
-        template <size_t n>
+        template <int32_t n>
         constexpr base_mat<n, n> sub() const
         {
             base_mat<n, n> r;
-            for (size_t row = 0; row < n; row++)
+            for (int32_t row = 0; row < n; row++)
             {
-                for (size_t col = 0; col < n; col++)
+                for (int32_t col = 0; col < n; col++)
                 {
                     r(row, col) = (*this)(row, col);
                 }
@@ -298,7 +300,7 @@ namespace tef::math
         }
 
         // Total number of elements (n_rows * n_col)
-        constexpr size_t n_total() const
+        constexpr int32_t n_total() const
         {
             return n_row * n_col;
         }
@@ -309,18 +311,18 @@ namespace tef::math
     };
 
     // Scalar * matrix
-    template <size_t n_row, size_t n_col>
+    template <int32_t n_row, int32_t n_col>
     constexpr base_mat<n_row, n_col> operator*(float s, const base_mat<n_row, n_col>& m)
     {
         return m * s;
     }
 
-    template <size_t n>
+    template <int32_t n>
     constexpr bool is_identity(const base_mat<n, n>& m)
     {
-        for (size_t row = 0; row < n; row++)
+        for (int32_t row = 0; row < n; row++)
         {
-            for (size_t col = 0; col < n; col++)
+            for (int32_t col = 0; col < n; col++)
             {
                 float expected = (row == col) ? 1.f : 0.f;
                 if (m(row, col) != expected)
@@ -332,14 +334,14 @@ namespace tef::math
 
     // Cofactor of m[p][q]
     // https://www.geeksforgeeks.org/adjoint-inverse-matrix/
-    template <size_t n>
-    constexpr base_mat<n - 1, n - 1> cofactor(const base_mat<n, n>& m, size_t p, size_t q)
+    template <int32_t n>
+    constexpr base_mat<n - 1, n - 1> cofactor(const base_mat<n, n>& m, int32_t p, int32_t q)
     {
-        size_t i = 0, j = 0;
+        int32_t i = 0, j = 0;
         base_mat<n - 1, n - 1> r;
-        for (size_t row = 0; row < n; row++)
+        for (int32_t row = 0; row < n; row++)
         {
-            for (size_t col = 0; col < n; col++)
+            for (int32_t col = 0; col < n; col++)
             {
                 // Copy into the result matrix only those elements which are not in the current
                 // row and column
@@ -361,7 +363,7 @@ namespace tef::math
 
     // Determinant of a square matrix
     // https://www.geeksforgeeks.org/determinant-of-a-matrix/
-    template <size_t n>
+    template <int32_t n>
     constexpr float determinant(base_mat<n, n> m)
     {
         if constexpr (n == 1)
@@ -374,9 +376,9 @@ namespace tef::math
         float temp[n + 1]{};
 
         // Traverse the diagonal elements
-        for (size_t i = 0; i < n; i++)
+        for (int32_t i = 0; i < n; i++)
         {
-            size_t index = i;
+            int32_t index = i;
 
             // Find the index which has non zero value
             while (index < n && m(index, i) == 0)
@@ -392,7 +394,7 @@ namespace tef::math
             if (index != i)
             {
                 // Swap the diagonal element row and index row
-                for (size_t j = 0; j < n; j++)
+                for (int32_t j = 0; j < n; j++)
                 {
                     std::swap(m(index, j), m(i, j));
                 }
@@ -402,13 +404,13 @@ namespace tef::math
             }
 
             // Store the diagonal row elements
-            for (size_t j = 0; j < n; j++)
+            for (int32_t j = 0; j < n; j++)
             {
                 temp[j] = m(i, j);
             }
 
             // Traverse every row below the diagonal element
-            for (size_t j = i + 1; j < n; j++)
+            for (int32_t j = i + 1; j < n; j++)
             {
                 // Value of diagonal element
                 float num1 = temp[i];
@@ -417,7 +419,7 @@ namespace tef::math
                 float num2 = m(j, i);
 
                 // Traverse every column of row and multiply to every row
-                for (size_t k = 0; k < n; k++)
+                for (int32_t k = 0; k < n; k++)
                 {
                     // Multiply to make the diagonal element and next row element equal
                     m(j, k) = (num1 * m(j, k)) - (num2 * temp[k]);
@@ -429,7 +431,7 @@ namespace tef::math
         }
 
         // Multiply the diagonal elements to get the determinant
-        for (size_t i = 0; i < n; i++)
+        for (int32_t i = 0; i < n; i++)
         {
             det *= m(i, i);
         }
@@ -440,16 +442,16 @@ namespace tef::math
 
     // Adjoint of a square matrix
     // https://www.geeksforgeeks.org/adjoint-inverse-matrix/
-    template <size_t n>
+    template <int32_t n>
     constexpr base_mat<n, n> adjoint(const base_mat<n, n>& m)
     {
         if constexpr (n == 1)
             return base_mat<n, n>();
 
         base_mat<n, n> r;
-        for (size_t i = 0; i < n; i++)
+        for (int32_t i = 0; i < n; i++)
         {
-            for (size_t j = 0; j < n; j++)
+            for (int32_t j = 0; j < n; j++)
             {
                 // Get cofactor of m[i][j]
                 base_mat<n - 1, n - 1> cf = cofactor(m, i, j);
@@ -465,7 +467,7 @@ namespace tef::math
     }
 
     // Inverted copy of a square matrix
-    template <size_t n>
+    template <int32_t n>
     constexpr base_mat<n, n> inverse(const base_mat<n, n>& m, bool* out_invertible = nullptr)
     {
         // Determinant
@@ -487,13 +489,13 @@ namespace tef::math
     }
 
     // Transposed copy of a matrix
-    template <size_t n_row, size_t n_col>
+    template <int32_t n_row, int32_t n_col>
     constexpr base_mat<n_col, n_row> transpose(const base_mat<n_row, n_col>& m)
     {
         base_mat<n_col, n_row> r;
-        for (size_t row = 0; row < n_row; row++)
+        for (int32_t row = 0; row < n_row; row++)
         {
-            for (size_t col = 0; col < n_col; col++)
+            for (int32_t col = 0; col < n_col; col++)
             {
                 r(col, row) = m(row, col);
             }
