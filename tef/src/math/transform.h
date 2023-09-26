@@ -1,9 +1,12 @@
 #pragma once
 
+#include "vec2.h"
 #include "vec3.h"
-#include "matrix.h"
-#include "ray.h"
+#include "vec4.h"
+#include "bounds2.h"
 #include "bounds3.h"
+#include "ray.h"
+#include "matrix.h"
 #include "utils.h"
 
 namespace tef::math::transform
@@ -14,596 +17,188 @@ namespace tef::math::transform
     // false, the output inverse matrix is updated according to the fact that
     // inv(A * B) = inv(B) * inv(A).
 
+    // Note: The goofy syntax of the functions below is because of the fact that for most of these
+    // transformations, we can calculate their inverse easily and way faster than the general
+    // inverse() function ever could, so if the caller also wants the inverse, they can get it in
+    // a computationally cheaper way.
+
     // 2D translation matrix (3x3)
-    constexpr void translate2D(
+    void translate2D(
         const vec2& delta,
         mat3* out_m,
         mat3* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        if (out_m)
-        {
-            mat3 r({
-                1, 0, delta.x,
-                0, 1, delta.y,
-                0, 0, 1 }
-            );
+    );
 
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            mat3 rinv({
-                1, 0, -delta.x,
-                0, 1, -delta.y,
-                0, 0, 1 }
-            );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
-        }
-    }
+    // Shortened version of translate2D()
+    mat3 translate2D(const vec2& delta);
 
     // 3D translation matrix (4x4)
-    constexpr void translate3D(
+    void translate3D(
         const vec3& delta,
         mat4* out_m,
         mat4* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        if (out_m)
-        {
-            mat4 r({
-                1, 0, 0, delta.x,
-                0, 1, 0, delta.y,
-                0, 0, 1, delta.z,
-                0, 0, 0, 1 }
-            );
+    );
 
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            mat4 rinv({
-                1, 0, 0, -delta.x,
-                0, 1, 0, -delta.y,
-                0, 0, 1, -delta.z,
-                0, 0, 0, 1 }
-            );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
-        }
-    }
+    // Shortened version of translate3D()
+    mat4 translate3D(const vec3& delta);
 
     // 2D scaling matrix (2x2)
-    constexpr void scale2D(
+    void scale2D(
         const vec2& fac,
         mat2* out_m,
         mat2* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        if (out_m)
-        {
-            mat2 r({
-                fac.x, 0,
-                0, fac.y }
-            );
-
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            mat2 rinv({
-                1 / fac.x, 0,
-                0, 1 / fac.y }
-            );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
-        }
-    }
+    );
 
     // 2D scaling matrix (3x3)
-    constexpr void scale2D(
+    void scale2D(
         const vec2& fac,
         mat3* out_m,
         mat3* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        if (out_m)
-        {
-            mat3 r({
-                fac.x, 0, 0,
-                0, fac.y, 0,
-                0, 0, 1 }
-            );
+    );
 
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            mat3 rinv({
-                1 / fac.x, 0, 0,
-                0, 1 / fac.y, 0,
-                0, 0, 1 }
-            );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
-        }
-    }
+    // Shortened versions of scale2D()
+    mat2 scale2D_2x2(const vec2& fac);
+    mat3 scale2D_3x3(const vec2& fac);
 
     // 3D scaling matrix (3x3)
-    constexpr void scale3D(
+    void scale3D(
         const vec3& fac,
         mat3* out_m,
         mat3* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        if (out_m)
-        {
-            mat3 r({
-                fac.x, 0, 0,
-                0, fac.y, 0,
-                0, 0, fac.z }
-            );
-
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            mat3 rinv({
-                1 / fac.x, 0, 0,
-                0, 1 / fac.y, 0,
-                0, 0, 1 / fac.z }
-            );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
-        }
-    }
+    );
 
     // 3D scaling matrix (4x4)
-    constexpr void scale3D(
+    void scale3D(
         const vec3& fac,
         mat4* out_m,
         mat4* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        if (out_m)
-        {
-            mat4 r({
-                fac.x, 0, 0, 0,
-                0, fac.y, 0, 0,
-                0, 0, fac.z, 0,
-                0, 0, 0, 1 }
-            );
+    );
 
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            mat4 rinv({
-                1 / fac.x, 0, 0, 0,
-                0, 1 / fac.y, 0, 0,
-                0, 0, 1 / fac.z, 0,
-                0, 0, 0, 1 }
-            );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
-        }
-    }
+    // Shortened versions of scale3D()
+    mat3 scale3D_3x3(const vec3& fac);
+    mat4 scale3D_4x4(const vec3& fac);
 
     // 2D rotation matrix (2x2)
-    constexpr void rotate2D(
+    void rotate2D(
         float theta,
         mat2* out_m,
         mat2* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        float s = sin(theta);
-        float c = cos(theta);
-
-        if (out_m)
-        {
-            mat2 r({
-                c, -s,
-                s, c }
-            );
-
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            mat2 rinv({
-                c, s,
-                -s, c }
-            );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
-        }
-    }
+    );
 
     // 2D rotation matrix (3x3)
-    constexpr void rotate2D(
+    void rotate2D(
         float theta,
         mat3* out_m,
         mat3* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        float s = sin(theta);
-        float c = cos(theta);
+    );
 
-        if (out_m)
-        {
-            mat3 r({
-                c, -s, 0,
-                s, c, 0,
-                0, 0, 1 }
-            );
-
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            mat3 rinv({
-                c, s, 0,
-                -s, c, 0,
-                0, 0, 1 }
-            );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
-        }
-    }
+    // Shortened versions of rotate2D()
+    mat2 rotate2D_2x2(float theta);
+    mat3 rotate2D_3x3(float theta);
 
     // 3D rotation matrix around the X axis (left-handed) (3x3)
-    constexpr void rotate3D_x(
+    void rotate3D_x(
         float theta,
         mat3* out_m,
         mat3* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        float s = sin(theta);
-        float c = cos(theta);
-
-        mat3 r({
-            1, 0, 0,
-            0, c, -s,
-            0, s, c }
-        );
-
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
-    }
+    );
 
     // 3D rotation matrix around the X axis (left-handed) (4x4)
-    constexpr void rotate3D_x(
+    void rotate3D_x(
         float theta,
         mat4* out_m,
         mat4* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        float s = sin(theta);
-        float c = cos(theta);
+    );
 
-        mat4 r({
-            1, 0, 0, 0,
-            0, c, -s, 0,
-            0, s, c, 0,
-            0, 0, 0, 1 }
-        );
-
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
-    }
+    // Shortened versions of rotate3D_x()
+    mat3 rotate3D_x_3x3(float theta);
+    mat4 rotate3D_x_4x4(float theta);
 
     // 3D rotation matrix around the Y axis (left-handed) (3x3)
-    constexpr void rotate3D_y(
+    void rotate3D_y(
         float theta,
         mat3* out_m,
         mat3* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        float s = sin(theta);
-        float c = cos(theta);
-
-        mat3 r({
-            c, 0, s,
-            0, 1, 0,
-            -s, 0, c }
-        );
-
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
-    }
+    );
 
     // 3D rotation matrix around the Y axis (left-handed) (4x4)
-    constexpr void rotate3D_y(
+    void rotate3D_y(
         float theta,
         mat4* out_m,
         mat4* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        float s = sin(theta);
-        float c = cos(theta);
+    );
 
-        mat4 r({
-            c, 0, s, 0,
-            0, 1, 0, 0,
-            -s, 0, c, 0,
-            0, 0, 0, 1 }
-        );
-
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
-    }
+    // Shortened versions of rotate3D_y()
+    mat3 rotate3D_y_3x3(float theta);
+    mat4 rotate3D_y_4x4(float theta);
 
     // 3D rotation matrix around the Z axis (left-handed) (3x3)
-    constexpr void rotate3D_z(
+    void rotate3D_z(
         float theta,
         mat3* out_m,
         mat3* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        float s = sin(theta);
-        float c = cos(theta);
-
-        mat3 r({
-            c, -s, 0,
-            s, c, 0,
-            0, 0, 1 }
-        );
-
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
-    }
+    );
 
     // 3D rotation matrix around the Z axis (left-handed) (4x4)
-    constexpr void rotate3D_z(
+    void rotate3D_z(
         float theta,
         mat4* out_m,
         mat4* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        float s = sin(theta);
-        float c = cos(theta);
+    );
 
-        mat4 r({
-            c, -s, 0, 0,
-            s, c, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1 }
-        );
-
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
-    }
+    // Shortened versions of rotate3D_z()
+    mat3 rotate3D_z_3x3(float theta);
+    mat4 rotate3D_z_4x4(float theta);
 
     // 3D rotation matrix around an arbitrary axis (left-handed) (3x3)
-    constexpr void rotate3D(
+    void rotate3D(
         float theta,
         const vec3& axis,
         mat3* out_m,
         mat3* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        vec3 a = normalize(axis);
-        float s = sin(theta);
-        float c = cos(theta);
-
-        mat3 r;
-
-        // Compute rotation of first basis vector
-        r(0, 0) = a.x * a.x + (1 - a.x * a.x) * c;
-        r(0, 1) = a.x * a.y * (1 - c) - a.z * s;
-        r(0, 2) = a.x * a.z * (1 - c) + a.y * s;
-
-        // Second basis vector
-        r(1, 0) = a.x * a.y * (1 - c) + a.z * s;
-        r(1, 1) = a.y * a.y + (1 - a.y * a.y) * c;
-        r(1, 2) = a.y * a.z * (1 - c) - a.x * s;
-
-        // Third basis vector
-        r(2, 0) = a.x * a.z * (1 - c) - a.y * s;
-        r(2, 1) = a.y * a.z * (1 - c) + a.x * s;
-        r(2, 2) = a.z * a.z + (1 - a.z * a.z) * c;
-
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
-    }
+    );
 
     // 3D rotation matrix around an arbitrary axis (left-handed) (4x4)
-    constexpr void rotate3D(
+    void rotate3D(
         float theta,
         const vec3& axis,
         mat4* out_m,
         mat4* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        vec3 a = normalize(axis);
-        float s = sin(theta);
-        float c = cos(theta);
+    );
 
-        mat4 r;
-
-        // Compute rotation of first basis vector
-        r(0, 0) = a.x * a.x + (1 - a.x * a.x) * c;
-        r(0, 1) = a.x * a.y * (1 - c) - a.z * s;
-        r(0, 2) = a.x * a.z * (1 - c) + a.y * s;
-        r(0, 3) = 0;
-
-        // Second basis vector
-        r(1, 0) = a.x * a.y * (1 - c) + a.z * s;
-        r(1, 1) = a.y * a.y + (1 - a.y * a.y) * c;
-        r(1, 2) = a.y * a.z * (1 - c) - a.x * s;
-        r(1, 3) = 0;
-
-        // Third basis vector
-        r(2, 0) = a.x * a.z * (1 - c) - a.y * s;
-        r(2, 1) = a.y * a.z * (1 - c) + a.x * s;
-        r(2, 2) = a.z * a.z + (1 - a.z * a.z) * c;
-        r(2, 3) = 0;
-
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
-        if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
-    }
+    // Shortened versions of rotate3D()
+    mat3 rotate3D_3x3(float theta, const vec3& axis);
+    mat4 rotate3D_4x4(float theta, const vec3& axis);
 
     // 3D transformation from a left-handed viewing coordinate system where the camera is at the
     // origin looking along the +z axis, where the +y axis is along the up direction (4x4)
-    constexpr void lookat3D(
+    void lookat3D(
         const vec3& pos,
         const vec3& look,
         const vec3& up,
         mat4* out_m,
         mat4* out_minv = nullptr,
         const bool overwrite = false
-    )
-    {
-        mat4 cam_to_world;
+    );
 
-        // Initialize fourth column of viewing matrix
-        cam_to_world(0, 3) = pos.x;
-        cam_to_world(1, 3) = pos.y;
-        cam_to_world(2, 3) = pos.z;
-        cam_to_world(3, 3) = 1;
-
-        // Initialize first three columns of viewing matrix
-        vec3 dir = normalize(look - pos);
-        vec3 right = normalize(cross(normalize(up), dir));
-        vec3 new_up = cross(dir, right);
-        cam_to_world(0, 0) = right.x;
-        cam_to_world(1, 0) = right.y;
-        cam_to_world(2, 0) = right.z;
-        cam_to_world(3, 0) = 0.;
-        cam_to_world(0, 1) = new_up.x;
-        cam_to_world(1, 1) = new_up.y;
-        cam_to_world(2, 1) = new_up.z;
-        cam_to_world(3, 1) = 0.;
-        cam_to_world(0, 2) = dir.x;
-        cam_to_world(1, 2) = dir.y;
-        cam_to_world(2, 2) = dir.z;
-        cam_to_world(3, 2) = 0.;
-
-        if (out_m)
-        {
-            if (overwrite) *out_m = inverse(cam_to_world);
-            else *out_m = inverse(cam_to_world) * *out_m;
-        }
-
-        if (out_minv)
-        {
-            if (overwrite) *out_minv = cam_to_world;
-            else *out_minv = *out_minv * cam_to_world;
-        }
-    }
+    // Shortened version of lookat3D()
+    mat4 lookat3D(const vec3& pos, const vec3& look, const vec3& up);
 
     // Transform a 2D point using a 2x2 matrix.
     constexpr vec2 apply_point2D(const mat2& m, const vec2& p)
@@ -762,7 +357,9 @@ namespace tef::math::transform
     {
         float la2 = length_squared(apply_vector2D(m, vec2(1, 0)));
         float lb2 = length_squared(apply_vector2D(m, vec2(0, 1)));
-        return abs(la2 - 1.f) > .001f || abs(lb2 - 1.f) > .001f;
+        return
+            la2 < .999f || la2 > 1.001f ||
+            lb2 < .999f || lb2 > 1.001f;
     }
 
     // Check if a 2D transformation matrix has a scaling term in it. (3x3)
@@ -770,7 +367,9 @@ namespace tef::math::transform
     {
         float la2 = length_squared(apply_vector2D(m, vec2(1, 0)));
         float lb2 = length_squared(apply_vector2D(m, vec2(0, 1)));
-        return abs(la2 - 1.f) > .001f || abs(lb2 - 1.f) > .001f;
+        return
+            la2 < .999f || la2 > 1.001f ||
+            lb2 < .999f || lb2 > 1.001f;
     }
 
     // Check if a 3D transformation matrix has a scaling term in it. (3x3)
@@ -780,9 +379,9 @@ namespace tef::math::transform
         float lb2 = length_squared(apply_vector3D(m, vec3(0, 1, 0)));
         float lc2 = length_squared(apply_vector3D(m, vec3(0, 0, 1)));
         return
-            abs(la2 - 1.f) > .001f ||
-            abs(lb2 - 1.f) > .001f ||
-            abs(lc2 - 1.f) > .001f;
+            la2 < .999f || la2 > 1.001f ||
+            lb2 < .999f || lb2 > 1.001f ||
+            lc2 < .999f || lc2 > 1.001f;
     }
 
     // Check if a 3D transformation matrix has a scaling term in it. (4x4)
@@ -792,9 +391,9 @@ namespace tef::math::transform
         float lb2 = length_squared(apply_vector3D(m, vec3(0, 1, 0)));
         float lc2 = length_squared(apply_vector3D(m, vec3(0, 0, 1)));
         return
-            abs(la2 - 1.f) > .001f ||
-            abs(lb2 - 1.f) > .001f ||
-            abs(lc2 - 1.f) > .001f;
+            la2 < .999f || la2 > 1.001f ||
+            lb2 < .999f || lb2 > 1.001f ||
+            lc2 < .999f || lc2 > 1.001f;
     }
 
     // Check if handedness is changed by a 3D transformation matrix. (3x3)
