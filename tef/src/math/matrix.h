@@ -43,7 +43,7 @@ namespace tef::math
         }
 
         // String
-        constexpr std::string to_string() const
+        std::string to_string() const
         {
             std::string s("[");
             for (size_t row = 0; row < n_row; row++)
@@ -398,7 +398,7 @@ namespace tef::math
                 }
 
                 // The determinant sign changes when we shift rows
-                det *= pow(-1, index - i);
+                det *= (index - i) % 2 == 0 ? 1.f : -1.f;
             }
 
             // Store the diagonal row elements
