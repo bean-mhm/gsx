@@ -1,8 +1,8 @@
 #pragma once
 
+// Internal
 #include "vec3.h"
 #include "utils.h"
-
 #include "../str/utils.h"
 
 namespace tef::math

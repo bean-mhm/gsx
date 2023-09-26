@@ -1,10 +1,10 @@
 #pragma once
 
+// Internal
 #include "vec4.h"
 #include "matrix.h"
 #include "transform.h"
 #include "utils.h"
-
 #include "../str/utils.h"
 
 namespace tef::math

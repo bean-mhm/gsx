@@ -1,5 +1,6 @@
 #pragma once
 
+// Internal
 #include "vec3.h"
 #include "utils.h"
 

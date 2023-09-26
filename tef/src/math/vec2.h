@@ -1,8 +1,8 @@
 #pragma once
 
+// Internal
 #include "matrix.h"
 #include "utils.h"
-
 #include "../str/utils.h"
 
 namespace tef::math

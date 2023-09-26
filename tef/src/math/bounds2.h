@@ -1,7 +1,9 @@
 #pragma once
 
+// STD
 #include <iterator>
 
+// Internal
 #include "vec2.h"
 #include "utils.h"
 
