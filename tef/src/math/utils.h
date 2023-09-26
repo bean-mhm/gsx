@@ -29,107 +29,107 @@ namespace tef::math
         return radians * rad2deg;
     }
 
-    constexpr float sin(float angle)
+    inline float sin(float angle)
     {
         return std::sin(angle);
     }
 
-    constexpr float cos(float angle)
+    inline float cos(float angle)
     {
         return std::cos(angle);
     }
 
-    constexpr float tan(float angle)
+    inline float tan(float angle)
     {
         return std::tan(angle);
     }
 
-    constexpr float asin(float x)
+    inline float asin(float x)
     {
         return std::asin(x);
     }
 
-    constexpr float acos(float x)
+    inline float acos(float x)
     {
         return std::acos(x);
     }
 
-    constexpr float atan(float y, float x)
+    inline float atan(float y, float x)
     {
         return std::atan2(y, x);
     }
 
-    constexpr float atan(float y_over_x)
+    inline float atan(float y_over_x)
     {
         return std::atan(y_over_x);
     }
 
-    constexpr float sinh(float x)
+    inline float sinh(float x)
     {
         return std::sinh(x);
     }
 
-    constexpr float cosh(float x)
+    inline float cosh(float x)
     {
         return std::cosh(x);
     }
 
-    constexpr float tanh(float x)
+    inline float tanh(float x)
     {
         return std::tanh(x);
     }
 
-    constexpr float asinh(float x)
+    inline float asinh(float x)
     {
         return std::asinh(x);
     }
 
-    constexpr float acosh(float x)
+    inline float acosh(float x)
     {
         return std::acosh(x);
     }
 
-    constexpr float atanh(float x)
+    inline float atanh(float x)
     {
         return std::atanh(x);
     }
 
-    constexpr float pow(float x, float y)
+    inline float pow(float x, float y)
     {
         return std::pow(x, y);
     }
 
-    constexpr float exp(float x)
+    inline float exp(float x)
     {
         return std::exp(x);
     }
 
-    constexpr float log(float x)
+    inline float log(float x)
     {
         return std::log(x);
     }
 
-    constexpr float exp2(float x)
+    inline float exp2(float x)
     {
         return std::exp2(x);
     }
 
-    constexpr float log2(float x)
+    inline float log2(float x)
     {
         return std::log2(x);
     }
 
-    constexpr float sqrt(float x)
+    inline float sqrt(float x)
     {
         return std::sqrt(x);
     }
 
-    constexpr float inversesqrt(float x)
+    inline float inversesqrt(float x)
     {
         return 1.f / std::sqrt(x);
     }
 
-    constexpr float abs(float x)
+    inline float abs(float x)
     {
         return std::abs(x);
     }
@@ -141,37 +141,37 @@ namespace tef::math
         if (x < 0) return -1.f;
     }
 
-    constexpr float floor(float x)
+    inline float floor(float x)
     {
         return std::floor(x);
     }
 
-    constexpr float ceil(float x)
+    inline float ceil(float x)
     {
         return std::ceil(x);
     }
 
-    constexpr float trunc(float x)
+    inline float trunc(float x)
     {
         return std::trunc(x);
     }
 
-    constexpr float fract(float x)
+    inline float fract(float x)
     {
         return x - std::floor(x);
     }
 
-    constexpr float mod(float x, float y)
+    inline float mod(float x, float y)
     {
         return std::fmod(x, y);
     }
 
-    constexpr float modf(float x, float& i)
+    inline float modf(float x, float& i)
     {
         return std::modf(x, &i);
     }
 
-    constexpr float wrap(float x, float start, float end)
+    inline float wrap(float x, float start, float end)
     {
         return start + std::fmod(x - start, end - start);
     }
@@ -229,18 +229,18 @@ namespace tef::math
         return t * t * (3.f - 2.f * t);
     }
 
-    constexpr bool isnan(float x)
+    inline bool isnan(float x)
     {
         return std::isnan(x);
     }
 
-    constexpr bool isinf(float x)
+    inline bool isinf(float x)
     {
         return std::isinf(x);
     }
 
     template <typename T>
-    constexpr uint64_t upper_power_of_2(T v)
+    inline uint64_t upper_power_of_2(T v)
     {
         return (uint64_t)std::pow(2., std::ceil(std::log2((double)v)));
     }
@@ -255,7 +255,7 @@ namespace tef::math
         return std::min(v, (uint32_t)INT_MAX);
     }
 
-    constexpr bool solve_quadratic(float a, float b, float c, float& t0, float& t1)
+    inline bool solve_quadratic(float a, float b, float c, float& t0, float& t1)
     {
         float discrim = b * b - 4 * a * c;
         if (discrim < 0)
@@ -277,7 +277,7 @@ namespace tef::math
         return true;
     }
 
-    constexpr bool solve_linear_2x2(const float a[2][2], const float b[2], float& x0, float& x1)
+    inline bool solve_linear_2x2(const float a[2][2], const float b[2], float& x0, float& x1)
     {
         float det = a[0][0] * a[1][1] - a[0][1] * a[1][0];
         if (abs(det) < 1e-10f)
