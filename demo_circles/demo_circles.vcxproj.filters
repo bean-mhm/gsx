@@ -27,22 +27,10 @@
     <ClCompile Include="src\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\tef\math\mat4.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\tef\math\prng.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="include\tef\math\quaternion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\tef\math\ray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\tef\math\transform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\tef\math\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\tef\str\utils.cpp">
@@ -80,10 +68,10 @@
     <ClInclude Include="include\tef\math\bounds3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\math\mat4.h">
+    <ClInclude Include="include\tef\math\math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\math\math.h">
+    <ClInclude Include="include\tef\math\matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\tef\math\prng.h">

@@ -96,8 +96,6 @@
   <ItemGroup>
     <ClCompile Include="src\math\quaternion.cpp" />
     <ClCompile Include="src\math\ray.cpp" />
-    <ClCompile Include="src\math\transform.cpp" />
-    <ClCompile Include="src\math\utils.cpp" />
     <ClCompile Include="src\str\utils.cpp" />
     <ClCompile Include="src\spatial.cpp" />
     <ClCompile Include="src\log.cpp" />

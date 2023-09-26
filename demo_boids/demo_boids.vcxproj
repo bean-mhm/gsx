@@ -93,12 +93,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="include\tef\log.cpp" />
-    <ClCompile Include="include\tef\math\mat4.cpp" />
-    <ClCompile Include="include\tef\math\prng.cpp" />
     <ClCompile Include="include\tef\math\quaternion.cpp" />
     <ClCompile Include="include\tef\math\ray.cpp" />
-    <ClCompile Include="include\tef\math\transform.cpp" />
-    <ClCompile Include="include\tef\math\utils.cpp" />
     <ClCompile Include="include\tef\spatial.cpp" />
     <ClCompile Include="include\tef\str\utils.cpp" />
     <ClCompile Include="include\tef\tef.cpp" />
@@ -118,8 +114,8 @@
     <ClInclude Include="include\tef\log.h" />
     <ClInclude Include="include\tef\math\bounds2.h" />
     <ClInclude Include="include\tef\math\bounds3.h" />
-    <ClInclude Include="include\tef\math\mat4.h" />
     <ClInclude Include="include\tef\math\math.h" />
+    <ClInclude Include="include\tef\math\matrix.h" />
     <ClInclude Include="include\tef\math\prng.h" />
     <ClInclude Include="include\tef\math\quaternion.h" />
     <ClInclude Include="include\tef\math\ray.h" />
