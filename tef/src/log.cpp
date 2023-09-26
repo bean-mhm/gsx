@@ -38,7 +38,7 @@ namespace tef
         }
 
         // time
-        stream << str::format("%s | ", str::from_time().c_str());
+        stream << std::format("{} | ", str::from_time());
 
         // log_level
         switch (entry.log_level)
@@ -60,7 +60,7 @@ namespace tef
         }
 
         // world_name, thread_id, message
-        stream << str::format("%s | ", entry.world_name.c_str());
+        stream << std::format("{} | ", entry.world_name);
         stream << entry.thread_id << " | ";
         stream << entry.message << '\n';
 
@@ -74,7 +74,10 @@ namespace tef
         log_file.open(filename, std::ofstream::out | std::ofstream::trunc);
         if (!log_file.is_open())
         {
-            throw std::runtime_error(str::format("Log file \"%s\" could not be created/opened.", filename.c_str()));
+            throw std::runtime_error(std::format(
+                "Log file \"{}\" could not be created/opened.",
+                filename
+            ));
         }
         else
         {
@@ -94,7 +97,10 @@ namespace tef
 
         if (!log_file)
         {
-            throw std::runtime_error(str::format("The log file stream \"%s\" is in failure state.", filename.c_str()));
+            throw std::runtime_error(std::format(
+                "The log file stream \"{}\" is in failure state.",
+                filename
+            ));
         }
 
         // Replace " with "" because CSV

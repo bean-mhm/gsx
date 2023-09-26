@@ -38,7 +38,9 @@ namespace tef
         log_level_t max_log_level,
         std::shared_ptr<base_logger_t> logger
     )
-        : name(name), max_log_level(max_log_level), logger(logger)
+        : name(name),
+        max_log_level(max_log_level),
+        logger(logger)
     {
         if (logger == nullptr)
             throw std::runtime_error("The world logger must not be null.");
@@ -115,9 +117,9 @@ namespace tef
 
     void world_t::add_system(const std::shared_ptr<base_system_t>& system)
     {
-        tef_log(this, log_level_t::verbose, str::format(
-            "Adding a new system named \"%s\"",
-            system->name.c_str()
+        tef_log(this, log_level_t::verbose, std::format(
+            "Adding a new system named \"{}\"",
+            system->name
         ));
 
         systems.push_back(system);
@@ -125,9 +127,9 @@ namespace tef
 
     void world_t::remove_system_named(const std::string& sname)
     {
-        tef_log(this, log_level_t::verbose, str::format(
-            "Removing the first system named \"%s\"",
-            sname.c_str()
+        tef_log(this, log_level_t::verbose, std::format(
+            "Removing the first system named \"{}\"",
+            sname
         ));
 
         for (size_t i = 0; i < systems.size(); i++)
@@ -142,9 +144,9 @@ namespace tef
 
     void world_t::remove_systems_named(const std::string& sname)
     {
-        tef_log(this, log_level_t::verbose, str::format(
-            "Removing all systems named \"%s\"",
-            sname.c_str()
+        tef_log(this, log_level_t::verbose, std::format(
+            "Removing all systems named \"{}\"",
+            sname
         ));
 
         for (size_t i = 0; i < systems.size();)
@@ -168,8 +170,8 @@ namespace tef
 
     void world_t::run(const float max_update_rate, const float max_run_time)
     {
-        tef_log(this, log_level_t::info, str::format(
-            "Preparing to run (max_update_rate = %.3f iterations/s, max_run_time = %.3f s)",
+        tef_log(this, log_level_t::info, std::format(
+            "Preparing to run (max_update_rate = {:.3f} iterations/s, max_run_time = {:.3f} s)",
             max_update_rate,
             max_run_time
         ));
@@ -199,8 +201,8 @@ namespace tef
 
         while (!should_stop)
         {
-            tef_log(this, log_level_t::verbose, str::format(
-                "Loop iteration %llu (elapsed = %.3f s, dt = %.3f s)",
+            tef_log(this, log_level_t::verbose, std::format(
+                "Loop iteration {} (elapsed = {:.3f} s, dt = {:.3f} s)",
                 iter.i, iter.time, iter.dt
             ));
 
@@ -240,9 +242,9 @@ namespace tef
 
     void world_t::stop(bool wait)
     {
-        tef_log(this, log_level_t::info, str::format(
-            "Signaling the world to stop running (wait = %s)",
-            str::from_bool(wait).c_str()
+        tef_log(this, log_level_t::info, std::format(
+            "Signaling the world to stop running (wait = {})",
+            wait
         ));
 
         should_stop = true;
@@ -326,10 +328,10 @@ namespace tef
                 worker->enqueue(
                     [this, &system, &worker]()
                     {
-                        tef_log(this, log_level_t::info, str::format(
-                            "Starting system named \"%s\" on worker thread #%s",
-                            system->name.c_str(),
-                            std::to_string(worker->id).c_str()
+                        tef_log(this, log_level_t::info, std::format(
+                            "Starting system named \"{}\" on worker thread #{}",
+                            system->name,
+                            worker->id
                         ));
 
                         system->on_start(*this);
@@ -339,9 +341,9 @@ namespace tef
             }
             else
             {
-                tef_log(this, log_level_t::info, str::format(
-                    "Starting system named \"%s\" on the world runner thread",
-                    system->name.c_str()
+                tef_log(this, log_level_t::info, std::format(
+                    "Starting system named \"{}\" on the world runner thread",
+                    system->name
                 ));
 
                 system->on_start(*this);
@@ -371,12 +373,12 @@ namespace tef
                         worker->enqueue(
                             [this, &iter, &system, &event, &worker]()
                             {
-                                tef_log(this, log_level_t::verbose, str::format(
-                                    "Using event of type %s to trigger system named \"%s\" "
-                                    "on worker thread #%s",
-                                    std::to_string(event.type).c_str(),
-                                    system->name.c_str(),
-                                    std::to_string(worker->id).c_str()
+                                tef_log(this, log_level_t::verbose, std::format(
+                                    "Using event of type {} to trigger system named \"{}\" "
+                                    "on worker thread #{}",
+                                    event.type,
+                                    system->name,
+                                    worker->id
                                 ));
 
                                 system->on_trigger(*this, iter, event);
@@ -386,11 +388,11 @@ namespace tef
                     }
                     else
                     {
-                        tef_log(this, log_level_t::verbose, str::format(
-                            "Using event of type %s to trigger system named \"%s\" on the "
+                        tef_log(this, log_level_t::verbose, std::format(
+                            "Using event of type {} to trigger system named \"{}\" on the "
                             "world runner thread",
-                            std::to_string(event.type).c_str(),
-                            system->name.c_str()
+                            event.type,
+                            system->name
                         ));
 
                         system->on_trigger(*this, iter, event);
@@ -409,10 +411,10 @@ namespace tef
     {
         for (const auto& group : system_groups)
         {
-            tef_log(this, log_level_t::verbose, str::format(
-                "Updating %s system(s) at order %s",
-                std::to_string(group.systems.size()).c_str(),
-                std::to_string(group.update_order).c_str()
+            tef_log(this, log_level_t::verbose, std::format(
+                "Updating {} system(s) at order {}",
+                group.systems.size(),
+                group.update_order
             ));
 
             // First, update every system in the group that needs to run on a worker thread.
@@ -424,11 +426,11 @@ namespace tef
                     worker->enqueue(
                         [this, &iter, &group, &system, &worker]()
                         {
-                            tef_log(this, log_level_t::verbose, str::format(
-                                "Updating system named \"%s\" at order %s on worker thread #%s",
-                                system->name.c_str(),
-                                std::to_string(group.update_order).c_str(),
-                                std::to_string(worker->id).c_str()
+                            tef_log(this, log_level_t::verbose, std::format(
+                                "Updating system named \"{}\" at order {} on worker thread #{}",
+                                system->name,
+                                group.update_order,
+                                worker->id
                             ));
 
                             system->on_update(*this, iter);
@@ -443,10 +445,10 @@ namespace tef
                 const auto& worker = worker_map[system.get()];
                 if (!worker)
                 {
-                    tef_log(this, log_level_t::verbose, str::format(
-                        "Updating system named \"%s\" at order %s on the world runner thread",
-                        system->name.c_str(),
-                        std::to_string(group.update_order).c_str()
+                    tef_log(this, log_level_t::verbose, std::format(
+                        "Updating system named \"{}\" at order {} on the world runner thread",
+                        system->name,
+                        group.update_order
                     ));
 
                     system->on_update(*this, iter);
@@ -482,10 +484,10 @@ namespace tef
                 worker->enqueue(
                     [this, &iter, &system, &worker]()
                     {
-                        tef_log(this, log_level_t::info, str::format(
-                            "Stopping system named \"%s\" on worker thread #%s",
-                            system->name.c_str(),
-                            std::to_string(worker->id).c_str()
+                        tef_log(this, log_level_t::info, std::format(
+                            "Stopping system named \"{}\" on worker thread #{}",
+                            system->name,
+                            worker->id
                         ));
 
                         system->on_stop(*this, iter);
@@ -495,9 +497,9 @@ namespace tef
             }
             else
             {
-                tef_log(this, log_level_t::info, str::format(
-                    "Stopping system named \"%s\" on the world runner thread",
-                    system->name.c_str()
+                tef_log(this, log_level_t::info, std::format(
+                    "Stopping system named \"{}\" on the world runner thread",
+                    system->name
                 ));
 
                 system->on_stop(*this, iter);

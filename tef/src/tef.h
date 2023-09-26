@@ -184,8 +184,8 @@ namespace tef
         template <typename T>
         T* add_component_of_type(const T& initial_values)
         {
-            tef_log(this, log_level_t::verbose, str::format(
-                "Adding a new component of type \"%s\"",
+            tef_log(this, log_level_t::verbose, std::format(
+                "Adding a new component of type \"{}\"",
                 typeid(T).name()
             ));
 
@@ -212,10 +212,10 @@ namespace tef
         template <typename T>
         void remove_component_of_type_owned_by(entity_t owner)
         {
-            tef_log(this, log_level_t::verbose, str::format(
-                "Removing the first component of type \"%s\" owned by %s",
+            tef_log(this, log_level_t::verbose, std::format(
+                "Removing the first component of type \"{}\" owned by {}",
                 typeid(T).name(),
-                std::to_string(owner).c_str()
+                owner
             ));
 
             // Component list for T
@@ -238,10 +238,10 @@ namespace tef
         template <typename T>
         void remove_components_of_type_owned_by(entity_t owner)
         {
-            tef_log(this, log_level_t::verbose, str::format(
-                "Removing all components of type \"%s\" owned by %s",
+            tef_log(this, log_level_t::verbose, std::format(
+                "Removing all components of type \"{}\" owned by {}",
                 typeid(T).name(),
-                std::to_string(owner).c_str()
+                owner
             ));
 
             // Component list for T
@@ -273,8 +273,8 @@ namespace tef
         template <typename T>
         void remove_components_of_type()
         {
-            tef_log(this, log_level_t::verbose, str::format(
-                "Removing all components of type \"%s\"",
+            tef_log(this, log_level_t::verbose, std::format(
+                "Removing all components of type \"{}\"",
                 typeid(T).name()
             ));
 
@@ -380,8 +380,8 @@ namespace tef
             // If there's no list for this type, create one
             if (!comp_map.contains(ti))
             {
-                tef_log(this, log_level_t::verbose, str::format(
-                    "Creating a new component list for type \"%s\"",
+                tef_log(this, log_level_t::verbose, std::format(
+                    "Creating a new component list for type \"{}\"",
                     typeid(T).name()
                 ));
 
