@@ -35,7 +35,7 @@ namespace tef::math
         }
 
         // String
-        constexpr std::string to_string() const
+        std::string to_string() const
         {
             return std::format(
                 "[pmin={}, pmax={}]",
