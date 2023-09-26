@@ -65,7 +65,7 @@ namespace tef::str
         {
             return std::format("{:.3f}", v);
         }
-        return std::to_string(v);
+        return std::format("{}", v);
     }
 
     int64_t to_int(const std::string& s);

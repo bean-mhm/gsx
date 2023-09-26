@@ -1,18 +1,30 @@
 #include "utils.h"
 
+// STD
+#include <stdexcept>
+
 namespace tef::str
 {
 
     std::string lower(std::string s)
     {
-        std::transform(s.begin(), s.end(), s.begin(), std::tolower);
+        std::transform(s.cbegin(), s.cend(), s.begin(),
+            [](unsigned char c)
+            {
+                return std::tolower(c);
+            }
+        );
         return s;
     }
 
     std::string upper(std::string s)
     {
-        std::string p = std::format("{}", 7);
-        std::transform(s.begin(), s.end(), s.begin(), std::toupper);
+        std::transform(s.cbegin(), s.cend(), s.begin(),
+            [](unsigned char c)
+            {
+                return std::toupper(c);
+            }
+        );
         return s;
     }
 
@@ -186,18 +198,23 @@ namespace tef::str
         static const char* suffixes[]{ "bytes", "KiB", "MiB", "GiB", "TiB" };
         static double powers[]
         {
-            pow(1024, 0), // 1 byte
-            pow(1024, 1), // 1 KB
-            pow(1024, 2), // 1 MB
-            pow(1024, 3), // 1 GB
-            pow(1024, 4)  // 1 TB
+            std::pow(1024., 0.), // 1 byte
+            std::pow(1024., 1.), // 1 KB
+            std::pow(1024., 2.), // 1 MB
+            std::pow(1024., 3.), // 1 GB
+            std::pow(1024., 4.)  // 1 TB
         };
 
-        uint64_t mag = (uint64_t)fmin(4, fmax(0, floor(log((double)bytes) / log(1024.0))));
+        uint64_t mag = std::clamp(
+            (uint64_t)std::floor(std::log((double)bytes) / std::log(1024.)),
+            0ull,
+            4ull
+        );
+
         if (mag == 0)
-            return format("%llu %s", bytes, suffixes[mag]);
+            return std::format("{} {}", bytes, suffixes[mag]);
         else
-            return format("%.1f %s", (double)bytes / powers[mag], suffixes[mag]);
+            return std::format("{:.1f} {}", (double)bytes / powers[mag], suffixes[mag]);
     }
 
     std::string from_large_number(uint64_t n)
@@ -205,23 +222,23 @@ namespace tef::str
         static const char* suffixes[]{ "", "K", "M", "B", "T" };
         static double powers[]
         {
-            pow(1000, 0), // 1
-            pow(1000, 1), // 1K
-            pow(1000, 2), // 1M
-            pow(1000, 3), // 1B
-            pow(1000, 4)  // 1T
+            std::pow(1000., 0.), // 1
+            std::pow(1000., 1.), // 1K
+            std::pow(1000., 2.), // 1M
+            std::pow(1000., 3.), // 1B
+            std::pow(1000., 4.)  // 1T
         };
 
-        uint64_t mag = (uint64_t)fmin(4, fmax(0, floor(log((double)n) / log(1000.0))));
-        if (mag == 0)
-            return format("%llu", n);
-        else
-            return format("%.1f%s", (double)n / powers[mag], suffixes[mag]);
-    }
+        uint64_t mag = std::clamp(
+            (uint64_t)std::floor(std::log((double)n) / std::log(1000.)),
+            0ull,
+            4ull
+        );
 
-    std::string from_bool(bool v)
-    {
-        return v ? "True" : "False";
+        if (mag == 0)
+            return std::format("{}", n);
+        else
+            return std::format("{:.1f}{}", (double)n / powers[mag], suffixes[mag]);
     }
 
     std::string from_enum_values(
@@ -230,13 +247,13 @@ namespace tef::str
         int starting_index
     )
     {
-        std::string s = format("%s: ", name.c_str());
+        std::string s = std::format("{}: ", name);
         for (uint64_t i = 0; i < values.size(); i++)
         {
             if (i > 0)
                 s += ", ";
 
-            s += format("%s = %d", values[i].c_str(), i + starting_index);
+            s += std::format("{} = {}", values[i], i + starting_index);
         }
         return s;
     }
@@ -245,36 +262,36 @@ namespace tef::str
     {
         if (seconds < 1.f)
         {
-            return format("%.3fs", seconds);
+            return std::format("{:.3f} s", seconds);
         }
         else if (seconds < 60.f)
         {
-            return format("%.1fs", seconds);
+            return std::format("{:.1f} s", seconds);
         }
         else
         {
-            uint64_t isec = (int)floorf(seconds);
+            uint64_t isec = (uint64_t)std::floor(seconds);
             uint64_t ihr = isec / 3600;
             uint64_t imin = (isec / 60) % 60;
             isec %= 60;
             if (ihr > 0)
             {
-                return format("%uh %um %us", ihr, imin, isec);
+                return std::format("{}h {}m {}s", ihr, imin, isec);
             }
             else
             {
-                return format("%um %us", imin, isec);
+                return std::format("{}m {}s", imin, isec);
             }
         }
     }
 
     std::string from_elapsed(float seconds)
     {
-        uint64_t isec = (uint64_t)floorf(seconds);
+        uint64_t isec = (uint64_t)std::floor(seconds);
         uint64_t ihr = isec / 3600;
         uint64_t imin = (isec / 60) % 60;
         isec %= 60;
-        return format("%02u:%02u:%02u", ihr, imin, isec);
+        return std::format("{:02}:{:02}:{:02}", ihr, imin, isec);
     }
 
     std::string from_time()
@@ -298,9 +315,9 @@ namespace tef::str
         }
         catch (const std::exception& e)
         {
-            throw std::exception(format(
-                "Couldn't parse an integer from \"%s\".",
-                s.c_str()
+            throw std::runtime_error(std::format(
+                "Couldn't parse an integer from \"{}\".",
+                s
             ).c_str());
         }
     }
@@ -313,9 +330,9 @@ namespace tef::str
         }
         catch (const std::exception& e)
         {
-            throw std::exception(format(
-                "Couldn't parse a float from \"%s\".",
-                s.c_str()
+            throw std::runtime_error(std::format(
+                "Couldn't parse a float from \"{}\".",
+                s
             ).c_str());
         }
     }
@@ -325,7 +342,7 @@ namespace tef::str
         try
         {
             if (s.empty())
-                throw std::exception("empty string");
+                throw std::runtime_error("empty string");
 
             std::vector<std::string> elements;
             to_list(s, ',', elements);
@@ -353,13 +370,13 @@ namespace tef::str
                     std::stof(elements[3])
                 };
             }
-            throw std::exception("invalid input");
+            throw std::runtime_error("invalid input");
         }
         catch (const std::exception& e)
         {
-            throw std::exception(format(
-                "Failed to parse color from string \"%s\": %s",
-                s.c_str(),
+            throw std::runtime_error(std::format(
+                "Failed to parse color from string \"{}\": {}",
+                s,
                 e.what()
             ).c_str());
         }
@@ -376,7 +393,7 @@ namespace tef::str
         try
         {
             if (s.empty())
-                throw std::exception("empty string");
+                throw std::runtime_error("empty string");
 
             std::vector<std::string> elements;
             to_list(s, ',', elements);
@@ -390,13 +407,13 @@ namespace tef::str
             {
                 return { std::stof(elements[0]), std::stof(elements[1]) };
             }
-            throw std::exception("invalid input");
+            throw std::runtime_error("invalid input");
         }
         catch (const std::exception& e)
         {
-            throw std::exception(format(
-                "Failed to parse XY from string \"%s\": %s",
-                s.c_str(),
+            throw std::runtime_error(std::format(
+                "Failed to parse XY from string \"{}\": {}",
+                s,
                 e.what()
             ).c_str());
         }
