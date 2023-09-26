@@ -34,22 +34,22 @@ namespace tef::math
 
         // Construct from matrix
 
-        constexpr base_vec2(const mat1x2& m)
+        explicit constexpr base_vec2(const mat1x2& m)
             : x((T)m(0)), y((T)m(1))
         {}
 
-        constexpr base_vec2(const mat2x1& m)
+        explicit constexpr base_vec2(const mat2x1& m)
             : x((T)m(0)), y((T)m(1))
         {}
 
         // Cast to matrix
 
-        constexpr operator mat1x2() const
+        explicit constexpr operator mat1x2() const
         {
             return mat1x2({ (float)x, (float)y });
         }
 
-        constexpr operator mat2x1() const
+        explicit constexpr operator mat2x1() const
         {
             return mat2x1({ (float)x, (float)y });
         }
