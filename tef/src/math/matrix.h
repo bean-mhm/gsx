@@ -247,6 +247,56 @@ namespace tef::math
             return m[row][col];
         }
 
+        // Sub-matrix
+        // Note: The indices are inclusive. For example, if the start row and column indices are
+        // both 0, and the end row and column indices are both 2, this function will return the
+        // upper-left 3x3 portion.
+        // Note: The value of end_row must not be smaller than the value of start_row, and the
+        // same goes for start_col and end_col.
+        template <size_t start_row, size_t start_col, size_t end_row, size_t end_col>
+        constexpr base_mat<end_row - start_row + 1, end_col - start_col + 1> sub() const
+        {
+            base_mat<end_row - start_row + 1, end_col - start_col + 1> r;
+            for (size_t row = start_row; row <= end_row; row++)
+            {
+                for (size_t col = start_col; col <= end_col; col++)
+                {
+                    r(row - start_row, col - start_col) = (*this)(row, col);
+                }
+            }
+        }
+
+        // Upper-left n x m sub-matrix
+        // Note: n must be smaller than or equal to n_row.
+        // Note: m must be smaller than or equal to n_col.
+        template <size_t n, size_t m>
+        constexpr base_mat<n, m> sub() const
+        {
+            base_mat<n, m> r;
+            for (size_t row = 0; row < n; row++)
+            {
+                for (size_t col = 0; col < m; col++)
+                {
+                    r(row, col) = (*this)(row, col);
+                }
+            }
+        }
+
+        // Upper-left n x n sub-matrix
+        // Note: n must be smaller than n_row and n_col.
+        template <size_t n>
+        constexpr base_mat<n, n> sub() const
+        {
+            base_mat<n, n> r;
+            for (size_t row = 0; row < n; row++)
+            {
+                for (size_t col = 0; col < n; col++)
+                {
+                    r(row, col) = (*this)(row, col);
+                }
+            }
+        }
+
         // Total number of elements (n_rows * n_col)
         constexpr size_t n_total() const
         {
@@ -263,6 +313,21 @@ namespace tef::math
     constexpr base_mat<n_row, n_col> operator*(float s, const base_mat<n_row, n_col>& m)
     {
         return m * s;
+    }
+
+    template <size_t n>
+    constexpr bool is_identity(const base_mat<n, n>& m)
+    {
+        for (size_t row = 0; row < n; row++)
+        {
+            for (size_t col = 0; col < n; col++)
+            {
+                float expected = (row == col) ? 1.f : 0.f;
+                if (m(row, col) != expected)
+                    return false;
+            }
+        }
+        return true;
     }
 
     // Cofactor of m[p][q]
@@ -447,8 +512,8 @@ namespace tef::math
     using mat1x4 = base_mat<1, 4>;
     using mat4x1 = base_mat<4, 1>;
 
-    using mat2x2 = base_mat<2, 2>;
     using mat2 = base_mat<2, 2>;
+    using mat2x2 = base_mat<2, 2>;
 
     using mat2x3 = base_mat<2, 3>;
     using mat3x2 = base_mat<3, 2>;
@@ -456,13 +521,13 @@ namespace tef::math
     using mat2x4 = base_mat<2, 4>;
     using mat4x2 = base_mat<4, 2>;
 
-    using mat3x3 = base_mat<3, 3>;
     using mat3 = base_mat<3, 3>;
+    using mat3x3 = base_mat<3, 3>;
 
     using mat3x4 = base_mat<3, 4>;
     using mat4x3 = base_mat<4, 3>;
 
-    using mat4x4 = base_mat<4, 4>;
     using mat4 = base_mat<4, 4>;
+    using mat4x4 = base_mat<4, 4>;
 
 }
