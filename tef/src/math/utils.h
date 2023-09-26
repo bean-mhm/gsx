@@ -9,7 +9,7 @@ namespace tef::math
 {
 
     static constexpr float infinity = std::numeric_limits<float>::infinity();
-    static constexpr float epsilon = 1e-6f;
+    static constexpr float epsilon = 1e-5f;
     static constexpr float sqrt2 = 1.414213562373095048801688724f;
     static constexpr float sqrt3 = 1.732050807568877293527446341f;
     static constexpr float e = 2.718281828459045235360287471f;
@@ -18,9 +18,6 @@ namespace tef::math
     static constexpr float pi_over_2 = 1.570796326794896619231321691f;
     static constexpr float deg2rad = 0.017453292519943295769236907f;
     static constexpr float rad2deg = 57.29577951308232087679815481f;
-
-    bool solve_quadratic(float a, float b, float c, float& t0, float& t1);
-    bool solve_linear_2x2(const float a[2][2], const float b[2], float& x0, float& x1);
 
     constexpr float radians(float degrees)
     {
@@ -256,6 +253,40 @@ namespace tef::math
     constexpr int u32_to_i32(uint32_t v)
     {
         return std::min(v, (uint32_t)INT_MAX);
+    }
+
+    constexpr bool solve_quadratic(float a, float b, float c, float& t0, float& t1)
+    {
+        float discrim = b * b - 4 * a * c;
+        if (discrim < 0)
+            return false;
+        float root_discrim = sqrt(discrim);
+        float q;
+        if (b < 0)
+        {
+            q = -.5f * (b - root_discrim);
+        }
+        else
+        {
+            q = -.5f * (b + root_discrim);
+        }
+        t0 = q / a;
+        t1 = c / q;
+        if (t0 > t1)
+            std::swap(t0, t1);
+        return true;
+    }
+
+    constexpr bool solve_linear_2x2(const float a[2][2], const float b[2], float& x0, float& x1)
+    {
+        float det = a[0][0] * a[1][1] - a[0][1] * a[1][0];
+        if (abs(det) < 1e-10f)
+            return false;
+        x0 = (a[1][1] * b[0] - a[0][1] * b[1]) / det;
+        x1 = (a[0][0] * b[1] - a[1][0] * b[0]) / det;
+        if (isnan(x0) || isnan(x1))
+            return false;
+        return true;
     }
 
 }
