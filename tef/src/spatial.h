@@ -44,8 +44,7 @@ namespace tef::spatial
                 return true;
             }
 
-            if (!divided)
-                subdivide();
+            subdivide();
 
             if (top_left->insert(elem)) return true;
             if (top_right->insert(elem)) return true;
@@ -116,6 +115,9 @@ namespace tef::spatial
 
         void subdivide()
         {
+            if (divided) return;
+            divided = true;
+
             math::vec2 center = (bounds.pmin + bounds.pmax) * .5f;
 
             top_left = std::make_unique<quadtree_t>(
@@ -134,8 +136,6 @@ namespace tef::spatial
                 capacity,
                 math::bounds2(center, bounds.pmin)
             );
-
-            divided = true;
         }
 
     };
