@@ -13,13 +13,6 @@
 #include "constants.h"
 #include "components.h"
 
-math::mat2 rotate2D(float a)
-{
-    float s = math::sin(a);
-    float c = math::cos(a);
-    return math::mat2(c, s, -s, c);
-}
-
 math::vec2 get_point_of_attraction(float time)
 {
     float a = .8f * time;
@@ -94,8 +87,11 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
                 float fac = 1.f - math::clamp01(dist / boids_attention);
 
                 // Steer
-                float deg_per_sec = 20.f * fac;
-                boid.vel = rotate2D(math::radians(deg_per_sec * dt)) * boid.vel;
+                float angle = math::radians(20.f * fac * dt);
+                boid.vel = math::transform::apply_vector2D(
+                    math::transform::rotate2D_2x2(angle),
+                    boid.vel
+                );
 
                 // Move away
                 boid.vel -= 5.f * fac * dt * this_to_other;
@@ -146,9 +142,11 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
 
             // Steer away
             float pd = math::max(0.f, sd);
-            float deg_per_sec = -50.f * math::exp(-15.f * pd);
-            float angle = math::radians(deg_per_sec * dt);
-            boid.vel = rotate2D(angle) * boid.vel;
+            float angle = math::radians(-50.f * math::exp(-15.f * pd) * dt);
+            boid.vel = math::transform::apply_vector2D(
+                math::transform::rotate2D_2x2(angle),
+                boid.vel
+            );
 
             // Move away
             float force = 1. / (100. * pd * pd + .1);
