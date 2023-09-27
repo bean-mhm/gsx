@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 #include <format>
-#include <functional>
 #include <stdexcept>
 
 namespace test
