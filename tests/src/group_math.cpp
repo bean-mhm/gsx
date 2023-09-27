@@ -256,6 +256,21 @@ static void test_bounds3()
     ), "inside(point, bounds)");
 }
 
+static void test_matrix()
+{
+    //
+}
+
+static void test_transform()
+{
+    //
+}
+
+static void test_prng()
+{
+    //
+}
+
 void test_group_math()
 {
     test::start_group("math");
@@ -264,5 +279,8 @@ void test_group_math()
     test::run("vec4", test_vec4);
     test::run("bounds2", test_bounds2);
     test::run("bounds3", test_bounds3);
+    test::run("matrix", test_matrix);
+    test::run("transform", test_transform);
+    test::run("prng", test_prng);
     test::end_group();
 }
