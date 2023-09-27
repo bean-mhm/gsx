@@ -154,7 +154,7 @@ namespace tef
         // Get the first component of type T owned by a given entity. If no such component exists,
         // nullptr will be returned.
         // Note: T must be derived from base_component_t.
-        template <typename T>
+        template<typename T>
         T* get_component_of_type_owned_by(entity_t owner)
         {
             std::vector<byte_t>& bytes = get_components_of_type_bytes<T>();
@@ -170,7 +170,7 @@ namespace tef
         }
 
         // Get a list of all components of type T.
-        template <typename T>
+        template<typename T>
         void get_components_of_type(T*& out_components, size_t& out_size)
         {
             std::vector<byte_t>& bytes = get_components_of_type_bytes<T>();
@@ -181,7 +181,7 @@ namespace tef
         // Add a component of type T with given initial values. You cannot use initial_values to
         // modify the component afterward. Instead, a pointer to the new copy in the component
         // list will be returned.
-        template <typename T>
+        template<typename T>
         T* add_component_of_type(const T& initial_values)
         {
             tef_log(this, log_level_t::verbose, std::format(
@@ -209,7 +209,7 @@ namespace tef
 
         // Remove the first component of type T owned by a given entity.
         // Note: T must be derived from base_component_t.
-        template <typename T>
+        template<typename T>
         void remove_component_of_type_owned_by(entity_t owner)
         {
             tef_log(this, log_level_t::verbose, std::format(
@@ -235,7 +235,7 @@ namespace tef
 
         // Remove all components of type T owned by a given entity.
         // Note: T must be derived from base_component_t.
-        template <typename T>
+        template<typename T>
         void remove_components_of_type_owned_by(entity_t owner)
         {
             tef_log(this, log_level_t::verbose, std::format(
@@ -270,7 +270,7 @@ namespace tef
         void remove_components_owned_by(entity_t owner);
 
         // Remove all components of type T.
-        template <typename T>
+        template<typename T>
         void remove_components_of_type()
         {
             tef_log(this, log_level_t::verbose, std::format(
@@ -371,7 +371,7 @@ namespace tef
         bool should_stop = false;
 
         // Get a byte array of all components of type T.
-        template <typename T>
+        template<typename T>
         std::vector<byte_t>& get_components_of_type_bytes()
         {
             // Type index

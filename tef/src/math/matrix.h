@@ -12,7 +12,7 @@ namespace tef::math
 {
 
     // Row-major matrix
-    template <int32_t n_row, int32_t n_col>
+    template<int32_t n_row, int32_t n_col>
     class base_mat
     {
     public:
@@ -178,7 +178,7 @@ namespace tef::math
         }
 
         // this * matrix
-        template <int32_t n2>
+        template<int32_t n2>
         constexpr base_mat<n_row, n2> operator*(const base_mat<n_col, n2>& m) const
         {
             base_mat<n_row, n2> r;
@@ -255,7 +255,7 @@ namespace tef::math
         // upper-left 3x3 portion.
         // Note: The value of end_row must not be smaller than the value of start_row, and the
         // same goes for start_col and end_col.
-        template <int32_t start_row, int32_t start_col, int32_t end_row, int32_t end_col>
+        template<int32_t start_row, int32_t start_col, int32_t end_row, int32_t end_col>
         constexpr base_mat<end_row - start_row + 1, end_col - start_col + 1> sub() const
         {
             base_mat<end_row - start_row + 1, end_col - start_col + 1> r;
@@ -271,7 +271,7 @@ namespace tef::math
         // Upper-left n x m sub-matrix
         // Note: n must be smaller than or equal to n_row.
         // Note: m must be smaller than or equal to n_col.
-        template <int32_t n, int32_t m>
+        template<int32_t n, int32_t m>
         constexpr base_mat<n, m> sub() const
         {
             base_mat<n, m> r;
@@ -286,7 +286,7 @@ namespace tef::math
 
         // Upper-left n x n sub-matrix
         // Note: n must be smaller than n_row and n_col.
-        template <int32_t n>
+        template<int32_t n>
         constexpr base_mat<n, n> sub() const
         {
             base_mat<n, n> r;
@@ -311,13 +311,13 @@ namespace tef::math
     };
 
     // Scalar * matrix
-    template <int32_t n_row, int32_t n_col>
+    template<int32_t n_row, int32_t n_col>
     constexpr base_mat<n_row, n_col> operator*(float s, const base_mat<n_row, n_col>& m)
     {
         return m * s;
     }
 
-    template <int32_t n>
+    template<int32_t n>
     constexpr bool is_identity(const base_mat<n, n>& m)
     {
         for (int32_t row = 0; row < n; row++)
@@ -334,7 +334,7 @@ namespace tef::math
 
     // Cofactor of m[p][q]
     // https://www.geeksforgeeks.org/adjoint-inverse-matrix/
-    template <int32_t n>
+    template<int32_t n>
     constexpr base_mat<n - 1, n - 1> cofactor(const base_mat<n, n>& m, int32_t p, int32_t q)
     {
         int32_t i = 0, j = 0;
@@ -363,7 +363,7 @@ namespace tef::math
 
     // Determinant of a square matrix
     // https://www.geeksforgeeks.org/determinant-of-a-matrix/
-    template <int32_t n>
+    template<int32_t n>
     constexpr float determinant(base_mat<n, n> m)
     {
         if constexpr (n == 1)
@@ -442,7 +442,7 @@ namespace tef::math
 
     // Adjoint of a square matrix
     // https://www.geeksforgeeks.org/adjoint-inverse-matrix/
-    template <int32_t n>
+    template<int32_t n>
     constexpr base_mat<n, n> adjoint(const base_mat<n, n>& m)
     {
         if constexpr (n == 1)
@@ -467,7 +467,7 @@ namespace tef::math
     }
 
     // Inverted copy of a square matrix
-    template <int32_t n>
+    template<int32_t n>
     constexpr base_mat<n, n> inverse(const base_mat<n, n>& m, bool* out_invertible = nullptr)
     {
         // Determinant
@@ -489,7 +489,7 @@ namespace tef::math
     }
 
     // Transposed copy of a matrix
-    template <int32_t n_row, int32_t n_col>
+    template<int32_t n_row, int32_t n_col>
     constexpr base_mat<n_col, n_row> transpose(const base_mat<n_row, n_col>& m)
     {
         base_mat<n_col, n_row> r;

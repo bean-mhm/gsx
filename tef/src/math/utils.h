@@ -240,7 +240,7 @@ namespace tef::math
         return std::isinf(x);
     }
 
-    template <typename T>
+    template<typename T>
     inline uint64_t upper_power_of_2(T v)
     {
         return (uint64_t)std::pow(2., std::ceil(std::log2((double)v)));

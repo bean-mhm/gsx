@@ -20,27 +20,27 @@ no_copy_constructor(CLASS); no_move_constructor(CLASS);
 namespace tef::utils
 {
 
-    template <typename T>
+    template<typename T>
     void vec_clear(std::vector<T>& vec)
     {
         vec.clear();
         std::vector<T>().swap(vec);
     }
 
-    template <typename T>
+    template<typename T>
     void vec_insert_contents(std::vector<T>& a, const std::vector<T>& b)
     {
         a.reserve(a.size() + b.size());
         a.insert(a.end(), b.begin(), b.end());
     }
 
-    template <typename T>
+    template<typename T>
     void vec_remove(std::vector<T>& vec, size_t pos)
     {
         vec.erase(vec.begin() + pos);
     }
 
-    template <typename T>
+    template<typename T>
     ptrdiff_t vec_find_index(const std::vector<T>& vec, const T& value)
     {
         for (size_t i = 0; i < vec.size(); i++)
@@ -53,7 +53,7 @@ namespace tef::utils
         return -1;
     }
 
-    template <typename T>
+    template<typename T>
     bool vec_contains(const std::vector<T>& vec, const T& value)
     {
         return vec_find_index(vec, value) > -1;

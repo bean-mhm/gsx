@@ -7,7 +7,7 @@
 namespace tef::math
 {
 
-    template <typename T>
+    template<typename T>
     class base_bounds3
     {
     public:
@@ -29,7 +29,7 @@ namespace tef::math
         {}
 
         // Type casting
-        template <typename U>
+        template<typename U>
         constexpr operator base_bounds3<U>() const
         {
             return base_bounds3<U>((base_vec3<U>)pmin, (base_vec3<U>)pmax);
@@ -141,28 +141,28 @@ namespace tef::math
     };
 
     // Bounds + point
-    template <typename T>
+    template<typename T>
     constexpr base_bounds3<T> union_(const base_bounds3<T>& b, const base_vec3<T>& p)
     {
         return base_bounds3<T>(min(b.pmin, p), max(b.pmax, p));
     }
 
     // Bounds + bounds
-    template <typename T>
+    template<typename T>
     constexpr base_bounds3<T> union_(const base_bounds3<T>& b1, const base_bounds3<T>& b2)
     {
         return base_bounds3<T>(min(b1.pmin, b2.pmin), max(b1.pmax, b2.pmax));
     }
 
     // Bounds * bounds
-    template <typename T>
+    template<typename T>
     constexpr base_bounds3<T> intersect(const base_bounds3<T>& b1, const base_bounds3<T>& b2)
     {
         return base_bounds3<T>(max(b1.pmin, b2.pmin), min(b1.pmax, b2.pmax));
     }
 
     // Check if two bounding boxes overlap
-    template <typename T>
+    template<typename T>
     constexpr bool overlaps(const base_bounds3<T>& b1, const base_bounds3<T>& b2)
     {
         return b1.pmax.x >= b2.pmin.x && b1.pmin.x <= b2.pmax.x
@@ -171,7 +171,7 @@ namespace tef::math
     }
 
     // Check if a point is inside a bounding box
-    template <typename T>
+    template<typename T>
     constexpr bool inside(const base_vec3<T>& p, const base_bounds3<T>& b)
     {
         return p.x >= b.pmin.x && p.x <= b.pmax.x
@@ -181,7 +181,7 @@ namespace tef::math
 
     // The inside_exclusive() variant of inside() doesn't consider points on the upper boundary to
     // be inside the bounds. It is mostly useful with integer-typed bounds.
-    template <typename T>
+    template<typename T>
     constexpr bool inside_exclusive(const base_vec3<T>& p, const base_bounds3<T>& b)
     {
         return p.x >= b.pmin.x && p.x < b.pmax.x
@@ -190,7 +190,7 @@ namespace tef::math
     }
 
     // Pad the bounding box by a constant factor in all dimensions
-    template <typename T, typename U>
+    template<typename T, typename U>
     constexpr base_bounds3<T> expand(const base_bounds3<T>& b, U delta)
     {
         return base_bounds3<T>(b.pmin - base_vec3<T>(delta), b.pmax + base_vec3<T>(delta));

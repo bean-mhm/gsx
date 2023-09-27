@@ -20,7 +20,7 @@ namespace tef::spatial
     // Quadtree data structure with a given capacity per tile
     // Note: T must have a constructor with no arguments.
     // Note: T must have a field of type tef::math::vec2 named pos, representing the 2D position.
-    template <typename T, size_t capacity>
+    template<typename T, size_t capacity>
     class quadtree_t
     {
     public:

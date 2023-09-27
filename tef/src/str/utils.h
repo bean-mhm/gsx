@@ -58,7 +58,7 @@ namespace tef::str
     // Example: "2023-07-30 15:38:09"
     std::string from_time();
 
-    template <typename T>
+    template<typename T>
     std::string from_number(T v)
     {
         if constexpr (std::is_same_v<T, float> || std::is_same_v<T, double>)
@@ -71,7 +71,7 @@ namespace tef::str
     int64_t to_int(const std::string& s);
     float to_float(const std::string& s);
 
-    template <size_t size>
+    template<size_t size>
     std::string from_float_array(const std::array<float, size>& arr)
     {
         std::string result = "";
