@@ -95,7 +95,8 @@ namespace tef::math
         return std::atanh(x);
     }
 
-    inline float pow(float x, float y)
+    template<typename T>
+    inline T pow(T x, T y)
     {
         return std::pow(x, y);
     }
