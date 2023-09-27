@@ -322,6 +322,12 @@ namespace tef::math
     }
 
     template<typename T>
+    inline base_vec2<T> pow(const base_vec2<T>& v1, T v2)
+    {
+        return base_vec2<T>(pow(v1.x, v2), pow(v1.y, v2));
+    }
+
+    template<typename T>
     inline base_vec2<T> exp(const base_vec2<T>& v)
     {
         return base_vec2<T>(exp(v.x), exp(v.y));
@@ -400,7 +406,7 @@ namespace tef::math
     }
 
     template<typename T>
-    inline base_vec2<T> mod(const base_vec2<T>& v1, float v2)
+    inline base_vec2<T> mod(const base_vec2<T>& v1, T v2)
     {
         return base_vec2<T>(mod(v1.x, v2), mod(v1.y, v2));
     }
