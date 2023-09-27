@@ -56,7 +56,8 @@ static void test_vec2()
     test::assert(eq_vec(sin(v), vec2(.9799081f, .8632094f)), "sin(vec2)");
     test::assert(eq_vec(pow(v, vec2(2.f)), v * v), "pow(vec2, 2)");
     test::assert(eq_vec(inversesqrt(v), vec2(.8543577f, .6900656f)), "inversesqrt(vec2)");
-    test::assert(eq_vec(sign(ivec2(-80, 50)), ivec2(-1, 1)), "sign(uvec2)");
+    test::assert(eq_vec(sign(ivec2(-80, 50)), ivec2(-1, 1)), "sign(ivec2)");
+    test::assert(eq_vec(clamp01(vec2(.2f, 2.f)), vec2(.2f, 1.f)), "clamp01(vec2)");
     test::assert(eq_float(distance(vec2(-1, 0), vec2(1, 3)), 3.6055513f), "distance(vec2, vec2)");
     test::assert(eq_vec(
         reflect(normalize(vec2(1, -1)), vec2(0, 1)),
@@ -108,7 +109,8 @@ static void test_vec3()
         inversesqrt(v),
         vec3(.8543577f, .6900656f, .3333333f)
     ), "inversesqrt(vec3)");
-    test::assert(eq_vec(sign(ivec3(-80, 50, 60)), ivec3(-1, 1, 1)), "sign(uvec3)");
+    test::assert(eq_vec(sign(ivec3(-80, 50, 60)), ivec3(-1, 1, 1)), "sign(ivec3)");
+    test::assert(eq_vec(clamp01(vec3(.2f, 2.f, -10.f)), vec3(.2f, 1.f, 0.f)), "clamp01(vec3)");
     test::assert(eq_float(
         distance(vec3(-1, 0, 0), vec3(1, 3, 0))
         , 3.6055513f
