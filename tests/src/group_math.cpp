@@ -180,11 +180,89 @@ static void test_vec4()
     test::assert(max_component_index(vec4(2, -2, 4, 30)) == 3, "max_component_index(vec4)");
 }
 
+static void test_bounds2()
+{
+    test::assert(
+        ibounds2(ivec2(-1), ivec2(1)).to_string() == "[pmin=[-1, -1], pmax=[1, 1]]",
+        "to_string()"
+    );
+    bounds2 b(vec2(-1), vec2(1));
+    test::assert(eq_float(b.area(), 4.f), "area()");
+    test::assert(eq_vec(b.lerp(.5), vec2(0)), "lerp()");
+    test::assert(eq_vec(b.offset_of(vec2(0)), vec2(.5)), "offset_of()");
+    test::assert(
+        union_(ibounds2(ivec2(-2), ivec2(0)), ivec2(3)) == ibounds2(ivec2(3), ivec2(-2)),
+        "union_(bounds, point)"
+    );
+    test::assert(
+        union_(
+            ibounds2(ivec2(-2), ivec2(0)),
+            ibounds2(ivec2(1), ivec2(4))
+        ) == ibounds2(ivec2(-2), ivec2(4)),
+        "union_(bounds, bounds)"
+    );
+    test::assert(
+        intersect(
+            ibounds2(ivec2(-2), ivec2(0)),
+            ibounds2(ivec2(-1), ivec2(1))
+        ) == ibounds2(ivec2(-1), ivec2(0)),
+        "intersect(bounds, bounds)"
+    );
+    test::assert(overlaps(
+        bounds2(vec2(0), vec2(3)),
+        bounds2(vec2(2), vec2(4))
+    ), "overlaps(bounds, bounds)");
+    test::assert(inside(
+        vec2(2),
+        bounds2(vec2(0), vec2(3))
+    ), "inside(point, bounds)");
+}
+
+static void test_bounds3()
+{
+    test::assert(
+        ibounds3(ivec3(-1), ivec3(1)).to_string() == "[pmin=[-1, -1, -1], pmax=[1, 1, 1]]",
+        "to_string()"
+    );
+    bounds3 b(vec3(-1), vec3(1));
+    test::assert(eq_float(b.volume(), 8.f), "volume()");
+    test::assert(eq_vec(b.lerp(.5), vec3(0)), "lerp()");
+    test::assert(eq_vec(b.offset_of(vec3(0)), vec3(.5)), "offset_of()");
+    test::assert(
+        union_(ibounds3(ivec3(-2), ivec3(0)), ivec3(3)) == ibounds3(ivec3(3), ivec3(-2)),
+        "union_(bounds, point)"
+    );
+    test::assert(
+        union_(
+            ibounds3(ivec3(-2), ivec3(0)),
+            ibounds3(ivec3(1), ivec3(4))
+        ) == ibounds3(ivec3(-2), ivec3(4)),
+        "union_(bounds, bounds)"
+    );
+    test::assert(
+        intersect(
+            ibounds3(ivec3(-2), ivec3(0)),
+            ibounds3(ivec3(-1), ivec3(1))
+        ) == ibounds3(ivec3(-1), ivec3(0)),
+        "intersect(bounds, bounds)"
+    );
+    test::assert(overlaps(
+        bounds3(vec3(0), vec3(3)),
+        bounds3(vec3(2), vec3(4))
+    ), "overlaps(bounds, bounds)");
+    test::assert(inside(
+        vec3(2),
+        bounds3(vec3(0), vec3(3))
+    ), "inside(point, bounds)");
+}
+
 void test_group_math()
 {
     test::start_group("math");
     test::run("vec2", test_vec2);
     test::run("vec3", test_vec3);
     test::run("vec4", test_vec4);
+    test::run("bounds2", test_bounds2);
+    test::run("bounds3", test_bounds3);
     test::end_group();
 }
