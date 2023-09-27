@@ -104,7 +104,7 @@ static void test_vec3()
     test::assert(eq_vec(2.f * v, vec3(2.74f, 4.2f, 18.f)), "scalar * vec3");
     test::assert(eq_vec(10.f / v, vec3(7.2992700f, 4.7619047f, 1.1111111f)), "scalar / vec3");
     test::assert(eq_vec(sin(v), vec3(.9799081f, .8632094f, 0.4121185f)), "sin(vec3)");
-    test::assert(eq_vec(pow(v, vec3(.5f)), sqrt(v)), "pow(vec3, 2)");
+    test::assert(eq_vec(pow(v, vec3(.5f)), sqrt(v)), "pow(vec3, .5)");
     test::assert(eq_vec(
         inversesqrt(v),
         vec3(.8543577f, .6900656f, .3333333f)
@@ -123,10 +123,68 @@ static void test_vec3()
     test::assert(max_component_index(vec3(2, 4, 6)) == 2, "max_component_index(vec3)");
 }
 
+static void test_vec4()
+{
+    vec4 v(1.37f, 2.1f, 9.f, 1.f);
+    test::assert(uvec4(v) == uvec4(1, 2, 9, 1), "type conversion");
+    test::assert(eq_vec(vec4(mat1x4({ 7, 3, 2, -1 })), vec4(7, 3, 2, -1)), "mat1x4 constructor");
+    test::assert(eq_vec(vec4(mat4x1({ 7, 3, 2, -1 })), vec4(7, 3, 2, -1)), "mat4x1 constructor");
+    test::assert(mat1x4(vec4(0, 2, 4, 6)) == mat1x4({ 0, 2, 4, 6 }), "mat1x4 cast");
+    test::assert(mat4x1(vec4(0, 2, 4, 6)) == mat4x1({ 0, 2, 4, 6 }), "mat4x1 cast");
+    test::assert(ivec4(3, 2, 1, -5).to_string() == "[3, 2, 1, -5]", "to_string()");
+    test::assert(eq_vec(v + vec4(5), vec4(6.37f, 7.1f, 14.f, 6.f)), "vec4 + vec4");
+    test::assert(eq_vec(v - vec4(.5f), vec4(.87f, 1.6f, 8.5f, .5f)), "vec4 - vec4");
+    v += vec4(5.f, 6.5f, 1.f, 1.f);
+    test::assert(eq_vec(v, vec4(6.37f, 8.6f, 10.f, 2.f)), "vec4 += vec4");
+    v -= vec4(5.f, 6.5f, 1.f, 1.f);
+    test::assert(eq_vec(v, vec4(1.37f, 2.1f, 9.f, 1.f)), "vec4 -= vec4");
+    test::assert(eq_vec(v * 2.f, vec4(2.74f, 4.2f, 18.f, 2.f)), "vec4 * scalar");
+    test::assert(eq_vec(v * vec4(2.f, 1.f, 3.f, 0), vec4(2.74f, 2.1f, 27.f, 0)), "vec4 * vec4");
+    test::assert(eq_vec(v / .5f, vec4(2.74f, 4.2f, 18.f, 2.f)), "vec4 / scalar");
+    test::assert(eq_vec(v / vec4(.5f, 1.f, 1.f, 1), vec4(2.74f, 2.1f, 9.f, 1)), "vec4 / vec4");
+    v *= 2.f;
+    test::assert(eq_vec(v, vec4(2.74f, 4.2f, 18.f, 2.f)), "vec4 *= scalar");
+    v /= 2.f;
+    test::assert(eq_vec(v, vec4(1.37f, 2.1f, 9.f, 1.f)), "vec4 /= scalar");
+    v *= vec4(2.f, 1.f, 3.f, 10.f);
+    test::assert(eq_vec(v, vec4(2.74f, 2.1f, 27.f, 10.f)), "vec4 *= vec4");
+    v /= vec4(2.f, 1.f, 3.f, 10.f);
+    test::assert(eq_vec(v, vec4(1.37f, 2.1f, 9.f, 1.f)), "vec4 /= vec4");
+
+    test::assert(vec4(4, 3, 5, 0) == vec4(4, 3, 5, 0), "vec4 == vec4");
+    test::assert(vec4(4, 3, 5, 0) != vec4(4, 2, 5, 0), "vec4 != vec4");
+    test::assert(-vec4(4, 3, 0, -4) == vec4(-4, -3, 0, 4), "-vec4");
+    test::assert(eq_vec(2.f + v, vec4(3.37f, 4.1f, 11.f, 3.f)), "scalar + vec4");
+    test::assert(eq_vec(10.f - v, vec4(8.63f, 7.9f, 1.f, 9.f)), "scalar - vec4");
+    test::assert(eq_vec(2.f * v, vec4(2.74f, 4.2f, 18.f, 2.f)), "scalar * vec4");
+    test::assert(eq_vec(10.f / v, vec4(7.2992700f, 4.7619047f, 1.1111111f, 10)), "scalar / vec4");
+    test::assert(eq_vec(sin(v), vec4(.9799081f, .8632094f, 0.4121185f, 0.841471f)), "sin(vec4)");
+    test::assert(eq_vec(pow(v, vec4(.5f)), sqrt(v)), "pow(vec4, .5)");
+    test::assert(eq_vec(
+        inversesqrt(v),
+        vec4(.8543577f, .6900656f, .3333333f, 1.f)
+    ), "inversesqrt(vec4)");
+    test::assert(eq_vec(sign(ivec4(-80, 50, 60, 0)), ivec4(-1, 1, 1, 0)), "sign(ivec4)");
+    test::assert(eq_vec(clamp01(vec4(.2f, 2.f, -10.f, 0)), vec4(.2f, 1, 0, 0)), "clamp01(vec4)");
+    test::assert(eq_float(
+        distance(vec4(-1, 0, 0, 8), vec4(1, 3, 0, -18))
+        , 26.2488095f
+    ), "distance(vec4, vec4)");
+    test::assert(min_component_index(vec4(2, 4, 6, 8)) == 0, "min_component_index(vec4)");
+    test::assert(min_component_index(vec4(4, 2, 6, 8)) == 1, "min_component_index(vec4)");
+    test::assert(min_component_index(vec4(4, 4, 2, 8)) == 2, "min_component_index(vec4)");
+    test::assert(min_component_index(vec4(8, 4, 6, 2)) == 3, "min_component_index(vec4)");
+    test::assert(max_component_index(vec4(8, -2, 4, 0)) == 0, "max_component_index(vec4)");
+    test::assert(max_component_index(vec4(2, 17, 4, 0)) == 1, "max_component_index(vec4)");
+    test::assert(max_component_index(vec4(8, -2, 40, 0)) == 2, "max_component_index(vec4)");
+    test::assert(max_component_index(vec4(2, -2, 4, 30)) == 3, "max_component_index(vec4)");
+}
+
 void test_group_math()
 {
     test::start_group("math");
     test::run("vec2", test_vec2);
     test::run("vec3", test_vec3);
+    test::run("vec4", test_vec4);
     test::end_group();
 }
