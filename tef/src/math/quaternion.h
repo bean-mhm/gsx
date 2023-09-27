@@ -92,7 +92,7 @@ namespace tef::math
             return quaternion_t(-v);
         }
 
-        // Generate a 3D transformation matrix based on this quaternion (left-handed)
+        // Generate a 3D homogeneous transformation matrix based on this quaternion (left-handed)
         constexpr mat4 to_transform() const
         {
             float xx = v.x * v.x, yy = v.y * v.y, zz = v.z * v.z;
@@ -131,7 +131,7 @@ namespace tef::math
     // Normalized copy of a quaternion
     constexpr quaternion_t normalize(const quaternion_t& q)
     {
-        return q / std::sqrt(dot(q, q));
+        return quaternion_t(normalize(q.v));
     }
 
     // Interpolatee between two quaternions using spherical linear interpolation
@@ -140,7 +140,7 @@ namespace tef::math
         float cos_theta = dot(q1, q2);
         if (cos_theta > .9995f)
         {
-            return normalize((1 - t) * q1 + t * q2);
+            return normalize(q1 + t * (q2 - q1));
         }
         else
         {
