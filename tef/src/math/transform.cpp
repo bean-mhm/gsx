@@ -3,333 +3,160 @@
 namespace tef::math::transform
 {
 
-    void translate2D(
-        const vec2& delta,
-        mat3* out_m,
-        mat3* out_minv,
-        const bool overwrite
-    )
+    mat3 translate2D_h(const vec2& delta, mat3* out_minv)
     {
-        if (out_m)
-        {
-            mat3 r({
-                1, 0, delta.x,
-                0, 1, delta.y,
-                0, 0, 1 }
-            );
-
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
         if (out_minv)
         {
-            mat3 rinv({
+            *out_minv = mat3({
                 1, 0, -delta.x,
                 0, 1, -delta.y,
                 0, 0, 1 }
             );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
-        }
-    }
-
-    mat3 translate2D(const vec2& delta)
-    {
-        mat3 m;
-        translate2D(delta, &m, nullptr, true);
-        return m;
-    }
-
-    void translate3D(
-        const vec3& delta,
-        mat4* out_m,
-        mat4* out_minv,
-        const bool overwrite
-    )
-    {
-        if (out_m)
-        {
-            mat4 r({
-                1, 0, 0, delta.x,
-                0, 1, 0, delta.y,
-                0, 0, 1, delta.z,
-                0, 0, 0, 1 }
-            );
-
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
         }
 
+        return mat3({
+            1, 0, delta.x,
+            0, 1, delta.y,
+            0, 0, 1 }
+        );
+    }
+
+    mat4 translate3D_h(const vec3& delta, mat4* out_minv)
+    {
         if (out_minv)
         {
-            mat4 rinv({
+            *out_minv = mat4({
                 1, 0, 0, -delta.x,
                 0, 1, 0, -delta.y,
                 0, 0, 1, -delta.z,
                 0, 0, 0, 1 }
             );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
-        }
-    }
-
-    mat4 translate3D(const vec3& delta)
-    {
-        mat4 m;
-        translate3D(delta, &m, nullptr, true);
-        return m;
-    }
-
-    void scale2D(
-        const vec2& fac,
-        mat2* out_m,
-        mat2* out_minv,
-        const bool overwrite
-    )
-    {
-        if (out_m)
-        {
-            mat2 r({
-                fac.x, 0,
-                0, fac.y }
-            );
-
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
         }
 
+        return mat4({
+            1, 0, 0, delta.x,
+            0, 1, 0, delta.y,
+            0, 0, 1, delta.z,
+            0, 0, 0, 1 }
+        );
+    }
+
+    mat2 scale2D(const vec2& fac, mat2* out_minv)
+    {
         if (out_minv)
         {
-            mat2 rinv({
+            *out_minv = mat2({
                 1 / fac.x, 0,
                 0, 1 / fac.y }
             );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
         }
+
+        return mat2({
+            fac.x, 0,
+            0, fac.y }
+        );
     }
 
-    void scale2D(
-        const vec2& fac,
-        mat3* out_m,
-        mat3* out_minv,
-        const bool overwrite
-    )
+    mat3 scale2D_h(const vec2& fac, mat3* out_minv)
     {
-        if (out_m)
-        {
-            mat3 r({
-                fac.x, 0, 0,
-                0, fac.y, 0,
-                0, 0, 1 }
-            );
-
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
         if (out_minv)
         {
-            mat3 rinv({
+            *out_minv = mat3({
                 1 / fac.x, 0, 0,
                 0, 1 / fac.y, 0,
                 0, 0, 1 }
             );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
-        }
-    }
-
-    mat2 scale2D_2x2(const vec2& fac)
-    {
-        mat2 m;
-        scale2D(fac, &m, nullptr, true);
-        return m;
-    }
-
-    mat3 scale2D_3x3(const vec2& fac)
-    {
-        mat3 m;
-        scale2D(fac, &m, nullptr, true);
-        return m;
-    }
-
-    void scale3D(
-        const vec3& fac,
-        mat3* out_m,
-        mat3* out_minv,
-        const bool overwrite
-    )
-    {
-        if (out_m)
-        {
-            mat3 r({
-                fac.x, 0, 0,
-                0, fac.y, 0,
-                0, 0, fac.z }
-            );
-
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
         }
 
+        return mat3({
+            fac.x, 0, 0,
+            0, fac.y, 0,
+            0, 0, 1 }
+        );
+    }
+
+    mat3 scale3D(const vec3& fac, mat3* out_minv)
+    {
         if (out_minv)
         {
-            mat3 rinv({
+            *out_minv = mat3({
                 1 / fac.x, 0, 0,
                 0, 1 / fac.y, 0,
                 0, 0, 1 / fac.z }
             );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
         }
+
+        return mat3({
+            fac.x, 0, 0,
+            0, fac.y, 0,
+            0, 0, fac.z }
+        );
     }
 
-    void scale3D(
-        const vec3& fac,
-        mat4* out_m,
-        mat4* out_minv,
-        const bool overwrite
-    )
+    mat4 scale3D_h(const vec3& fac, mat4* out_minv)
     {
-        if (out_m)
-        {
-            mat4 r({
-                fac.x, 0, 0, 0,
-                0, fac.y, 0, 0,
-                0, 0, fac.z, 0,
-                0, 0, 0, 1 }
-            );
-
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
         if (out_minv)
         {
-            mat4 rinv({
+            *out_minv = mat4({
                 1 / fac.x, 0, 0, 0,
                 0, 1 / fac.y, 0, 0,
                 0, 0, 1 / fac.z, 0,
                 0, 0, 0, 1 }
             );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
         }
+
+        return mat4({
+            fac.x, 0, 0, 0,
+            0, fac.y, 0, 0,
+            0, 0, fac.z, 0,
+            0, 0, 0, 1 }
+        );
     }
 
-    mat3 scale3D_3x3(const vec3& fac)
+    mat2 rotate2D(float angle, mat2* out_minv)
     {
-        mat3 m;
-        scale3D(fac, &m, nullptr, true);
-        return m;
-    }
-
-    mat4 scale3D_4x4(const vec3& fac)
-    {
-        mat4 m;
-        scale3D(fac, &m, nullptr, true);
-        return m;
-    }
-
-    void rotate2D(
-        float theta,
-        mat2* out_m,
-        mat2* out_minv,
-        const bool overwrite
-    )
-    {
-        float s = sin(theta);
-        float c = cos(theta);
-
-        if (out_m)
-        {
-            mat2 r({
-                c, -s,
-                s, c }
-            );
-
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
+        float s = sin(angle);
+        float c = cos(angle);
 
         if (out_minv)
         {
-            mat2 rinv({
+            *out_minv = mat2({
                 c, s,
                 -s, c }
             );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
         }
+
+        return mat2({
+            c, -s,
+            s, c }
+        );
     }
 
-    void rotate2D(
-        float theta,
-        mat3* out_m,
-        mat3* out_minv,
-        const bool overwrite
-    )
+    mat3 rotate2D_h(float angle, mat3* out_minv)
     {
-        float s = sin(theta);
-        float c = cos(theta);
-
-        if (out_m)
-        {
-            mat3 r({
-                c, -s, 0,
-                s, c, 0,
-                0, 0, 1 }
-            );
-
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
+        float s = sin(angle);
+        float c = cos(angle);
 
         if (out_minv)
         {
-            mat3 rinv({
+            *out_minv = mat3({
                 c, s, 0,
                 -s, c, 0,
                 0, 0, 1 }
             );
-
-            if (overwrite) *out_minv = rinv;
-            else *out_minv = *out_minv * rinv;
         }
+
+        return mat3({
+            c, -s, 0,
+            s, c, 0,
+            0, 0, 1 }
+        );
     }
 
-    mat2 rotate2D_2x2(float theta)
+    mat3 rotate3D_x(float angle, mat3* out_minv)
     {
-        mat2 m;
-        rotate2D(theta, &m, nullptr, true);
-        return m;
-    }
-
-    mat3 rotate2D_3x3(float theta)
-    {
-        mat3 m;
-        rotate2D(theta, &m, nullptr, true);
-        return m;
-    }
-
-    void rotate3D_x(
-        float theta,
-        mat3* out_m,
-        mat3* out_minv,
-        const bool overwrite
-    )
-    {
-        float s = sin(theta);
-        float c = cos(theta);
+        float s = sin(angle);
+        float c = cos(angle);
 
         mat3 r({
             1, 0, 0,
@@ -337,28 +164,16 @@ namespace tef::math::transform
             0, s, c }
         );
 
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
         if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
+            *out_minv = transpose(r);
+
+        return r;
     }
 
-    void rotate3D_x(
-        float theta,
-        mat4* out_m,
-        mat4* out_minv,
-        const bool overwrite
-    )
+    mat4 rotate3D_x_h(float angle, mat4* out_minv)
     {
-        float s = sin(theta);
-        float c = cos(theta);
+        float s = sin(angle);
+        float c = cos(angle);
 
         mat4 r({
             1, 0, 0, 0,
@@ -367,42 +182,16 @@ namespace tef::math::transform
             0, 0, 0, 1 }
         );
 
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
         if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
+            *out_minv = transpose(r);
+
+        return r;
     }
 
-    mat3 rotate3D_x_3x3(float theta)
+    mat3 rotate3D_y(float angle, mat3* out_minv)
     {
-        mat3 m;
-        rotate3D_x(theta, &m, nullptr, true);
-        return m;
-    }
-
-    mat4 rotate3D_x_4x4(float theta)
-    {
-        mat4 m;
-        rotate3D_x(theta, &m, nullptr, true);
-        return m;
-    }
-
-    void rotate3D_y(
-        float theta,
-        mat3* out_m,
-        mat3* out_minv,
-        const bool overwrite
-    )
-    {
-        float s = sin(theta);
-        float c = cos(theta);
+        float s = sin(angle);
+        float c = cos(angle);
 
         mat3 r({
             c, 0, s,
@@ -410,28 +199,16 @@ namespace tef::math::transform
             -s, 0, c }
         );
 
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
         if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
+            *out_minv = transpose(r);
+
+        return r;
     }
 
-    void rotate3D_y(
-        float theta,
-        mat4* out_m,
-        mat4* out_minv,
-        const bool overwrite
-    )
+    mat4 rotate3D_y_h(float angle, mat4* out_minv)
     {
-        float s = sin(theta);
-        float c = cos(theta);
+        float s = sin(angle);
+        float c = cos(angle);
 
         mat4 r({
             c, 0, s, 0,
@@ -440,42 +217,16 @@ namespace tef::math::transform
             0, 0, 0, 1 }
         );
 
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
         if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
+            *out_minv = transpose(r);
+
+        return r;
     }
 
-    mat3 rotate3D_y_3x3(float theta)
+    mat3 rotate3D_z(float angle, mat3* out_minv)
     {
-        mat3 m;
-        rotate3D_y(theta, &m, nullptr, true);
-        return m;
-    }
-
-    mat4 rotate3D_y_4x4(float theta)
-    {
-        mat4 m;
-        rotate3D_y(theta, &m, nullptr, true);
-        return m;
-    }
-
-    void rotate3D_z(
-        float theta,
-        mat3* out_m,
-        mat3* out_minv,
-        const bool overwrite
-    )
-    {
-        float s = sin(theta);
-        float c = cos(theta);
+        float s = sin(angle);
+        float c = cos(angle);
 
         mat3 r({
             c, -s, 0,
@@ -483,28 +234,16 @@ namespace tef::math::transform
             0, 0, 1 }
         );
 
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
         if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
+            *out_minv = transpose(r);
+
+        return r;
     }
 
-    void rotate3D_z(
-        float theta,
-        mat4* out_m,
-        mat4* out_minv,
-        const bool overwrite
-    )
+    mat4 rotate3D_z_h(float angle, mat4* out_minv)
     {
-        float s = sin(theta);
-        float c = cos(theta);
+        float s = sin(angle);
+        float c = cos(angle);
 
         mat4 r({
             c, -s, 0, 0,
@@ -513,44 +252,17 @@ namespace tef::math::transform
             0, 0, 0, 1 }
         );
 
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
         if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
+            *out_minv = transpose(r);
+
+        return r;
     }
 
-    mat3 rotate3D_z_3x3(float theta)
-    {
-        mat3 m;
-        rotate3D_z(theta, &m, nullptr, true);
-        return m;
-    }
-
-    mat4 rotate3D_z_4x4(float theta)
-    {
-        mat4 m;
-        rotate3D_z(theta, &m, nullptr, true);
-        return m;
-    }
-
-    void rotate3D(
-        float theta,
-        const vec3& axis,
-        mat3* out_m,
-        mat3* out_minv,
-        const bool overwrite
-    )
+    mat3 rotate3D(float angle, const vec3& axis, mat3* out_minv)
     {
         vec3 a = normalize(axis);
-        float s = sin(theta);
-        float c = cos(theta);
+        float s = sin(angle);
+        float c = cos(angle);
 
         mat3 r;
 
@@ -569,30 +281,17 @@ namespace tef::math::transform
         r(2, 1) = a.y * a.z * (1 - c) + a.x * s;
         r(2, 2) = a.z * a.z + (1 - a.z * a.z) * c;
 
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
         if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
+            *out_minv = transpose(r);
+
+        return r;
     }
 
-    void rotate3D(
-        float theta,
-        const vec3& axis,
-        mat4* out_m,
-        mat4* out_minv,
-        const bool overwrite
-    )
+    mat4 rotate3D_h(float angle, const vec3& axis, mat4* out_minv)
     {
         vec3 a = normalize(axis);
-        float s = sin(theta);
-        float c = cos(theta);
+        float s = sin(angle);
+        float c = cos(angle);
 
         mat4 r;
 
@@ -614,41 +313,13 @@ namespace tef::math::transform
         r(2, 2) = a.z * a.z + (1 - a.z * a.z) * c;
         r(2, 3) = 0;
 
-        if (out_m)
-        {
-            if (overwrite) *out_m = r;
-            else *out_m = r * *out_m;
-        }
-
         if (out_minv)
-        {
-            if (overwrite) *out_minv = transpose(r);
-            else *out_minv = *out_minv * transpose(r);
-        }
+            *out_minv = transpose(r);
+
+        return r;
     }
 
-    mat3 rotate3D_3x3(float theta, const vec3& axis)
-    {
-        mat3 m;
-        rotate3D(theta, axis, &m, nullptr, true);
-        return m;
-    }
-
-    mat4 rotate3D_4x4(float theta, const vec3& axis)
-    {
-        mat4 m;
-        rotate3D(theta, axis, &m, nullptr, true);
-        return m;
-    }
-
-    void lookat3D(
-        const vec3& pos,
-        const vec3& look,
-        const vec3& up,
-        mat4* out_m,
-        mat4* out_minv,
-        const bool overwrite
-    )
+    mat4 lookat3D_h(const vec3& pos, const vec3& look, const vec3& up, mat4* out_minv)
     {
         mat4 cam_to_world;
 
@@ -675,24 +346,10 @@ namespace tef::math::transform
         cam_to_world(2, 2) = dir.z;
         cam_to_world(3, 2) = 0.;
 
-        if (out_m)
-        {
-            if (overwrite) *out_m = inverse(cam_to_world);
-            else *out_m = inverse(cam_to_world) * *out_m;
-        }
-
         if (out_minv)
-        {
-            if (overwrite) *out_minv = cam_to_world;
-            else *out_minv = *out_minv * cam_to_world;
-        }
-    }
+            *out_minv = cam_to_world;
 
-    mat4 lookat3D(const vec3& pos, const vec3& look, const vec3& up)
-    {
-        mat4 m;
-        lookat3D(pos, look, up, &m, nullptr, true);
-        return m;
+        return inverse(cam_to_world);
     }
 
 }
