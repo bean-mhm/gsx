@@ -112,8 +112,8 @@ namespace tef::math
             return o;
         }
 
-        // The center and radius of a sphere that bounds the bounding box
-        void bounding_sphere(base_vec2<T>& center, float& radius) const
+        // The center and radius of a circle that bounds the bounding box
+        void bounding_circle(base_vec2<T>& center, float& radius) const
         {
             center = (pmin + pmax) / 2;
             radius = inside(center, *this) ? distance(center, pmax) : 0;
