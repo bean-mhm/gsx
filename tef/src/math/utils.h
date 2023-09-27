@@ -130,39 +130,46 @@ namespace tef::math
         return 1.f / std::sqrt(x);
     }
 
-    inline float abs(float x)
+    template<typename T>
+    inline T abs(T x)
     {
         return std::abs(x);
     }
 
-    constexpr float sign(float x)
+    template<typename T>
+    constexpr T sign(T x)
     {
-        if (x > 0) return 1.f;
-        if (x == 0) return 0.f;
-        if (x < 0) return -1.f;
+        if (x > 0) return 1;
+        if (x == 0) return 0;
+        if (x < 0) return -1;
     }
 
-    inline float floor(float x)
+    template<typename T>
+    inline T floor(T x)
     {
         return std::floor(x);
     }
 
-    inline float ceil(float x)
+    template<typename T>
+    inline T ceil(T x)
     {
         return std::ceil(x);
     }
 
-    inline float trunc(float x)
+    template<typename T>
+    inline T trunc(T x)
     {
         return std::trunc(x);
     }
 
-    inline float fract(float x)
+    template<typename T>
+    inline T fract(T x)
     {
         return x - std::floor(x);
     }
 
-    inline float mod(float x, float y)
+    template<typename T>
+    inline T mod(T x, T y)
     {
         return std::fmod(x, y);
     }
@@ -172,22 +179,26 @@ namespace tef::math
         return std::modf(x, &i);
     }
 
-    inline float wrap(float x, float start, float end)
+    template<typename T>
+    inline T wrap(T x, T start, T end)
     {
         return start + std::fmod(x - start, end - start);
     }
 
-    constexpr float min(float x, float y)
+    template<typename T>
+    constexpr T min(T x, T y)
     {
         return std::min(x, y);
     }
 
-    constexpr float max(float x, float y)
+    template<typename T>
+    constexpr T max(T x, T y)
     {
         return std::max(x, y);
     }
 
-    constexpr float clamp(float x, float min, float max)
+    template<typename T>
+    constexpr T clamp(T x, T min, T max)
     {
         return std::clamp(x, min, max);
     }
@@ -218,10 +229,11 @@ namespace tef::math
         return clamp01((x - a_start) / (a_end - a_start));
     }
 
-    constexpr float step(float edge, float x)
+    template<typename T>
+    constexpr T step(T edge, T x)
     {
-        if (x < edge) return 0.f;
-        return 1.f;
+        if (x < edge) return 0;
+        return 1;
     }
 
     constexpr float smoothstep(float edge0, float edge1, float x)
