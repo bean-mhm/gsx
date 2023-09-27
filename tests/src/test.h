@@ -21,12 +21,13 @@ namespace test
         std::cout << "----------------------------------------\n\n";
     }
 
-    inline void run(const char* name, std::function<void()> f)
+    template <typename fn_t, typename... arg_t>
+    inline void run(const char* name, fn_t fn, arg_t... args)
     {
         try
         {
-            f();
-            std::cout << std::format("[  PASS  ] {}\n", name);
+            fn(args...);
+            std::cout << std::format("[ PASS ] {}\n", name);
         }
         catch (const std::exception& e)
         {
@@ -40,17 +41,6 @@ namespace test
                 std::cout << std::format("[ FAIL ] {}: {}\n", name, message);
             }
         }
-    }
-
-    template <typename... arg_types>
-    inline void run(const char* name, std::function<void(arg_types...)> f, arg_types... args)
-    {
-        run(name,
-            [&]()
-            {
-                f(args...);
-            }
-        );
     }
 
     inline void assert(bool cond, const char* message)
