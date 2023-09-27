@@ -614,7 +614,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr int min_component_index(const base_vec3<T>& v)
+    constexpr int32_t min_component_index(const base_vec3<T>& v)
     {
         return (v.x < v.y)
             ? ((v.x < v.z) ? 0 : 2)
@@ -622,7 +622,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr int max_component_index(const base_vec3<T>& v)
+    constexpr int32_t max_component_index(const base_vec3<T>& v)
     {
         return (v.x > v.y)
             ? ((v.x > v.z) ? 0 : 2)
