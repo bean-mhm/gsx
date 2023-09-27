@@ -31,6 +31,18 @@ namespace tef::math
         // Print
         friend std::ostream& operator<<(std::ostream& os, const ray_t& r);
 
+        // this == ray
+        constexpr bool operator==(const ray_t& r) const
+        {
+            return o == r.o && d == r.d;
+        }
+
+        // this != ray
+        constexpr bool operator!=(const ray_t& r) const
+        {
+            return o != r.o || d != r.d;
+        }
+
     };
 
 }
