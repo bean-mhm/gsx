@@ -89,7 +89,7 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
                 // Steer
                 float angle = math::radians(20.f * fac * dt);
                 boid.vel = math::transform::apply_vector2D(
-                    math::transform::rotate2D_2x2(angle),
+                    math::transform::rotate2D(angle),
                     boid.vel
                 );
 
@@ -144,7 +144,7 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
             float pd = math::max(0.f, sd);
             float angle = math::radians(-50.f * math::exp(-15.f * pd) * dt);
             boid.vel = math::transform::apply_vector2D(
-                math::transform::rotate2D_2x2(angle),
+                math::transform::rotate2D(angle),
                 boid.vel
             );
 
