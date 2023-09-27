@@ -95,7 +95,9 @@
     <ClCompile Include="include\tef\str\utils.cpp" />
     <ClCompile Include="include\tef\tef.cpp" />
     <ClCompile Include="include\tef\utils.cpp" />
+    <ClCompile Include="src\group_math.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\group_math.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\tef\log.h" />
@@ -115,6 +117,7 @@
     <ClInclude Include="include\tef\str\utils.h" />
     <ClInclude Include="include\tef\tef.h" />
     <ClInclude Include="include\tef\utils.h" />
+    <ClInclude Include="src\test.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

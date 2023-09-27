@@ -1,9 +1,12 @@
 // STD
 #include <iostream>
 
+// Internal
+#include "group_math.h"
+
 int main()
 {
-	std::cout << "Hello!\n";
+	test_group_math();
 
 	return 0;
 }

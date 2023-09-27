@@ -45,6 +45,12 @@
     <ClCompile Include="include\tef\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\group_math.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\group_math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\tef\math\bounds2.h">
@@ -96,6 +102,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\tef\utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\test.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
