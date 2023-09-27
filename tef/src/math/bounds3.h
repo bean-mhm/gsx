@@ -132,10 +132,22 @@ namespace tef::math
         }
 
         // The center and radius of a sphere that bounds the bounding box
-        constexpr void bounding_sphere(base_vec3<T>& center, float& radius) const
+        void bounding_sphere(base_vec3<T>& center, float& radius) const
         {
             center = (pmin + pmax) / 2;
             radius = inside(center, *this) ? distance(center, pmax) : 0;
+        }
+
+        // this == bounds
+        constexpr bool operator==(const base_bounds3<T>& b) const
+        {
+            return pmin == b.pmin && pmax == b.pmax;
+        }
+
+        // this != bounds
+        constexpr bool operator!=(const base_bounds3<T>& b) const
+        {
+            return pmin != b.pmin || pmax != b.pmax;
         }
 
     };
