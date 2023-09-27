@@ -299,8 +299,20 @@ namespace tef::math
             }
         }
 
-        // Total number of elements (n_rows * n_col)
-        constexpr int32_t n_total() const
+        // Number of rows
+        constexpr int32_t n_rows()
+        {
+            return n_row;
+        }
+
+        // Number of columns
+        constexpr int32_t n_cols()
+        {
+            return n_col;
+        }
+
+        // Number of elements (n_row * n_col)
+        constexpr int32_t n_elements() const
         {
             return n_row * n_col;
         }
