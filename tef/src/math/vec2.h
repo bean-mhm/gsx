@@ -244,121 +244,121 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec2<T> sin(const base_vec2<T>& v)
+    inline base_vec2<T> sin(const base_vec2<T>& v)
     {
         return base_vec2<T>(sin(v.x), sin(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> cos(const base_vec2<T>& v)
+    inline base_vec2<T> cos(const base_vec2<T>& v)
     {
         return base_vec2<T>(cos(v.x), cos(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> tan(const base_vec2<T>& v)
+    inline base_vec2<T> tan(const base_vec2<T>& v)
     {
         return base_vec2<T>(tan(v.x), tan(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> asin(const base_vec2<T>& v)
+    inline base_vec2<T> asin(const base_vec2<T>& v)
     {
         return base_vec2<T>(asin(v.x), asin(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> acos(const base_vec2<T>& v)
+    inline base_vec2<T> acos(const base_vec2<T>& v)
     {
         return base_vec2<T>(acos(v.x), acos(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> atan(const base_vec2<T>& v)
+    inline base_vec2<T> atan(const base_vec2<T>& v)
     {
         return base_vec2<T>(atan(v.x), atan(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> sinh(const base_vec2<T>& v)
+    inline base_vec2<T> sinh(const base_vec2<T>& v)
     {
         return base_vec2<T>(sinh(v.x), sinh(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> cosh(const base_vec2<T>& v)
+    inline base_vec2<T> cosh(const base_vec2<T>& v)
     {
         return base_vec2<T>(cosh(v.x), cosh(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> tanh(const base_vec2<T>& v)
+    inline base_vec2<T> tanh(const base_vec2<T>& v)
     {
         return base_vec2<T>(tanh(v.x), tanh(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> asinh(const base_vec2<T>& v)
+    inline base_vec2<T> asinh(const base_vec2<T>& v)
     {
         return base_vec2<T>(asinh(v.x), asinh(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> acosh(const base_vec2<T>& v)
+    inline base_vec2<T> acosh(const base_vec2<T>& v)
     {
         return base_vec2<T>(acosh(v.x), acosh(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> atanh(const base_vec2<T>& v)
+    inline base_vec2<T> atanh(const base_vec2<T>& v)
     {
         return base_vec2<T>(atanh(v.x), atanh(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> pow(const base_vec2<T>& v1, const base_vec2<T>& v2)
+    inline base_vec2<T> pow(const base_vec2<T>& v1, const base_vec2<T>& v2)
     {
         return base_vec2<T>(pow(v1.x, v2.x), pow(v1.y, v2.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> exp(const base_vec2<T>& v)
+    inline base_vec2<T> exp(const base_vec2<T>& v)
     {
         return base_vec2<T>(exp(v.x), exp(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> log(const base_vec2<T>& v)
+    inline base_vec2<T> log(const base_vec2<T>& v)
     {
         return base_vec2<T>(log(v.x), log(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> exp2(const base_vec2<T>& v)
+    inline base_vec2<T> exp2(const base_vec2<T>& v)
     {
         return base_vec2<T>(exp2(v.x), exp2(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> log2(const base_vec2<T>& v)
+    inline base_vec2<T> log2(const base_vec2<T>& v)
     {
         return base_vec2<T>(log2(v.x), log2(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> sqrt(const base_vec2<T>& v)
+    inline base_vec2<T> sqrt(const base_vec2<T>& v)
     {
         return base_vec2<T>(sqrt(v.x), sqrt(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> inversesqrt(const base_vec2<T>& v)
+    inline base_vec2<T> inversesqrt(const base_vec2<T>& v)
     {
         return base_vec2<T>(inversesqrt(v.x), inversesqrt(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> abs(const base_vec2<T>& v)
+    inline base_vec2<T> abs(const base_vec2<T>& v)
     {
         return base_vec2<T>(abs(v.x), abs(v.y));
     }
@@ -370,49 +370,49 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec2<T> floor(const base_vec2<T>& v)
+    inline base_vec2<T> floor(const base_vec2<T>& v)
     {
         return base_vec2<T>(floor(v.x), floor(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> ceil(const base_vec2<T>& v)
+    inline base_vec2<T> ceil(const base_vec2<T>& v)
     {
         return base_vec2<T>(ceil(v.x), ceil(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> trunc(const base_vec2<T>& v)
+    inline base_vec2<T> trunc(const base_vec2<T>& v)
     {
         return base_vec2<T>(trunc(v.x), trunc(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> fract(const base_vec2<T>& v)
+    inline base_vec2<T> fract(const base_vec2<T>& v)
     {
         return base_vec2<T>(fract(v.x), fract(v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> mod(const base_vec2<T>& v1, const base_vec2<T>& v2)
+    inline base_vec2<T> mod(const base_vec2<T>& v1, const base_vec2<T>& v2)
     {
         return base_vec2<T>(mod(v1.x, v2.x), mod(v1.y, v2.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> mod(const base_vec2<T>& v1, float v2)
+    inline base_vec2<T> mod(const base_vec2<T>& v1, float v2)
     {
         return base_vec2<T>(mod(v1.x, v2), mod(v1.y, v2));
     }
 
     template<typename T>
-    constexpr base_vec2<T> modf(const base_vec2<T>& v, base_vec2<T>& i)
+    inline base_vec2<T> modf(const base_vec2<T>& v, base_vec2<T>& i)
     {
         return base_vec2<T>(modf(v.x, i.x), modf(v.y, i.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> wrap(const base_vec2<T>& v, float start, float end)
+    inline base_vec2<T> wrap(const base_vec2<T>& v, float start, float end)
     {
         return start + mod(v - start, end - start);
     }
@@ -503,7 +503,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr float length(const base_vec2<T>& v)
+    inline float length(const base_vec2<T>& v)
     {
         return sqrt(length_squared(v));
     }
@@ -515,7 +515,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr float distance(const base_vec2<T>& v1, const base_vec2<T>& v2)
+    inline float distance(const base_vec2<T>& v1, const base_vec2<T>& v2)
     {
         return length(v1 - v2);
     }
@@ -527,7 +527,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec2<T> normalize(const base_vec2<T>& v)
+    inline base_vec2<T> normalize(const base_vec2<T>& v)
     {
         return v / length(v);
     }
@@ -551,7 +551,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec2<T> refract(const base_vec2<T>& I, const base_vec2<T>& N, float eta)
+    inline base_vec2<T> refract(const base_vec2<T>& I, const base_vec2<T>& N, float eta)
     {
         float dp = dot(N, I);
         float k = 1 - eta * eta * (1 - dp * dp);

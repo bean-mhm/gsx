@@ -292,115 +292,115 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec4<T> sin(const base_vec4<T>& v)
+    inline base_vec4<T> sin(const base_vec4<T>& v)
     {
         return base_vec4<T>(sin(v.x), sin(v.y), sin(v.z), sin(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> cos(const base_vec4<T>& v)
+    inline base_vec4<T> cos(const base_vec4<T>& v)
     {
         return base_vec4<T>(cos(v.x), cos(v.y), cos(v.z), cos(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> tan(const base_vec4<T>& v)
+    inline base_vec4<T> tan(const base_vec4<T>& v)
     {
         return base_vec4<T>(tan(v.x), tan(v.y), tan(v.z), tan(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> asin(const base_vec4<T>& v)
+    inline base_vec4<T> asin(const base_vec4<T>& v)
     {
         return base_vec4<T>(asin(v.x), asin(v.y), asin(v.z), asin(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> acos(const base_vec4<T>& v)
+    inline base_vec4<T> acos(const base_vec4<T>& v)
     {
         return base_vec4<T>(acos(v.x), acos(v.y), acos(v.z), acos(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> atan(const base_vec4<T>& v)
+    inline base_vec4<T> atan(const base_vec4<T>& v)
     {
         return base_vec4<T>(atan(v.x), atan(v.y), atan(v.z), atan(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> sinh(const base_vec4<T>& v)
+    inline base_vec4<T> sinh(const base_vec4<T>& v)
     {
         return base_vec4<T>(sinh(v.x), sinh(v.y), sinh(v.z), sinh(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> cosh(const base_vec4<T>& v)
+    inline base_vec4<T> cosh(const base_vec4<T>& v)
     {
         return base_vec4<T>(cosh(v.x), cosh(v.y), cosh(v.z), cosh(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> tanh(const base_vec4<T>& v)
+    inline base_vec4<T> tanh(const base_vec4<T>& v)
     {
         return base_vec4<T>(tanh(v.x), tanh(v.y), tanh(v.z), tanh(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> asinh(const base_vec4<T>& v)
+    inline base_vec4<T> asinh(const base_vec4<T>& v)
     {
         return base_vec4<T>(asinh(v.x), asinh(v.y), asinh(v.z), asinh(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> acosh(const base_vec4<T>& v)
+    inline base_vec4<T> acosh(const base_vec4<T>& v)
     {
         return base_vec4<T>(acosh(v.x), acosh(v.y), acosh(v.z), acosh(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> atanh(const base_vec4<T>& v)
+    inline base_vec4<T> atanh(const base_vec4<T>& v)
     {
         return base_vec4<T>(atanh(v.x), atanh(v.y), atanh(v.z), atanh(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> pow(const base_vec4<T>& v1, const base_vec4<T>& v2)
+    inline base_vec4<T> pow(const base_vec4<T>& v1, const base_vec4<T>& v2)
     {
         return base_vec4<T>(pow(v1.x, v2.x), pow(v1.y, v2.y), pow(v1.z, v2.z), pow(v1.w, v2.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> exp(const base_vec4<T>& v)
+    inline base_vec4<T> exp(const base_vec4<T>& v)
     {
         return base_vec4<T>(exp(v.x), exp(v.y), exp(v.z), exp(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> log(const base_vec4<T>& v)
+    inline base_vec4<T> log(const base_vec4<T>& v)
     {
         return base_vec4<T>(log(v.x), log(v.y), log(v.z), log(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> exp2(const base_vec4<T>& v)
+    inline base_vec4<T> exp2(const base_vec4<T>& v)
     {
         return base_vec4<T>(exp2(v.x), exp2(v.y), exp2(v.z), exp2(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> log2(const base_vec4<T>& v)
+    inline base_vec4<T> log2(const base_vec4<T>& v)
     {
         return base_vec4<T>(log2(v.x), log2(v.y), log2(v.z), log2(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> sqrt(const base_vec4<T>& v)
+    inline base_vec4<T> sqrt(const base_vec4<T>& v)
     {
         return base_vec4<T>(sqrt(v.x), sqrt(v.y), sqrt(v.z), sqrt(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> inversesqrt(const base_vec4<T>& v)
+    inline base_vec4<T> inversesqrt(const base_vec4<T>& v)
     {
         return base_vec4<T>(
             inversesqrt(v.x),
@@ -411,7 +411,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec4<T> abs(const base_vec4<T>& v)
+    inline base_vec4<T> abs(const base_vec4<T>& v)
     {
         return base_vec4<T>(abs(v.x), abs(v.y), abs(v.z), abs(v.w));
     }
@@ -423,49 +423,49 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec4<T> floor(const base_vec4<T>& v)
+    inline base_vec4<T> floor(const base_vec4<T>& v)
     {
         return base_vec4<T>(floor(v.x), floor(v.y), floor(v.z), floor(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> ceil(const base_vec4<T>& v)
+    inline base_vec4<T> ceil(const base_vec4<T>& v)
     {
         return base_vec4<T>(ceil(v.x), ceil(v.y), ceil(v.z), ceil(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> trunc(const base_vec4<T>& v)
+    inline base_vec4<T> trunc(const base_vec4<T>& v)
     {
         return base_vec4<T>(trunc(v.x), trunc(v.y), trunc(v.z), trunc(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> fract(const base_vec4<T>& v)
+    inline base_vec4<T> fract(const base_vec4<T>& v)
     {
         return base_vec4<T>(fract(v.x), fract(v.y), fract(v.z), fract(v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> mod(const base_vec4<T>& v1, const base_vec4<T>& v2)
+    inline base_vec4<T> mod(const base_vec4<T>& v1, const base_vec4<T>& v2)
     {
         return base_vec4<T>(mod(v1.x, v2.x), mod(v1.y, v2.y), mod(v1.z, v2.z), mod(v1.w, v2.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> mod(const base_vec4<T>& v1, float v2)
+    inline base_vec4<T> mod(const base_vec4<T>& v1, float v2)
     {
         return base_vec4<T>(mod(v1.x, v2), mod(v1.y, v2), mod(v1.z, v2), mod(v1.w, v2));
     }
 
     template<typename T>
-    constexpr base_vec4<T> modf(const base_vec4<T>& v, base_vec4<T>& i)
+    inline base_vec4<T> modf(const base_vec4<T>& v, base_vec4<T>& i)
     {
         return base_vec4<T>(modf(v.x, i.x), modf(v.y, i.y), modf(v.z, i.z), modf(v.w, i.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> wrap(const base_vec4<T>& v, float start, float end)
+    inline base_vec4<T> wrap(const base_vec4<T>& v, float start, float end)
     {
         return start + mod(v - start, end - start);
     }
@@ -570,7 +570,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr float length(const base_vec4<T>& v)
+    inline float length(const base_vec4<T>& v)
     {
         return sqrt(length_squared(v));
     }
@@ -582,7 +582,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr float distance(const base_vec4<T>& v1, const base_vec4<T>& v2)
+    inline float distance(const base_vec4<T>& v1, const base_vec4<T>& v2)
     {
         return length(v1 - v2);
     }
@@ -594,7 +594,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec4<T> normalize(const base_vec4<T>& v)
+    inline base_vec4<T> normalize(const base_vec4<T>& v)
     {
         return v / length(v);
     }
@@ -618,7 +618,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec4<T> refract(const base_vec4<T>& I, const base_vec4<T>& N, float eta)
+    inline base_vec4<T> refract(const base_vec4<T>& I, const base_vec4<T>& N, float eta)
     {
         float dp = dot(N, I);
         float k = 1 - eta * eta * (1 - dp * dp);
