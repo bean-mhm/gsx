@@ -114,6 +114,18 @@ namespace tef::math
             return transpose(r);
         }
 
+        // this == quaternion
+        constexpr bool operator==(const quaternion_t& q) const
+        {
+            return v == q.v;
+        }
+
+        // this != quaternion
+        constexpr bool operator!=(const quaternion_t& q) const
+        {
+            return v != q.v;
+        }
+
     };
 
     // scalar * quaternion
