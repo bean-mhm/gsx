@@ -1,5 +1,8 @@
 #include "group_math.h"
 
+// STD
+#include <array>
+
 // TEF
 #include "tef/math/math.h"
 
@@ -313,7 +316,30 @@ static void test_transform()
 
 static void test_prng()
 {
-    //
+    prng_t prng;
+
+    for (size_t i = 0; i < 100; i++)
+    {
+        int32_t a = prng.next_i32(-100, 100);
+        test::assert(a >= -100 && a <= 100, std::format("next_i32(-100, 100) = {}", a));
+
+        uint32_t b = prng.next_u32(10, 50);
+        test::assert(b >= 10 && b <= 50, std::format("next_u32(10, 50) = {}", b));
+    }
+
+    std::array<uint32_t, 100> hist;
+    hist.fill(0);
+    for (size_t i = 0; i < 1000000; i++)
+    {
+        float num = prng.next_float();
+        uint32_t category = (uint32_t)math::floor(num * 99.9999f);
+        hist[category]++;
+    }
+    for (size_t i = 0; i < 100; i++)
+    {
+        uint32_t count = hist[i] / 100;
+        test::assert(count > 95 && count < 105, "next_float() distribution");
+    }
 }
 
 void test_group_math()
