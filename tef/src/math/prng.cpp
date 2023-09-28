@@ -60,7 +60,7 @@ namespace tef::math
 
     int32_t prng_t::next_i32(int32_t min, int32_t max)
     {
-        return min + (next_i32() % (max - min + 1));
+        return min + (next_u32() % ((uint32_t)(max - min) + 1u));
     }
 
     uint32_t prng_t::next_u32()
@@ -91,7 +91,7 @@ namespace tef::math
 
     vec2 prng_t::next_in_circle()
     {
-        vec2 v = vec2(1);
+        vec2 v;
         for (int i = 0; i < 100; i++)
         {
             v = vec2(
@@ -105,7 +105,7 @@ namespace tef::math
 
     vec3 prng_t::next_in_sphere()
     {
-        vec3 v = vec3(1);
+        vec3 v;
         for (int i = 0; i < 100; i++)
         {
             v = vec3(
@@ -120,7 +120,7 @@ namespace tef::math
 
     vec2 prng_t::next_on_circle()
     {
-        vec2 v = vec2(1);
+        vec2 v;
         float lensqr;
         for (int i = 0; i < 100; i++)
         {
@@ -136,7 +136,7 @@ namespace tef::math
 
     vec3 prng_t::next_on_sphere()
     {
-        vec3 v = vec3(1);
+        vec3 v;
         float lensqr;
         for (int i = 0; i < 100; i++)
         {
