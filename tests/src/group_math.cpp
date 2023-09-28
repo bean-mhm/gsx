@@ -19,6 +19,20 @@ inline bool eq_vec(const T& a, const T& b)
     return (float)max_component(math::abs(a - b)) < epsilon;
 }
 
+template<int32_t n_row, int32_t n_col>
+inline bool eq_mat(const base_mat<n_row, n_col>& m1, const base_mat<n_row, n_col>& m2)
+{
+    for (int32_t row = 0; row < n_row; row++)
+    {
+        for (int32_t col = 0; col < n_col; col++)
+        {
+            if (math::abs(m1(row, col) - m2(row, col)) >= epsilon)
+                return false;
+        }
+    }
+    return true;
+}
+
 static void test_vec2()
 {
     vec2 v(1.37f, 2.1f);
@@ -258,7 +272,38 @@ static void test_bounds3()
 
 static void test_matrix()
 {
-    //
+    test::assert(is_identity(mat4()), "is_identity(mat4)");
+    test::assert(eq_mat(
+        mat3({ 2, 2, 4, 4, 3, -1, 8, -1, 0 }) * mat3({ 10, 3, 2, -5, 5, -5, -1, -20, 1 }),
+        mat3({ 6, -64, -2, 26, 47, -8, 85, 19, 21 })
+    ), "mat3 * mat3");
+    test::assert(eq_mat(
+        base_mat<5, 2>({ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
+        * base_mat<2, 3>({ 6, 5, 4, 3, 2, 1 }),
+        base_mat<5, 3>({ 12, 9, 6, 30, 23, 16, 48, 37, 26, 66, 51, 36, 84, 65, 46 })
+    ), "mat5x2 * mat2x3");
+    test::assert(eq_mat(
+        5 * mat2({ 1, 2, 3, 4 }),
+        mat2({ 5, 10, 15, 20 })
+    ), "scalar * mat2");
+    test::assert(eq_float(
+        determinant(mat3({ 3, 5, 8, 7, 2.5f, 6, 4, -20, 1 })),
+        -747.5f
+    ), "determinant(mat3)");
+    test::assert(eq_mat(
+        inverse(mat3({ 3, 5, 8, 7, 2.5f, 6, 4, -20, 1 })),
+        mat3(
+            {
+                -.1638800f, +.2207360f, -.0133779f,
+                -.0227425f, +.0387960f, -.0508361f,
+                +.2006690f, -.1070230f, +.0367893f
+            }
+        )
+    ), "inverse(mat3)");
+    test::assert(eq_mat(
+        transpose(mat2x3({ 3, 5, 8, 7, 2.5f, 6 })),
+        mat3x2({ 3, 7, 5, 2.5f, 8, 6 })
+    ), "transpose(mat3)");
 }
 
 static void test_transform()
