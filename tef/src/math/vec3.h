@@ -218,6 +218,12 @@ namespace tef::math
             return base_vec3<T>((*this)[x], (*this)[y], (*this)[z]);
         }
 
+        // Number of components
+        constexpr int32_t n_components() const
+        {
+            return 3;
+        }
+
     };
 
     // Scalar + vector

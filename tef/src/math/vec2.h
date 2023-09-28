@@ -201,6 +201,12 @@ namespace tef::math
             return base_vec2<T>(y, x);
         }
 
+        // Number of components
+        constexpr int32_t n_components() const
+        {
+            return 2;
+        }
+
     };
 
     // Scalar + vector

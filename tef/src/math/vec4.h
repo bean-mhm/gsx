@@ -249,6 +249,12 @@ namespace tef::math
             return base_vec4<T>((*this)[x], (*this)[y], (*this)[z], (*this)[w]);
         }
 
+        // Number of components
+        constexpr int32_t n_components() const
+        {
+            return 4;
+        }
+
     };
 
     // Scalar + vector
