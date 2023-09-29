@@ -1,7 +1,12 @@
 #include "utils.h"
 
 // STD
+#include <sstream>
+#include <algorithm>
 #include <stdexcept>
+#include <ctime>
+#include <cmath>
+#include <cctype>
 
 namespace tef::str
 {
@@ -239,23 +244,6 @@ namespace tef::str
             return std::format("{}", n);
         else
             return std::format("{:.1f}{}", (double)n / powers[mag], suffixes[mag]);
-    }
-
-    std::string from_enum_values(
-        const std::string& name,
-        const std::vector<std::string>& values,
-        int starting_index
-    )
-    {
-        std::string s = std::format("{}: ", name);
-        for (uint64_t i = 0; i < values.size(); i++)
-        {
-            if (i > 0)
-                s += ", ";
-
-            s += std::format("{} = {}", values[i], i + starting_index);
-        }
-        return s;
     }
 
     std::string from_duration(float seconds)

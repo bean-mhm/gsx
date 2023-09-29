@@ -1,18 +1,11 @@
 #pragma once
 
+// STD
+#include <iostream>
 #include <string>
 #include <format>
-#include <iostream>
-#include <iomanip>
-#include <sstream>
-#include <fstream>
 #include <vector>
-#include <array>
-#include <algorithm>
-#include <cctype>
-#include <locale>
-#include <clocale>
-#include <ctime>
+#include <type_traits>
 #include <cstdint>
 
 namespace tef::str
@@ -42,12 +35,6 @@ namespace tef::str
 
     std::string from_data_size(uint64_t bytes);
     std::string from_large_number(uint64_t n);
-    std::string from_bool(bool v);
-    std::string from_enum_values(
-        const std::string& name,
-        const std::vector<std::string>& values,
-        int starting_index = 0
-    );
 
     // Examples: "7h 9m 32s", "10.7s"
     std::string from_duration(float seconds);
