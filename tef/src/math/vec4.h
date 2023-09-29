@@ -4,7 +4,7 @@
 #include "vec2.h"
 #include "vec3.h"
 #include "utils.h"
-#include "../str/str.h"
+#include "../str.h"
 
 namespace tef::math
 {

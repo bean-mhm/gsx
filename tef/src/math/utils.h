@@ -259,12 +259,12 @@ namespace tef::math
         return (uint64_t)std::pow(2., std::ceil(std::log2((double)v)));
     }
 
-    constexpr uint32_t i32_to_u32(int v)
+    constexpr uint32_t i32_to_u32(int32_t v)
     {
         return std::max(v, 0);
     }
 
-    constexpr int u32_to_i32(uint32_t v)
+    constexpr int32_t u32_to_i32(uint32_t v)
     {
         return std::min(v, (uint32_t)INT_MAX);
     }

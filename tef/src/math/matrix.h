@@ -6,7 +6,7 @@
 
 // Internal
 #include "utils.h"
-#include "../str/str.h"
+#include "../str.h"
 
 namespace tef::math
 {
