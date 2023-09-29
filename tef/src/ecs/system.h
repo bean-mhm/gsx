@@ -7,7 +7,7 @@
 
 // Internal
 #include "event.h"
-#include "../misc/misc.h"
+#include "../misc.h"
 
 namespace tef::ecs
 {

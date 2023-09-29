@@ -13,7 +13,6 @@
 #include "log.h"
 #include "event.h"
 #include "system.h"
-#include "../math/math.h"
 
 namespace tef::ecs
 {
