@@ -13,29 +13,31 @@
 #include "constants.h"
 #include "components.h"
 
-math::vec2 get_point_of_attraction(float time)
+using namespace math;
+
+vec2 get_point_of_attraction(float time)
 {
     float a = .8f * time;
-    return .7f * math::vec2(math::cos(a), math::sin(a));
+    return .7f * vec2(math::cos(a), math::sin(a));
 }
 
 // Signed distance from the edges of the colliders
 // Note: This function must be identical to its GLSL version in plane_src_frag.
-float sd_colliders(math::vec2 p, float time)
+float sd_colliders(vec2 p, float time)
 {
     float d = 1e9;
 
     // Walls (bounds)
-    const math::vec2 min_pos = math::vec2(-.9);
-    const math::vec2 max_pos = math::vec2(.9);
-    d = math::min(d, p.x - min_pos.x);
-    d = math::min(d, p.y - min_pos.y);
-    d = math::min(d, max_pos.x - p.x);
-    d = math::min(d, max_pos.y - p.y);
+    const vec2 min_pos = vec2(-.9);
+    const vec2 max_pos = vec2(.9);
+    d = min(d, p.x - min_pos.x);
+    d = min(d, p.y - min_pos.y);
+    d = min(d, max_pos.x - p.x);
+    d = min(d, max_pos.y - p.y);
 
     // Circle
-    math::vec2 center = math::vec2(math::sin(time) * .4f, 0);
-    d = math::min(d, math::distance(p, center) - .15f);
+    vec2 center = vec2(math::sin(time) * .4f, 0);
+    d = min(d, distance(p, center) - .15f);
 
     return d;
 }
@@ -51,7 +53,7 @@ s_boids::~s_boids()
 
 void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
 {
-    const float dt = math::min(iter.dt, 0.02f);
+    const float dt = min(iter.dt, 0.02f);
 
     c_boid* boids; size_t num_boids;
     world.get_components_of_type<c_boid>(boids, num_boids);
@@ -62,7 +64,7 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
         c_boid& boid = boids[i];
 
         // Weighted average of the neighbor velocities
-        math::vec2 avg_vel(0);
+        vec2 avg_vel(0);
 
         // Iterate through the neighbors
         for (int j = 0; j < num_boids; j++)
@@ -71,25 +73,25 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
 
             // Info about the other boid
             const c_boid& other = boids[j];
-            math::vec2 this_to_other = other.pos - boid.pos;
-            float dist_sqr = math::dot(this_to_other, this_to_other);
+            vec2 this_to_other = other.pos - boid.pos;
+            float dist_sqr = dot(this_to_other, this_to_other);
             if (dist_sqr > boids_attention_sqr) continue;
             float dist = math::sqrt(dist_sqr);
 
             // Steer away from nearby boids
             if (
-                math::dot(
-                    math::normalize(boid.vel),
-                    math::normalize(other.vel)
+                dot(
+                    normalize(boid.vel),
+                    normalize(other.vel)
                 ) > math::cos(1.1f))
             {
                 // How much do I steer away?
-                float fac = 1.f - math::clamp01(dist / boids_attention);
+                float fac = 1.f - clamp01(dist / boids_attention);
 
                 // Steer
-                float angle = math::radians(20.f * fac * dt);
-                boid.vel = math::transform::apply_vector2D(
-                    math::transform::rotate2D(angle),
+                float angle = radians(20.f * fac * dt);
+                boid.vel = transform::apply_vector2D(
+                    transform::rotate2D(angle),
                     boid.vel
                 );
 
@@ -98,23 +100,23 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
             }
 
             // Update the weighted average velocity
-            float weight = 1.f - math::clamp01(dist / boids_attention);
+            float weight = 1.f - clamp01(dist / boids_attention);
             avg_vel += weight * other.vel;
         }
 
         // Try to go in the same direction as the neighbors
-        float lensqr_avg_vel = math::dot(avg_vel, avg_vel);
+        float lensqr_avg_vel = dot(avg_vel, avg_vel);
         if (lensqr_avg_vel > 0)
         {
-            boid.vel = math::mix(boid.vel, avg_vel, math::min(.3f * dt, 1.f));
+            boid.vel = mix(boid.vel, avg_vel, min(.3f * dt, 1.f));
         }
 
         // Try to follow the point of attraction
-        math::vec2 poa = get_point_of_attraction(iter.time);
-        boid.vel = math::mix(boid.vel, (poa - boid.pos), math::min(dt, 1.f));
+        vec2 poa = get_point_of_attraction(iter.time);
+        boid.vel = mix(boid.vel, (poa - boid.pos), min(dt, 1.f));
 
         // Constant speed
-        boid.vel = boids_speed * math::normalize(boid.vel);
+        boid.vel = boids_speed * normalize(boid.vel);
 
         // Update position
         boid.pos += boid.vel * dt;
@@ -125,9 +127,9 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
             float sd = sd_colliders(boid.pos, iter.time);
 
             // Normal
-            math::vec2 normal = math::normalize(math::vec2(
-                sd_colliders(boid.pos + math::vec2(.001, 0), iter.time) - sd,
-                sd_colliders(boid.pos + math::vec2(0, .001), iter.time) - sd
+            vec2 normal = normalize(vec2(
+                sd_colliders(boid.pos + vec2(.001, 0), iter.time) - sd,
+                sd_colliders(boid.pos + vec2(0, .001), iter.time) - sd
             ));
 
             // If inside
@@ -137,14 +139,14 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
                 boid.pos += (.001f - sd) * normal;
 
                 // Bounce
-                boid.vel = math::reflect(boid.vel, normal);
+                boid.vel = reflect(boid.vel, normal);
             }
 
             // Steer away
-            float pd = math::max(0.f, sd);
-            float angle = math::radians(-50.f * math::exp(-15.f * pd) * dt);
-            boid.vel = math::transform::apply_vector2D(
-                math::transform::rotate2D(angle),
+            float pd = max(0.f, sd);
+            float angle = radians(-50.f * math::exp(-15.f * pd) * dt);
+            boid.vel = transform::apply_vector2D(
+                transform::rotate2D(angle),
                 boid.vel
             );
 
@@ -267,13 +269,13 @@ void s_rendering::on_update(tef::world_t& world, const tef::world_iteration_t& i
         GLint location = glGetUniformLocation(plane_shader_program, "aspect");
         glUniform2f(
             location,
-            (float)width / math::min(width, height),
-            (float)height / math::min(width, height)
+            (float)width / min(width, height),
+            (float)height / min(width, height)
         );
     }
     {
         GLint location = glGetUniformLocation(plane_shader_program, "px2uv");
-        glUniform1f(location, 2.f / math::min(width, height));
+        glUniform1f(location, 2.f / min(width, height));
     }
     {
         GLint location = glGetUniformLocation(plane_shader_program, "time");
@@ -297,8 +299,8 @@ void s_rendering::on_update(tef::world_t& world, const tef::world_iteration_t& i
         GLint location = glGetUniformLocation(boids_shader_program, "aspect");
         glUniform2f(
             location,
-            (float)width / math::min(width, height),
-            (float)height / math::min(width, height)
+            (float)width / min(width, height),
+            (float)height / min(width, height)
         );
     }
     {
@@ -307,7 +309,7 @@ void s_rendering::on_update(tef::world_t& world, const tef::world_iteration_t& i
     }
     {
         GLint location = glGetUniformLocation(boids_shader_program, "px2uv");
-        glUniform1f(location, (2.f / math::min(width, height)) / boids_size);
+        glUniform1f(location, (2.f / min(width, height)) / boids_size);
     }
 
     // Bind the boids VAO
