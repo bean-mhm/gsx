@@ -311,7 +311,33 @@ static void test_matrix()
 
 static void test_transform()
 {
-    //
+    test::assert(eq_vec(
+        transform::apply_point2D_h(
+            transform::translate2D_h(vec2(1, -4)),
+            vec2(10, 20)
+        ),
+        vec2(11, 16)
+    ), "translate2D_h(), apply_point2D_h()");
+    mat4 inv;
+    transform::translate3D_h(vec3(-100), &inv);
+    test::assert(eq_vec(
+        transform::apply_point3D_h(inv, vec3(2, 9, -2)),
+        vec3(102, 109, 98)
+    ), "translate3D_h(), apply_point3D_h()");
+    test::assert(eq_vec(
+        transform::apply_vector3D(
+            transform::scale3D(vec3(10, 20, -40)),
+            vec3(1, 2, -10)
+        ),
+        vec3(10, 40, 400)
+    ), "scale3D(), apply_vector3D()");
+    test::assert(eq_vec(
+        transform::apply_point2D_h(
+            transform::translate2D_h(vec2(100)) * transform::rotate2D_h(-pi / 6.f),
+            vec2(10, 20)
+        ),
+        vec2(118.6602554f, 112.3205109f)
+    ), "rotate2D_h(), translate2D_h(), apply_point2D_h()");
 }
 
 static void test_prng()
