@@ -1,5 +1,8 @@
 #include "log.h"
 
+// STD
+#include <stdexcept>
+
 namespace tef::ecs
 {
 
@@ -7,7 +10,8 @@ namespace tef::ecs
         log_level_t log_level,
         const std::string& world_name,
         std::thread::id thread_id,
-        const std::string& message)
+        const std::string& message
+    )
         : log_level(log_level), world_name(world_name), thread_id(thread_id), message(message)
     {}
 

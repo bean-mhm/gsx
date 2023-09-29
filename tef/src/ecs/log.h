@@ -11,6 +11,10 @@
 #include "../str/str.h"
 #include "../misc/misc.h"
 
+// Note: For internal use only. Do not use this, use world_t::log() instead.
+#define tef_log(world_ptr, log_level, message) if (log_level <= world_ptr->max_log_level) \
+logger->log(log_entry_t(log_level, world_ptr->name, std::this_thread::get_id(), message))
+
 namespace tef::ecs
 {
 
@@ -31,15 +35,17 @@ namespace tef::ecs
         std::thread::id thread_id;
         std::string message;
 
-        log_entry_t(log_level_t log_level,
+        log_entry_t(
+            log_level_t log_level,
             const std::string& world_name,
             std::thread::id thread_id,
-            const std::string& message);
+            const std::string& message
+        );
     };
 
     // Abstract class for logging
-    // Note: The abstract function log() may be called from several threads simultaneously, so
-    // any derived class must manually implement synchronization.
+    // Note: The abstract function log() may be called from several threads simultaneously, so any
+    // derived class must manually implement synchronization.
     class base_logger_t
     {
     public:
@@ -85,8 +91,3 @@ namespace tef::ecs
     };
 
 }
-
-// Log macro
-// Note: For internal use only. Do not use this, use world_t::log() instead.
-#define tef_log(world_ptr, log_level, message) if (log_level <= world_ptr->max_log_level) \
-logger->log(log_entry_t(log_level, world_ptr->name, std::this_thread::get_id(), message))
