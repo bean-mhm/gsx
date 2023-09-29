@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ecs\tef.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\misc\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -45,11 +42,14 @@
     <ClCompile Include="src\ecs\event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ecs\system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ecs\world.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ecs\tef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\misc\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -113,10 +113,13 @@
     <ClInclude Include="src\misc\worker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ecs\utils.h">
+    <ClInclude Include="src\ecs\event.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ecs\event.h">
+    <ClInclude Include="src\ecs\system.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ecs\world.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

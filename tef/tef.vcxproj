@@ -95,6 +95,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\ecs\event.cpp" />
+    <ClCompile Include="src\ecs\system.cpp" />
+    <ClCompile Include="src\ecs\world.cpp" />
     <ClCompile Include="src\math\prng.cpp" />
     <ClCompile Include="src\math\quaternion.cpp" />
     <ClCompile Include="src\math\ray.cpp" />
@@ -102,13 +104,13 @@
     <ClCompile Include="src\misc\worker.cpp" />
     <ClCompile Include="src\str\utils.cpp" />
     <ClCompile Include="src\ecs\log.cpp" />
-    <ClCompile Include="src\ecs\tef.cpp" />
     <ClCompile Include="src\misc\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ecs\ecs.h" />
     <ClInclude Include="src\ecs\event.h" />
-    <ClInclude Include="src\ecs\utils.h" />
+    <ClInclude Include="src\ecs\system.h" />
+    <ClInclude Include="src\ecs\world.h" />
     <ClInclude Include="src\math\bounds2.h" />
     <ClInclude Include="src\math\bounds3.h" />
     <ClInclude Include="src\math\matrix.h" />
@@ -127,7 +129,6 @@
     <ClInclude Include="src\str\str.h" />
     <ClInclude Include="src\str\utils.h" />
     <ClInclude Include="src\ecs\log.h" />
-    <ClInclude Include="src\ecs\tef.h" />
     <ClInclude Include="src\spatial\spatial.h" />
     <ClInclude Include="src\misc\utils.h" />
   </ItemGroup>
