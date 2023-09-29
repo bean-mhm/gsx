@@ -176,21 +176,21 @@ namespace tef::math
         }
 
         // Access by index (copy)
-        constexpr T operator[](int i) const
+        constexpr T operator[](int32_t i) const
         {
             if (i == 0) return x;
             return y;
         }
 
         // Access by index (reference)
-        constexpr T& operator[](int i)
+        constexpr T& operator[](int32_t i)
         {
             if (i == 0) return x;
             return y;
         }
 
         // Permute by indices
-        constexpr base_vec2<T> permute(int x, int y) const
+        constexpr base_vec2<T> permute(int32_t x, int32_t y) const
         {
             return base_vec2<T>((*this)[x], (*this)[y]);
         }

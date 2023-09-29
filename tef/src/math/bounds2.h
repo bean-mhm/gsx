@@ -56,14 +56,14 @@ namespace tef::math
         }
 
         // Access by index (const reference)
-        constexpr const base_vec2<T>& operator[](int i) const
+        constexpr const base_vec2<T>& operator[](int32_t i) const
         {
             if (i == 0) return pmin;
             return pmax;
         }
 
         // Access by index (reference)
-        constexpr base_vec2<T>& operator[](int i)
+        constexpr base_vec2<T>& operator[](int32_t i)
         {
             if (i == 0) return pmin;
             return pmax;
@@ -83,7 +83,7 @@ namespace tef::math
         }
 
         // The index of which of the axes is longest
-        constexpr int max_extent() const
+        constexpr int32_t max_extent() const
         {
             base_vec2<T> d = diagonal();
             if (d.x > d.y)

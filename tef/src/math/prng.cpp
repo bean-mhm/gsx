@@ -28,8 +28,8 @@ namespace tef::math
 
     prng_t::prng_t(vec2 seed)
     {
-        seed *= vec2(10.258331f, 31.833125f);
         seed += 7.6476101531702f;
+        seed *= vec2(10.258331f, 31.833125f);
         init(
             *reinterpret_cast<uint32_t*>(&seed.x),
             *reinterpret_cast<uint32_t*>(&seed.y)
@@ -38,9 +38,9 @@ namespace tef::math
 
     prng_t::prng_t(vec3 seed)
     {
+        seed += 3.49276101561702f;
         seed.x *= seed.z + 10.258331f;
         seed.y *= seed.z + 31.833125f;
-        seed += 3.49276101561702f;
         init(
             *reinterpret_cast<uint32_t*>(&seed.x),
             *reinterpret_cast<uint32_t*>(&seed.y)
@@ -92,7 +92,7 @@ namespace tef::math
     vec2 prng_t::next_in_circle()
     {
         vec2 v;
-        for (int i = 0; i < 100; i++)
+        for (int32_t i = 0; i < 100; i++)
         {
             v = vec2(
                 2.f * next_float() - 1.f,
@@ -106,7 +106,7 @@ namespace tef::math
     vec3 prng_t::next_in_sphere()
     {
         vec3 v;
-        for (int i = 0; i < 100; i++)
+        for (int32_t i = 0; i < 100; i++)
         {
             v = vec3(
                 2.f * next_float() - 1.f,
@@ -122,7 +122,7 @@ namespace tef::math
     {
         vec2 v;
         float lensqr;
-        for (int i = 0; i < 100; i++)
+        for (int32_t i = 0; i < 100; i++)
         {
             v = vec2(
                 2.f * next_float() - 1.f,
@@ -138,7 +138,7 @@ namespace tef::math
     {
         vec3 v;
         float lensqr;
-        for (int i = 0; i < 100; i++)
+        for (int32_t i = 0; i < 100; i++)
         {
             v = vec3(
                 2.f * next_float() - 1.f,

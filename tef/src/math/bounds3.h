@@ -53,21 +53,21 @@ namespace tef::math
         }
 
         // Access by index (const reference)
-        constexpr const base_vec3<T>& operator[](int i) const
+        constexpr const base_vec3<T>& operator[](int32_t i) const
         {
             if (i == 0) return pmin;
             return pmax;
         }
 
         // Access by index (reference)
-        constexpr base_vec3<T>& operator[](int i)
+        constexpr base_vec3<T>& operator[](int32_t i)
         {
             if (i == 0) return pmin;
             return pmax;
         }
 
         // The coordinates of one of the eight corners of the bounding box
-        constexpr base_vec3<T> corner(int i) const
+        constexpr base_vec3<T> corner(int32_t i) const
         {
             return base_vec3<T>(
                 (*this)[(i & 1)].x,
@@ -97,7 +97,7 @@ namespace tef::math
         }
 
         // The index of which of the axes is longest
-        constexpr int max_extent() const
+        constexpr int32_t max_extent() const
         {
             base_vec3<T> d = diagonal();
             if (d.x > d.y && d.x > d.z)

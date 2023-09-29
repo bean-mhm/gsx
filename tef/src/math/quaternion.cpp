@@ -20,13 +20,13 @@ namespace tef::math
         else
         {
             // Compute largest of $x$, $y$, or $z$, then remaining components
-            const int nxt[3] = { 1, 2, 0 };
+            const int32_t nxt[3] = { 1, 2, 0 };
             float q[3];
-            int i = 0;
+            int32_t i = 0;
             if (m(1, 1) > m(0, 0)) i = 1;
             if (m(2, 2) > m(i, i)) i = 2;
-            int j = nxt[i];
-            int k = nxt[j];
+            int32_t j = nxt[i];
+            int32_t k = nxt[j];
             float s = sqrt((m(i, i) - (m(j, j) + m(k, k))) + 1.f);
             q[i] = s * 0.5f;
             if (s != 0.f) s = 0.5f / s;
