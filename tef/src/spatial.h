@@ -1,5 +1,5 @@
 #pragma once
 
-#include "quadtree.h"
+#include "spatial/quadtree.h"
 
 namespace spatial = tef::spatial;
