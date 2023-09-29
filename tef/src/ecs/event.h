@@ -2,12 +2,12 @@
 
 // STD
 #include <any>
-
-// Internal
-#include "utils.h"
+#include <cstdint>
 
 namespace tef::ecs
 {
+
+    using event_type_t = uint64_t;
 
     // Event
     struct event_t
