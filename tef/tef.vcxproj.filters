@@ -56,7 +56,7 @@
     <ClInclude Include="src\ecs\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\spatial\spatial.h">
+    <ClInclude Include="src\spatial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\math\bounds2.h">
@@ -92,22 +92,22 @@
     <ClInclude Include="src\str\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\math\math.h">
+    <ClInclude Include="src\math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\math\prng.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\str\str.h">
+    <ClInclude Include="src\str.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\spatial\quadtree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ecs\ecs.h">
+    <ClInclude Include="src\ecs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\misc\misc.h">
+    <ClInclude Include="src\misc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\misc\worker.h">

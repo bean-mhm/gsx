@@ -107,7 +107,7 @@
     <ClCompile Include="src\misc\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ecs\ecs.h" />
+    <ClInclude Include="src\ecs.h" />
     <ClInclude Include="src\ecs\event.h" />
     <ClInclude Include="src\ecs\system.h" />
     <ClInclude Include="src\ecs\world.h" />
@@ -122,14 +122,14 @@
     <ClInclude Include="src\math\vec2.h" />
     <ClInclude Include="src\math\vec3.h" />
     <ClInclude Include="src\math\vec4.h" />
-    <ClInclude Include="src\math\math.h" />
-    <ClInclude Include="src\misc\misc.h" />
+    <ClInclude Include="src\math.h" />
+    <ClInclude Include="src\misc.h" />
     <ClInclude Include="src\misc\worker.h" />
     <ClInclude Include="src\spatial\quadtree.h" />
-    <ClInclude Include="src\str\str.h" />
+    <ClInclude Include="src\str.h" />
     <ClInclude Include="src\str\utils.h" />
     <ClInclude Include="src\ecs\log.h" />
-    <ClInclude Include="src\spatial\spatial.h" />
+    <ClInclude Include="src\spatial.h" />
     <ClInclude Include="src\misc\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
