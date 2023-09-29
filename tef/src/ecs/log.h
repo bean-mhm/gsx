@@ -8,10 +8,10 @@
 #include <mutex>
 
 // Internal
-#include "str/utils.h"
-#include "utils.h"
+#include "../str/str.h"
+#include "../misc/misc.h"
 
-namespace tef
+namespace tef::ecs
 {
 
     // Log level

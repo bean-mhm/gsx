@@ -3,12 +3,8 @@
 // STD
 #include <stdexcept>
 
-namespace tef
+namespace tef::ecs
 {
-
-    event_t::event_t(event_type_t type, const std::any& data)
-        : type(type), data(data)
-    {}
 
     base_system_t::base_system_t(
         const std::string& name,
@@ -136,7 +132,7 @@ namespace tef
         {
             if (systems[i]->name == sname)
             {
-                utils::vec_remove(systems, i);
+                misc::vec_remove(systems, i);
                 break;
             }
         }
@@ -153,7 +149,7 @@ namespace tef
         {
             if (systems[i]->name == sname)
             {
-                utils::vec_remove(systems, i);
+                misc::vec_remove(systems, i);
             }
             else
             {
@@ -165,7 +161,7 @@ namespace tef
     void world_t::remove_systems()
     {
         tef_log(this, log_level_t::verbose, "Removing all systems");
-        utils::vec_clear(systems);
+        misc::vec_clear(systems);
     }
 
     void world_t::run(const float max_update_rate, const float max_run_time)
@@ -211,7 +207,7 @@ namespace tef
             update_systems(system_groups, worker_map, iter);
 
             // Don't go faster than the maximum update rate
-            float time_left = min_dt - utils::elapsed_sec(time_last_iter);
+            float time_left = min_dt - misc::elapsed_sec(time_last_iter);
             if (time_left > 0)
             {
                 std::this_thread::sleep_for(
@@ -221,8 +217,8 @@ namespace tef
 
             // Iteration info
             iter.i++;
-            iter.time = utils::elapsed_sec(time_start);
-            iter.dt = utils::elapsed_sec(time_last_iter);
+            iter.time = misc::elapsed_sec(time_start);
+            iter.dt = misc::elapsed_sec(time_last_iter);
             time_last_iter = std::chrono::high_resolution_clock::now();
 
             // Stop running if the maximum run time is exceeded
@@ -298,7 +294,7 @@ namespace tef
                     }
                     else
                     {
-                        out_worker_map[system.get()] = std::make_shared<utils::worker_t>(
+                        out_worker_map[system.get()] = std::make_shared<misc::worker_t>(
                             out_worker_map.size()
                         );
                     }

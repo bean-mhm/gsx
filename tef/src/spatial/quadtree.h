@@ -6,16 +6,11 @@
 #include <cstdint>
 
 // Internal
-#include "math/math.h"
-#include "utils.h"
+#include "../math/math.h"
+#include "../misc/misc.h"
 
 namespace tef::spatial
 {
-
-    struct point_t
-    {
-        math::vec2 pos;
-    };
 
     // Quadtree data structure with a given capacity per tile
     // Note: T must have a constructor with no arguments.

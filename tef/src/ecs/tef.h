@@ -16,34 +16,19 @@
 #include <cstdint>
 
 // Internal
-#include "math/math.h"
-#include "str/utils.h"
 #include "log.h"
+#include "event.h"
 #include "utils.h"
+#include "../math/math.h"
+#include "../str/str.h"
+#include "../misc/misc.h"
 
-namespace tef
+namespace tef::ecs
 {
-
-    // Type definitions
-    using byte_t = uint8_t;
-    using entity_t = uint64_t;
-    using event_type_t = uint64_t;
 
     // Forward declerations
     class world_t;
     struct world_iteration_t;
-
-    // Event
-    struct event_t
-    {
-        // Event type specified by the sender
-        event_type_t type;
-
-        // Event data
-        std::any data;
-
-        event_t(event_type_t type, const std::any& data);
-    };
 
     // Abstract struct for a component
     // Note: A component has no functionality, it only ever stores data.
@@ -347,7 +332,7 @@ namespace tef
         // Mapping from a system pointer to a worker thread used to invoke the abtract functions
         // of that system. If the worker is nullptr, then the system must run on the same thread
         // that is running the world.
-        using worker_map_t = std::unordered_map<base_system_t*, std::shared_ptr<utils::worker_t>>;
+        using worker_map_t = std::unordered_map<base_system_t*, std::shared_ptr<misc::worker_t>>;
 
         // Logger
         std::shared_ptr<base_logger_t> logger;

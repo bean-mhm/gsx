@@ -1,6 +1,6 @@
 #include "log.h"
 
-namespace tef
+namespace tef::ecs
 {
 
     log_entry_t::log_entry_t(

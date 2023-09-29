@@ -94,17 +94,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ecs\event.cpp" />
     <ClCompile Include="src\math\prng.cpp" />
     <ClCompile Include="src\math\quaternion.cpp" />
     <ClCompile Include="src\math\ray.cpp" />
     <ClCompile Include="src\math\transform.cpp" />
+    <ClCompile Include="src\misc\worker.cpp" />
     <ClCompile Include="src\str\utils.cpp" />
-    <ClCompile Include="src\spatial.cpp" />
-    <ClCompile Include="src\log.cpp" />
-    <ClCompile Include="src\tef.cpp" />
-    <ClCompile Include="src\utils.cpp" />
+    <ClCompile Include="src\ecs\log.cpp" />
+    <ClCompile Include="src\ecs\tef.cpp" />
+    <ClCompile Include="src\misc\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ecs\ecs.h" />
+    <ClInclude Include="src\ecs\event.h" />
+    <ClInclude Include="src\ecs\utils.h" />
     <ClInclude Include="src\math\bounds2.h" />
     <ClInclude Include="src\math\bounds3.h" />
     <ClInclude Include="src\math\matrix.h" />
@@ -117,11 +121,15 @@
     <ClInclude Include="src\math\vec3.h" />
     <ClInclude Include="src\math\vec4.h" />
     <ClInclude Include="src\math\math.h" />
+    <ClInclude Include="src\misc\misc.h" />
+    <ClInclude Include="src\misc\worker.h" />
+    <ClInclude Include="src\spatial\quadtree.h" />
+    <ClInclude Include="src\str\str.h" />
     <ClInclude Include="src\str\utils.h" />
-    <ClInclude Include="src\log.h" />
-    <ClInclude Include="src\tef.h" />
-    <ClInclude Include="src\spatial.h" />
-    <ClInclude Include="src\utils.h" />
+    <ClInclude Include="src\ecs\log.h" />
+    <ClInclude Include="src\ecs\tef.h" />
+    <ClInclude Include="src\spatial\spatial.h" />
+    <ClInclude Include="src\misc\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
