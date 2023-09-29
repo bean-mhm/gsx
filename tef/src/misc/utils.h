@@ -23,10 +23,10 @@ namespace tef::misc
     }
 
     template<typename T>
-    void vec_insert_contents(std::vector<T>& a, const std::vector<T>& b)
+    void vec_append(std::vector<T>& vec, const std::vector<T>& to_add)
     {
-        a.reserve(a.size() + b.size());
-        a.insert(a.end(), b.begin(), b.end());
+        vec.reserve(vec.size() + to_add.size());
+        vec.insert(vec.end(), to_add.begin(), to_add.end());
     }
 
     template<typename T>
