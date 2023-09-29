@@ -307,7 +307,7 @@ namespace tef::str
         return std::string(buffer);
     }
 
-    int64_t to_int(const std::string& s)
+    int64_t to_i64(const std::string& s)
     {
         try
         {
@@ -316,7 +316,7 @@ namespace tef::str
         catch (const std::exception& e)
         {
             throw std::runtime_error(std::format(
-                "Couldn't parse an integer from \"{}\".",
+                "Couldn't parse a 64-bit signed integer from \"{}\".",
                 s
             ).c_str());
         }
@@ -333,88 +333,6 @@ namespace tef::str
             throw std::runtime_error(std::format(
                 "Couldn't parse a float from \"{}\".",
                 s
-            ).c_str());
-        }
-    }
-
-    std::array<float, 4> to_rgba(const std::string& s)
-    {
-        try
-        {
-            if (s.empty())
-                throw std::runtime_error("empty string");
-
-            std::vector<std::string> elements;
-            to_list(s, ',', elements);
-
-            if (elements.size() == 1)
-            {
-                float v = std::stof(elements[0]);
-                return { v, v, v, 1.f };
-            }
-            else if (elements.size() == 3)
-            {
-                return {
-                    std::stof(elements[0]),
-                    std::stof(elements[1]),
-                    std::stof(elements[2]),
-                    1.f
-                };
-            }
-            else if (elements.size() == 4)
-            {
-                return {
-                    std::stof(elements[0]),
-                    std::stof(elements[1]),
-                    std::stof(elements[2]),
-                    std::stof(elements[3])
-                };
-            }
-            throw std::runtime_error("invalid input");
-        }
-        catch (const std::exception& e)
-        {
-            throw std::runtime_error(std::format(
-                "Failed to parse color from string \"{}\": {}",
-                s,
-                e.what()
-            ).c_str());
-        }
-    }
-
-    std::array<float, 3> to_rgb(const std::string& s)
-    {
-        std::array<float, 4> rgba = to_rgba(s);
-        return { rgba[0], rgba[1], rgba[2] };
-    }
-
-    std::array<float, 2> to_xy(const std::string& s)
-    {
-        try
-        {
-            if (s.empty())
-                throw std::runtime_error("empty string");
-
-            std::vector<std::string> elements;
-            to_list(s, ',', elements);
-
-            if (elements.size() == 1)
-            {
-                float v = std::stof(elements[0]);
-                return { v, v };
-            }
-            else if (elements.size() == 2)
-            {
-                return { std::stof(elements[0]), std::stof(elements[1]) };
-            }
-            throw std::runtime_error("invalid input");
-        }
-        catch (const std::exception& e)
-        {
-            throw std::runtime_error(std::format(
-                "Failed to parse XY from string \"{}\": {}",
-                s,
-                e.what()
             ).c_str());
         }
     }

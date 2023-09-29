@@ -5,7 +5,7 @@
 #include "matrix.h"
 #include "transform.h"
 #include "utils.h"
-#include "../str/utils.h"
+#include "../str/str.h"
 
 namespace tef::math
 {

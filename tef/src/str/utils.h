@@ -68,33 +68,7 @@ namespace tef::str
         return std::format("{}", v);
     }
 
-    int64_t to_int(const std::string& s);
+    int64_t to_i64(const std::string& s);
     float to_float(const std::string& s);
-
-    template<size_t size>
-    std::string from_float_array(const std::array<float, size>& arr)
-    {
-        std::string result = "";
-        for (size_t i = 0; i < size; i++)
-        {
-            if (i != 0) result += ", ";
-            result += std::format("{:.3f}", arr[i]);
-        }
-        return result;
-    }
-
-    std::array<float, 4> to_rgba(const std::string& s);
-    std::array<float, 3> to_rgb(const std::string& s);
-    std::array<float, 2> to_xy(const std::string& s);
-
-    template< typename T >
-    std::string from_hex(T i)
-    {
-        std::stringstream stream;
-        stream << "0x"
-            << std::setfill('0') << std::setw(sizeof(T) * 2)
-            << std::hex << i;
-        return stream.str();
-    }
 
 }
