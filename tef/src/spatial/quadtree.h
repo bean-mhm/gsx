@@ -2,6 +2,7 @@
 
 // STD
 #include <vector>
+#include <stack>
 #include <memory>
 #include <cstdint>
 
@@ -29,59 +30,81 @@ namespace tef::spatial
 
         bool insert(const T& elem)
         {
-            if (!math::inside(elem.pos, bounds))
-                return false;
-
-            if (size < capacity)
+            std::stack<quadtree_t*> stack({ this });
+            while (!stack.empty())
             {
-                elements[size] = elem;
-                size++;
-                return true;
+                quadtree_t* q = stack.top();
+                stack.pop();
+
+                if (!math::inside(elem.pos, q->bounds))
+                    continue;
+
+                if (q->size < capacity)
+                {
+                    q->elements[q->size] = elem;
+                    q->size++;
+                    return true;
+                }
+
+                q->subdivide();
+
+                stack.push(q->top_left.get());
+                stack.push(q->top_right.get());
+                stack.push(q->bottom_right.get());
+                stack.push(q->bottom_left.get());
             }
-
-            subdivide();
-
-            if (top_left->insert(elem)) return true;
-            if (top_right->insert(elem)) return true;
-            if (bottom_right->insert(elem)) return true;
-            if (bottom_left->insert(elem)) return true;
+            return false;
         }
 
         void query(const math::bounds2& range, std::vector<T*>& out_elements)
         {
-            if (!math::overlaps(bounds, range))
-                return;
-
-            for (size_t i = 0; i < size; i++)
+            std::stack<quadtree_t*> stack({ this });
+            while (!stack.empty())
             {
-                if (math::inside(elements[i].pos, range))
+                quadtree_t* q = stack.top();
+                stack.pop();
+
+                if (!math::overlaps(q->bounds, range))
+                    continue;
+
+                for (size_t i = 0; i < q->size; i++)
                 {
-                    out_elements.push_back(&elements[i]);
+                    if (math::inside(q->elements[i].pos, range))
+                    {
+                        out_elements.push_back(&q->elements[i]);
+                    }
                 }
-            }
 
-            if (divided)
-            {
-                top_left->query(range, out_elements);
-                top_right->query(range, out_elements);
-                bottom_right->query(range, out_elements);
-                bottom_left->query(range, out_elements);
+                if (q->divided)
+                {
+                    stack.push(q->top_left.get());
+                    stack.push(q->top_right.get());
+                    stack.push(q->bottom_right.get());
+                    stack.push(q->bottom_left.get());
+                }
             }
         }
 
         void query_all(std::vector<T*>& out_elements)
         {
-            for (size_t i = 0; i < size; i++)
+            std::stack<quadtree_t*> stack({ this });
+            while (!stack.empty())
             {
-                out_elements.push_back(&elements[i]);
-            }
+                quadtree_t* q = stack.top();
+                stack.pop();
 
-            if (divided)
-            {
-                top_left->query_all(out_elements);
-                top_right->query_all(out_elements);
-                bottom_right->query_all(out_elements);
-                bottom_left->query_all(out_elements);
+                for (size_t i = 0; i < q->size; i++)
+                {
+                    out_elements.push_back(&q->elements[i]);
+                }
+
+                if (q->divided)
+                {
+                    stack.push(q->top_left.get());
+                    stack.push(q->top_right.get());
+                    stack.push(q->bottom_right.get());
+                    stack.push(q->bottom_left.get());
+                }
             }
         }
 
@@ -110,8 +133,10 @@ namespace tef::spatial
 
         void subdivide()
         {
-            if (divided) return;
-            divided = true;
+            if (divided)
+                return;
+            else
+                divided = true;
 
             math::vec2 center = (bounds.pmin + bounds.pmax) * .5f;
 
