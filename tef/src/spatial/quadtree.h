@@ -117,7 +117,7 @@ namespace tef::spatial
 
             top_left = std::make_unique<quadtree_t>(
                 capacity,
-                math::bounds2(center, { bounds.pmin.x, bounds.pmax.y })
+                math::bounds2(center, math::vec2(bounds.pmin.x, bounds.pmax.y))
             );
             top_right = std::make_unique<quadtree_t>(
                 capacity,
@@ -125,7 +125,7 @@ namespace tef::spatial
             );
             bottom_right = std::make_unique<quadtree_t>(
                 capacity,
-                math::bounds2(center, { bounds.pmax.x, bounds.pmin.y })
+                math::bounds2(center, math::vec2(bounds.pmax.x, bounds.pmin.y))
             );
             bottom_left = std::make_unique<quadtree_t>(
                 capacity,
