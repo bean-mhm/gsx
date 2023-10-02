@@ -43,7 +43,7 @@ namespace tef::ecs
 
         // Create a system with given properties.
         base_system_t(const std::string& name, int32_t update_order, bool run_on_caller_thread);
-        no_default_copy_move_constructor(base_system_t);
+        no_default_copy_construct_no_assignment(base_system_t);
         virtual ~base_system_t();
 
         // Called when the world starts running, in the order in which the systems were added.

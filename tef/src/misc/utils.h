@@ -5,12 +5,12 @@
 #include <chrono>
 #include <cstdint>
 
-#define no_default_constructor(CLASS) CLASS() = delete
-#define no_copy_constructor(CLASS) CLASS(const CLASS&) = delete
-#define no_move_constructor(CLASS) CLASS& operator= (const CLASS&) = delete
-#define no_copy_move_constructor(CLASS) no_copy_constructor(CLASS); no_move_constructor(CLASS);
-#define no_default_copy_move_constructor(CLASS) no_default_constructor(CLASS); \
-no_copy_constructor(CLASS); no_move_constructor(CLASS);
+#define no_default_construct(CLASS) CLASS() = delete
+#define no_copy_construct(CLASS) CLASS(const CLASS&) = delete
+#define no_assignment(CLASS) CLASS& operator= (const CLASS&) = delete
+#define no_copy_construct_no_assignment(CLASS) no_copy_construct(CLASS); no_assignment(CLASS);
+#define no_default_copy_construct_no_assignment(CLASS) no_default_construct(CLASS); \
+no_copy_construct(CLASS); no_assignment(CLASS);
 
 namespace tef::misc
 {

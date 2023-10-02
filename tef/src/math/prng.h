@@ -20,7 +20,7 @@ namespace tef::math
         prng_t(uvec2 seed);
         prng_t(vec2 seed);
         prng_t(vec3 seed);
-        no_copy_move_constructor(prng_t);
+        no_copy_construct_no_assignment(prng_t);
 
         // 32-bit signed integer from -2^31 to 2^31-1
         int32_t next_i32();

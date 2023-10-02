@@ -53,7 +53,7 @@ namespace tef::ecs
             log_level_t max_log_level,
             std::shared_ptr<base_logger_t> logger
         );
-        no_default_copy_move_constructor(world_t);
+        no_default_copy_construct_no_assignment(world_t);
         ~world_t();
 
         // Add a custom log message.
