@@ -14,7 +14,7 @@ namespace tef::spatial
 {
 
     // Quadtree data structure with a given capacity per tile
-    // Note: T must have a constructor with no arguments.
+    // Note: T must have a constructor with no arguments, and an assignment operator.
     // Note: T must have a field of type tef::math::vec2 named pos, representing the 2D position.
     template<typename T, size_t capacity>
     class quadtree_t
@@ -26,9 +26,9 @@ namespace tef::spatial
             : bounds(bounds)
         {}
 
-        no_default_copy_move_constructor(quadtree_t);
+        no_default_copy_construct_no_assignment(quadtree_t);
 
-        bool insert(const T& elem)
+        bool insert(const T& element)
         {
             std::stack<quadtree_t*> stack({ this });
             while (!stack.empty())
@@ -36,12 +36,12 @@ namespace tef::spatial
                 quadtree_t* q = stack.top();
                 stack.pop();
 
-                if (!math::inside(elem.pos, q->bounds))
+                if (!math::inside(element.pos, q->bounds))
                     continue;
 
                 if (q->size < capacity)
                 {
-                    q->elements[q->size] = elem;
+                    q->elements[q->size] = element;
                     q->size++;
                     return true;
                 }
