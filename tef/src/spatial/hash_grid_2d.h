@@ -65,10 +65,12 @@ namespace tef::spatial
 
             for (int index : indices)
             {
-                std::vector<T>& container = containers[index];
-                for (auto& element : container)
+                for (auto& element : containers[index])
                 {
-                    out_elements.push_back(&element);
+                    if (math::inside(element.pos, range))
+                    {
+                        out_elements.push_back(&element);
+                    }
                 }
             }
         }

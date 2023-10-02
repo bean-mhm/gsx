@@ -62,7 +62,10 @@ namespace tef::spatial
                     size_t container_index = y * (size_t)resolution.x + x;
                     for (auto& element : containers[container_index])
                     {
-                        out_elements.push_back(&element);
+                        if (math::inside(element.pos, range))
+                        {
+                            out_elements.push_back(&element);
+                        }
                     }
                 }
             }
