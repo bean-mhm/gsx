@@ -125,6 +125,8 @@
     <ClInclude Include="src\math.h" />
     <ClInclude Include="src\misc.h" />
     <ClInclude Include="src\misc\worker.h" />
+    <ClInclude Include="src\spatial\grid_2d.h" />
+    <ClInclude Include="src\spatial\hash_grid_2d.h" />
     <ClInclude Include="src\spatial\quadtree.h" />
     <ClInclude Include="src\str.h" />
     <ClInclude Include="src\str\utils.h" />
