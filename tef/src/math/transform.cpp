@@ -3,7 +3,7 @@
 namespace tef::math::transform
 {
 
-    mat3 translate2D_h(const vec2& delta, mat3* out_minv)
+    mat3 translate_2d_h(const vec2& delta, mat3* out_minv)
     {
         if (out_minv)
         {
@@ -21,7 +21,7 @@ namespace tef::math::transform
         );
     }
 
-    mat4 translate3D_h(const vec3& delta, mat4* out_minv)
+    mat4 translate_3d_h(const vec3& delta, mat4* out_minv)
     {
         if (out_minv)
         {
@@ -41,7 +41,7 @@ namespace tef::math::transform
         );
     }
 
-    mat2 scale2D(const vec2& fac, mat2* out_minv)
+    mat2 scale_2d(const vec2& fac, mat2* out_minv)
     {
         if (out_minv)
         {
@@ -57,7 +57,7 @@ namespace tef::math::transform
         );
     }
 
-    mat3 scale2D_h(const vec2& fac, mat3* out_minv)
+    mat3 scale_2d_h(const vec2& fac, mat3* out_minv)
     {
         if (out_minv)
         {
@@ -75,7 +75,7 @@ namespace tef::math::transform
         );
     }
 
-    mat3 scale3D(const vec3& fac, mat3* out_minv)
+    mat3 scale_3d(const vec3& fac, mat3* out_minv)
     {
         if (out_minv)
         {
@@ -93,7 +93,7 @@ namespace tef::math::transform
         );
     }
 
-    mat4 scale3D_h(const vec3& fac, mat4* out_minv)
+    mat4 scale_3d_h(const vec3& fac, mat4* out_minv)
     {
         if (out_minv)
         {
@@ -113,7 +113,7 @@ namespace tef::math::transform
         );
     }
 
-    mat2 rotate2D(float angle, mat2* out_minv)
+    mat2 rotate_2d(float angle, mat2* out_minv)
     {
         float s = sin(angle);
         float c = cos(angle);
@@ -132,7 +132,7 @@ namespace tef::math::transform
         );
     }
 
-    mat3 rotate2D_h(float angle, mat3* out_minv)
+    mat3 rotate_2d_h(float angle, mat3* out_minv)
     {
         float s = sin(angle);
         float c = cos(angle);
@@ -153,7 +153,7 @@ namespace tef::math::transform
         );
     }
 
-    mat3 rotate3D_x(float angle, mat3* out_minv)
+    mat3 rotate_3d_x(float angle, mat3* out_minv)
     {
         float s = sin(angle);
         float c = cos(angle);
@@ -170,7 +170,7 @@ namespace tef::math::transform
         return r;
     }
 
-    mat4 rotate3D_x_h(float angle, mat4* out_minv)
+    mat4 rotate_3d_x_h(float angle, mat4* out_minv)
     {
         float s = sin(angle);
         float c = cos(angle);
@@ -188,7 +188,7 @@ namespace tef::math::transform
         return r;
     }
 
-    mat3 rotate3D_y(float angle, mat3* out_minv)
+    mat3 rotate_3d_y(float angle, mat3* out_minv)
     {
         float s = sin(angle);
         float c = cos(angle);
@@ -205,7 +205,7 @@ namespace tef::math::transform
         return r;
     }
 
-    mat4 rotate3D_y_h(float angle, mat4* out_minv)
+    mat4 rotate_3d_y_h(float angle, mat4* out_minv)
     {
         float s = sin(angle);
         float c = cos(angle);
@@ -223,7 +223,7 @@ namespace tef::math::transform
         return r;
     }
 
-    mat3 rotate3D_z(float angle, mat3* out_minv)
+    mat3 rotate_3d_z(float angle, mat3* out_minv)
     {
         float s = sin(angle);
         float c = cos(angle);
@@ -240,7 +240,7 @@ namespace tef::math::transform
         return r;
     }
 
-    mat4 rotate3D_z_h(float angle, mat4* out_minv)
+    mat4 rotate_3d_z_h(float angle, mat4* out_minv)
     {
         float s = sin(angle);
         float c = cos(angle);
@@ -258,7 +258,7 @@ namespace tef::math::transform
         return r;
     }
 
-    mat3 rotate3D(float angle, const vec3& axis, mat3* out_minv)
+    mat3 rotate_3d(float angle, const vec3& axis, mat3* out_minv)
     {
         vec3 a = normalize(axis);
         float s = sin(angle);
@@ -287,7 +287,7 @@ namespace tef::math::transform
         return r;
     }
 
-    mat4 rotate3D_h(float angle, const vec3& axis, mat4* out_minv)
+    mat4 rotate_3d_h(float angle, const vec3& axis, mat4* out_minv)
     {
         vec3 a = normalize(axis);
         float s = sin(angle);
@@ -319,7 +319,7 @@ namespace tef::math::transform
         return r;
     }
 
-    mat4 lookat3D_h(const vec3& pos, const vec3& look, const vec3& up, mat4* out_minv)
+    mat4 lookat_3d_h(const vec3& pos, const vec3& look, const vec3& up, mat4* out_minv)
     {
         mat4 cam_to_world;
 
