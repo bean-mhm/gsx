@@ -77,9 +77,9 @@ namespace tef::str
     {
         if (length > s.size())
         {
-            uint64_t num_spaces = (length - s.size());
+            uint64_t n_spaces = (length - s.size());
             std::string padding;
-            for (uint64_t i = 0; i < num_spaces; i++)
+            for (uint64_t i = 0; i < n_spaces; i++)
                 padding += " ";
             return padding + s;
         }
@@ -90,9 +90,9 @@ namespace tef::str
     {
         if (length > s.size())
         {
-            uint64_t num_spaces = (length - s.size());
+            uint64_t n_spaces = (length - s.size());
             std::string padding;
-            for (uint64_t i = 0; i < num_spaces; i++)
+            for (uint64_t i = 0; i < n_spaces; i++)
                 padding += " ";
             return s + padding;
         }
