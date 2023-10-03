@@ -128,5 +128,11 @@
     <ClInclude Include="src\spatial\hash_grid_2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\spatial\octree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\misc\fixed_vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
