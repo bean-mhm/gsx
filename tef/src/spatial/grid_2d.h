@@ -82,6 +82,11 @@ namespace tef::spatial
             }
         }
 
+        void clear()
+        {
+            misc::vec_clear(containers);
+        }
+
     private:
         const math::vec2 cell_ratio;
         std::vector<std::vector<T>> containers;

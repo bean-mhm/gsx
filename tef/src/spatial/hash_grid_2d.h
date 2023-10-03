@@ -13,11 +13,6 @@
 namespace tef::spatial
 {
 
-    struct bruh
-    {
-        math::vec2 pos;
-    };
-
     // 2D hash grid data structure
     // Note: T must have a copy constructor.
     // Note: T must have a field of type tef::math::vec2 named pos, representing the 2D position.
@@ -84,6 +79,11 @@ namespace tef::spatial
                     out_elements.push_back(&element);
                 }
             }
+        }
+
+        void clear()
+        {
+            misc::vec_clear(containers);
         }
 
     private:
