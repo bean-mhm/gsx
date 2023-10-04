@@ -18,6 +18,24 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\group_math.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\group_math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\tef\ecs\event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\tef\ecs\log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\tef\ecs\system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\tef\ecs\world.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="include\tef\math\prng.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -30,36 +48,36 @@
     <ClCompile Include="include\tef\math\transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\tef\misc\utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\tef\misc\worker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="include\tef\str\utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\tef\log.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\tef\spatial.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\tef\tef.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\tef\utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\group_math.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\group_math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tef\ecs\event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tef\ecs\log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tef\ecs\system.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tef\ecs\world.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\tef\math\bounds2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\tef\math\bounds3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\tef\math\math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\tef\math\matrix.h">
@@ -89,22 +107,43 @@
     <ClInclude Include="include\tef\math\vec4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\tef\misc\fixed_vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tef\misc\utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tef\misc\worker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tef\spatial\grid_2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tef\spatial\hash_grid_2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tef\spatial\octree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tef\spatial\quadtree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\tef\str\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\log.h">
+    <ClInclude Include="include\tef\ecs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tef\math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tef\misc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\tef\spatial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\tef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\tef\utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\test.h">
+    <ClInclude Include="include\tef\str.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
