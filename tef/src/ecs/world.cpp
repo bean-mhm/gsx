@@ -55,6 +55,11 @@ namespace tef::ecs
         return nullptr;
     }
 
+    const std::vector<std::shared_ptr<base_system_t>>& world_t::get_systems()
+    {
+        return systems;
+    }
+
     void world_t::add_system(const std::shared_ptr<base_system_t>& system)
     {
         tef_log(this, log_level_t::verbose, std::format(
@@ -129,6 +134,7 @@ namespace tef::ecs
         std::vector<system_group_t> system_groups;
         prepare_system_groups_and_workers(systems_copy, system_groups, worker_map);
 
+        // Start up the systems
         start_systems(systems_copy, worker_map);
 
         tef_log(this, log_level_t::info, "Starting the loop");
@@ -139,6 +145,7 @@ namespace tef::ecs
         auto time_last_iter = time_start;
         const float min_dt = (max_update_rate == 0) ? 0 : (1.f / max_update_rate);
 
+        // Start the loop
         while (!should_stop)
         {
             tef_log(this, log_level_t::verbose, std::format(
@@ -146,8 +153,10 @@ namespace tef::ecs
                 iter.i, iter.time, iter.dt
             ));
 
+            // Process new events, if any
             process_events(systems_copy, worker_map, iter);
 
+            // Update the systems
             update_systems(system_groups, worker_map, iter);
 
             // Don't go faster than the maximum update rate
@@ -175,6 +184,7 @@ namespace tef::ecs
             }
         }
 
+        // Stop the systems
         stop_systems(systems_copy, worker_map, iter);
 
         tef_log(this, log_level_t::info, "Stopped running");

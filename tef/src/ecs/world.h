@@ -62,6 +62,9 @@ namespace tef::ecs
         // will be returned.
         std::shared_ptr<base_system_t> get_system_named(const std::string& name);
 
+        // Get a list of all the systems
+        const std::vector<std::shared_ptr<base_system_t>>& get_systems();
+
         // Add a system to the world.
         void add_system(const std::shared_ptr<base_system_t>& system);
 
@@ -88,11 +91,12 @@ namespace tef::ecs
         void stop(bool wait);
 
     private:
-        // A group of systems with identical update order values, all to be updated in parallel.
-        // If you're confused, here's an example of how the systems could be updated:
+        // A group of systems with identical update order values, all to be updated in parallel
+        // (with some exceptions).
+        // If you're confused, here's how the systems could be updated in a hypothetical world:
         // 1. Update the movement system, the jump system, and the physics system all in parallel.
         // 2. After step 1 is finished, update the collision system.
-        // 3. Update the audio system and the render system in parallel.
+        // 3. Then, update the audio system and the render system in parallel.
         // Think of each step as a system group. Notice how the system groups are run in serial,
         // but the systems inside each group are updated together in parallel.
         struct system_group_t
@@ -102,8 +106,8 @@ namespace tef::ecs
         };
 
         // Mapping from a system pointer to a worker thread used to invoke the abtract functions
-        // of that system. If the worker is nullptr, then the system must run on the same thread
-        // that is running the world.
+        // of that system (start, update, trigger, stop). If the worker is nullptr, then the
+        // system must run on the same thread that is running the world.
         using worker_map_t = std::unordered_map<base_system_t*, std::shared_ptr<misc::worker_t>>;
 
         // Logger
@@ -124,29 +128,34 @@ namespace tef::ecs
         // Should the world stop running?
         bool should_stop = false;
 
+        // Note: This function is called internally by run().
         void prepare_system_groups_and_workers(
             const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
             std::vector<system_group_t>& out_system_groups,
             worker_map_t& out_worker_map
         );
 
+        // Note: This function is called internally by run().
         void start_systems(
             const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
             worker_map_t& worker_map
         );
 
+        // Note: This function is called internally by run().
         void process_events(
             const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
             worker_map_t& worker_map,
             const iteration_t& iter
         );
 
+        // Note: This function is called internally by run().
         void update_systems(
             std::vector<system_group_t>& system_groups,
             worker_map_t& worker_map,
             const iteration_t& iter
         );
 
+        // Note: This function is called internally by run().
         void stop_systems(
             const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
             worker_map_t& worker_map,
