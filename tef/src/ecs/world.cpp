@@ -3,6 +3,9 @@
 // STD
 #include <stdexcept>
 
+// Internal
+#include "system.h"
+
 namespace tef::ecs
 {
 
@@ -131,7 +134,7 @@ namespace tef::ecs
         tef_log(this, log_level_t::info, "Starting the loop");
 
         // Iteration info
-        world_iteration_t iter;
+        iteration_t iter;
         auto time_start = std::chrono::high_resolution_clock::now();
         auto time_last_iter = time_start;
         const float min_dt = (max_update_rate == 0) ? 0 : (1.f / max_update_rate);
@@ -291,7 +294,7 @@ namespace tef::ecs
     void world_t::process_events(
         const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
         worker_map_t& worker_map,
-        const world_iteration_t& iter
+        const iteration_t& iter
     )
     {
         std::unique_lock lock(mutex_events);
@@ -343,7 +346,7 @@ namespace tef::ecs
     void world_t::update_systems(
         std::vector<system_group_t>& system_groups,
         worker_map_t& worker_map,
-        const world_iteration_t& iter
+        const iteration_t& iter
     )
     {
         for (const auto& group : system_groups)
@@ -407,7 +410,7 @@ namespace tef::ecs
     void world_t::stop_systems(
         const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
         worker_map_t& worker_map,
-        const world_iteration_t& iter
+        const iteration_t& iter
     )
     {
         // Stop the systems in serial in the order opposite to that in which they were added. The

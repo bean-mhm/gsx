@@ -7,14 +7,11 @@
 
 // Internal
 #include "event.h"
+#include "world.h"
 #include "../misc.h"
 
 namespace tef::ecs
 {
-
-    // Forward declerations
-    class world_t;
-    struct world_iteration_t;
 
     // Abstract class for a system
     // Note: The abstract functions will be called at appropriate times by the parent world while
@@ -56,19 +53,19 @@ namespace tef::ecs
         // iteration can be manually parallelized by the user for improved performance.
         // Note: Avoid starting separate threads that keep running after returning from this
         // function.
-        virtual void on_update(world_t& world, const world_iteration_t& iter);
+        virtual void on_update(world_t& world, const world_t::iteration_t& iter);
 
         // Called when triggered by an event.
         // Note: Avoid starting separate threads that keep running after returning from this
         // function.
-        virtual void on_trigger(world_t& world, const world_iteration_t& iter,
+        virtual void on_trigger(world_t& world, const world_t::iteration_t& iter,
             const event_t& event);
 
         // Called when the world stops running, in the opposite order to that in which the systems
         // were added.
         // Note: Avoid starting separate threads that keep running after returning from this
         // function.
-        virtual void on_stop(world_t& world, const world_iteration_t& iter);
+        virtual void on_stop(world_t& world, const world_t::iteration_t& iter);
 
     };
 

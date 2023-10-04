@@ -12,40 +12,36 @@
 // Internal
 #include "log.h"
 #include "event.h"
-#include "system.h"
 
 namespace tef::ecs
 {
 
-    // Information about the current iteration of the world. This will be passed to systems when
-    // the world is running.
-    struct world_iteration_t
-    {
-        // Iteration number starting from 0
-        uint64_t i = 0;
-
-        // Seconds elapsed since the start
-        float time = 0;
-
-        // Seconds elapsed since the last iteration
-        float dt = 0;
-    };
+    // Forward decleration
+    class base_system_t;
 
     // A world for holding and managing a collection of components and systems
     class world_t
     {
     public:
+        // Information about the current iteration of the world. This will be passed to systems when
+        // the world is running.
+        struct iteration_t
+        {
+            // Iteration number starting from 0
+            uint64_t i = 0;
+
+            // Seconds elapsed since the start
+            float time = 0;
+
+            // Seconds elapsed since the last iteration
+            float dt = 0;
+        };
+
         // A name for the world
         const std::string name;
 
         // Maximum log level to use
         const log_level_t max_log_level;
-
-        // Mutex for the systems
-        // Note: Not used internally, can optionally be used by the developer for synchronization.
-        // You might want to use this when adding/removing systems using several threads for
-        // example.
-        std::mutex mutex_systems;
 
         // Create a world with a given name and a logger.
         world_t(
@@ -142,19 +138,19 @@ namespace tef::ecs
         void process_events(
             const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
             worker_map_t& worker_map,
-            const world_iteration_t& iter
+            const iteration_t& iter
         );
 
         void update_systems(
             std::vector<system_group_t>& system_groups,
             worker_map_t& worker_map,
-            const world_iteration_t& iter
+            const iteration_t& iter
         );
 
         void stop_systems(
             const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
             worker_map_t& worker_map,
-            const world_iteration_t& iter
+            const iteration_t& iter
         );
 
     };
