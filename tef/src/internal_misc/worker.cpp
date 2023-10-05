@@ -3,7 +3,7 @@
 namespace tef::misc
 {
 
-    worker_t::worker_t(uint64_t id)
+    worker_t::worker_t(u64 id)
         : id(id), thread(
             [this](std::stop_token stop_token)
             {

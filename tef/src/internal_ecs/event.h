@@ -4,11 +4,14 @@
 #include <any>
 #include <cstdint>
 
+// Internal
+#include "../internal_common/all.h"
+
 namespace tef::ecs
 {
 
     // Event type
-    using event_type_t = uint64_t;
+    using event_type_t = u64;
 
     // Event
     struct event_t

@@ -9,6 +9,7 @@
 #include "ray.h"
 #include "matrix.h"
 #include "utils.h"
+#include "../internal_common/all.h"
 
 namespace tef::math::transform
 {
@@ -32,34 +33,34 @@ namespace tef::math::transform
     mat4 scale_3d_h(const vec3& fac, mat4* out_minv = nullptr);
 
     // 2D rotation matrix
-    mat2 rotate_2d(float angle, mat2* out_minv = nullptr);
+    mat2 rotate_2d(f32 angle, mat2* out_minv = nullptr);
 
     // 2D rotation matrix (homogeneous)
-    mat3 rotate_2d_h(float angle, mat3* out_minv = nullptr);
+    mat3 rotate_2d_h(f32 angle, mat3* out_minv = nullptr);
 
     // 3D rotation matrix around the X axis (left-handed)
-    mat3 rotate_3d_x(float angle, mat3* out_minv = nullptr);
+    mat3 rotate_3d_x(f32 angle, mat3* out_minv = nullptr);
 
     // 3D rotation matrix around the X axis (left-handed) (homogeneous)
-    mat4 rotate_3d_x_h(float angle, mat4* out_minv = nullptr);
+    mat4 rotate_3d_x_h(f32 angle, mat4* out_minv = nullptr);
 
     // 3D rotation matrix around the Y axis (left-handed)
-    mat3 rotate_3d_y(float angle, mat3* out_minv = nullptr);
+    mat3 rotate_3d_y(f32 angle, mat3* out_minv = nullptr);
 
     // 3D rotation matrix around the Y axis (left-handed) (homogeneous)
-    mat4 rotate_3d_y_h(float angle, mat4* out_minv = nullptr);
+    mat4 rotate_3d_y_h(f32 angle, mat4* out_minv = nullptr);
 
     // 3D rotation matrix around the Z axis (left-handed)
-    mat3 rotate_3d_z(float angle, mat3* out_minv = nullptr);
+    mat3 rotate_3d_z(f32 angle, mat3* out_minv = nullptr);
 
     // 3D rotation matrix around the Z axis (left-handed) (homogeneous)
-    mat4 rotate_3d_z_h(float angle, mat4* out_minv = nullptr);
+    mat4 rotate_3d_z_h(f32 angle, mat4* out_minv = nullptr);
 
     // 3D rotation matrix around an arbitrary axis (left-handed)
-    mat3 rotate_3d(float angle, const vec3& axis, mat3* out_minv = nullptr);
+    mat3 rotate_3d(f32 angle, const vec3& axis, mat3* out_minv = nullptr);
 
     // 3D rotation matrix around an arbitrary axis (left-handed) (homogeneous)
-    mat4 rotate_3d_h(float angle, const vec3& axis, mat4* out_minv = nullptr);
+    mat4 rotate_3d_h(f32 angle, const vec3& axis, mat4* out_minv = nullptr);
 
     // 3D homogeneous transformation from a left-handed viewing coordinate system where the camera
     // is at the origin looking along the +z axis, where the +y axis is along the up direction
@@ -220,8 +221,8 @@ namespace tef::math::transform
     // Check if a 2D transformation matrix has a scaling term in it.
     constexpr bool has_scale_2d(const mat2& m)
     {
-        float la2 = length_squared(apply_vector_2d(m, vec2(1, 0)));
-        float lb2 = length_squared(apply_vector_2d(m, vec2(0, 1)));
+        f32 la2 = length_squared(apply_vector_2d(m, vec2(1, 0)));
+        f32 lb2 = length_squared(apply_vector_2d(m, vec2(0, 1)));
         return
             la2 < .9999f || la2 > 1.0001f ||
             lb2 < .9999f || lb2 > 1.0001f;
@@ -230,8 +231,8 @@ namespace tef::math::transform
     // Check if a 2D homogeneous transformation matrix has a scaling term in it.
     constexpr bool has_scale_2d_h(const mat3& m)
     {
-        float la2 = length_squared(apply_vector_2d_h(m, vec2(1, 0)));
-        float lb2 = length_squared(apply_vector_2d_h(m, vec2(0, 1)));
+        f32 la2 = length_squared(apply_vector_2d_h(m, vec2(1, 0)));
+        f32 lb2 = length_squared(apply_vector_2d_h(m, vec2(0, 1)));
         return
             la2 < .9999f || la2 > 1.0001f ||
             lb2 < .9999f || lb2 > 1.0001f;
@@ -240,9 +241,9 @@ namespace tef::math::transform
     // Check if a 3D transformation matrix has a scaling term in it.
     constexpr bool has_scale_3d(const mat3& m)
     {
-        float la2 = length_squared(apply_vector_3d(m, vec3(1, 0, 0)));
-        float lb2 = length_squared(apply_vector_3d(m, vec3(0, 1, 0)));
-        float lc2 = length_squared(apply_vector_3d(m, vec3(0, 0, 1)));
+        f32 la2 = length_squared(apply_vector_3d(m, vec3(1, 0, 0)));
+        f32 lb2 = length_squared(apply_vector_3d(m, vec3(0, 1, 0)));
+        f32 lc2 = length_squared(apply_vector_3d(m, vec3(0, 0, 1)));
         return
             la2 < .9999f || la2 > 1.0001f ||
             lb2 < .9999f || lb2 > 1.0001f ||
@@ -252,9 +253,9 @@ namespace tef::math::transform
     // Check if a 3D homogeneous transformation matrix has a scaling term in it.
     constexpr bool has_scale_3d_h(const mat4& m)
     {
-        float la2 = length_squared(apply_vector_3d_h(m, vec3(1, 0, 0)));
-        float lb2 = length_squared(apply_vector_3d_h(m, vec3(0, 1, 0)));
-        float lc2 = length_squared(apply_vector_3d_h(m, vec3(0, 0, 1)));
+        f32 la2 = length_squared(apply_vector_3d_h(m, vec3(1, 0, 0)));
+        f32 lb2 = length_squared(apply_vector_3d_h(m, vec3(0, 1, 0)));
+        f32 lc2 = length_squared(apply_vector_3d_h(m, vec3(0, 0, 1)));
         return
             la2 < .9999f || la2 > 1.0001f ||
             lb2 < .9999f || lb2 > 1.0001f ||

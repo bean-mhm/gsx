@@ -5,21 +5,21 @@
 #include <cstdint>
 #include <cstdlib>
 
-static constexpr float uv_scale = 4.;
+static constexpr f32 uv_scale = 4.;
 
 math::vec2 screen_to_uv(math::uvec2 coord, math::uvec2 res)
 {
     return 2.f * uv_scale
         * (math::vec2(coord) + .5f - math::vec2(res) * .5f)
-        / (float)math::min(res.x, res.y);
+        / (f32)math::min(res.x, res.y);
 }
 
-float get_px2uv_ratio(math::uvec2 res)
+f32 get_px2uv_ratio(math::uvec2 res)
 {
-    return uv_scale * 2.f / (float)std::min(res.x, res.y);
+    return uv_scale * 2.f / (f32)std::min(res.x, res.y);
 }
 
-float sd_circle(math::vec2 p, math::vec2 center, float radius)
+f32 sd_circle(math::vec2 p, math::vec2 center, f32 radius)
 {
     return math::distance(p, center) - radius;
 }

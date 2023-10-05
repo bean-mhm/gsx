@@ -8,8 +8,7 @@
 #include <cstdint>
 
 // TEF
-#include "tef/ecs.h"
-#include "tef/math.h"
+#include "tef/tef.h"
 
 // Internal
 #include "components.h"
@@ -31,7 +30,7 @@ void app_t::run()
     // Add components
     std::vector<c_transform> transforms;
     std::vector<c_circle> circles;
-    for (size_t i = 0; i < 5; i++)
+    for (usize i = 0; i < 5; i++)
     {
         // Add a transform component
         if (i != 0)
@@ -44,7 +43,7 @@ void app_t::run()
         // Add a circle component
         c_circle circle;
         circle.owner = i;
-        circle.radius = prng.next_float(.05f, .2f);
+        circle.radius = prng.next_f32(.05f, .2f);
         circles.push_back(circle);
     }
 

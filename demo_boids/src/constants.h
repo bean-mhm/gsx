@@ -3,6 +3,9 @@
 // STD
 #include <cstdint>
 
+// TEF
+#include "tef/tef.h"
+
 // Internal
 #include "gl_utils.h"
 
@@ -83,7 +86,7 @@ static const char* plane_src_frag = R"glsl(
     }
 )glsl";
 
-static const float plane_vertices[]{
+static const f32 plane_vertices[]{
     // vec2 pos
     -1.f, 1.f,  // Top-left
     1.f, 1.f,   // Top-right
@@ -99,10 +102,10 @@ static const GLuint plane_elements[] = {
 
 static constexpr math::vec2 boids_min_pos(-.9f, -.9f);
 static constexpr math::vec2 boids_max_pos(.9f, .9f);
-static constexpr float boids_speed = .6f;
-static constexpr float boids_attention = .2f;
-static constexpr float boids_attention_sqr = boids_attention * boids_attention;
-static constexpr float boids_size = .03f;
+static constexpr f32 boids_speed = .6f;
+static constexpr f32 boids_attention = .2f;
+static constexpr f32 boids_attention_sqr = boids_attention * boids_attention;
+static constexpr f32 boids_size = .03f;
 
 static const char* boids_src_vert = R"glsl(
     #version 330 core

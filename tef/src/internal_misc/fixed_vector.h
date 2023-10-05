@@ -6,16 +6,19 @@
 #include <cstddef>
 #include <cstdint>
 
+// Internal
+#include "../internal_common/all.h"
+
 namespace tef::misc
 {
 
-    template<typename T, uint8_t _capacity>
+    template<typename T, u8 _capacity>
         requires (_capacity <= 255)
     class fixed_vector_t
     {
     private:
         alignas(T) std::byte storage[sizeof(T) * _capacity];
-        uint8_t _size = 0;
+        u8 _size = 0;
 
     public:
         fixed_vector_t() = default;
@@ -27,7 +30,7 @@ namespace tef::misc
 
         fixed_vector_t(const fixed_vector_t& other)
         {
-            for (size_t i = 0; i < other.size(); i++)
+            for (u8 i = 0; i < other.size(); i++)
             {
                 emplace_back(other[i]);
             }
@@ -35,7 +38,7 @@ namespace tef::misc
 
         fixed_vector_t(fixed_vector_t&& other)
         {
-            for (size_t i = 0; i < other.size(); i++)
+            for (u8 i = 0; i < other.size(); i++)
             {
                 emplace_back(std::move(other[i]));
             }
@@ -46,7 +49,7 @@ namespace tef::misc
         {
             if (this == &other) return;
             clear();
-            for (size_t i = 0; i < other.size(); i++)
+            for (u8 i = 0; i < other.size(); i++)
             {
                 emplace_back(other[i]);
             }
@@ -56,36 +59,36 @@ namespace tef::misc
         {
             if (this == &other) return;
             clear();
-            for (size_t i = 0; i < other.size(); i++)
+            for (u8 i = 0; i < other.size(); i++)
             {
                 emplace_back(std::move(other[i]));
             }
             other.clear();
         }
 
-        T& operator[](uint8_t pos) noexcept
+        T& operator[](u8 pos) noexcept
         {
             return reinterpret_cast<T*>(storage)[pos];
         }
 
-        const T& operator[](uint8_t pos) const noexcept
+        const T& operator[](u8 pos) const noexcept
         {
             return reinterpret_cast<const T*>(storage)[pos];
         }
 
-        constexpr uint8_t size() const noexcept
+        constexpr u8 size() const noexcept
         {
             return _size;
         }
 
-        constexpr uint8_t capacity() const noexcept
+        constexpr u8 capacity() const noexcept
         {
             return _capacity;
         }
 
         void clear() noexcept
         {
-            for (uint8_t i = 0; i < _size; i++)
+            for (u8 i = 0; i < _size; i++)
             {
                 std::destroy_at(reinterpret_cast<T*>(storage) + i);
             }

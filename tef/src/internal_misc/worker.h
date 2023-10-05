@@ -9,7 +9,7 @@
 #include <cstdint>
 
 // Internal
-#include "utils.h"
+#include "../internal_common/all.h"
 
 namespace tef::misc
 {
@@ -20,9 +20,9 @@ namespace tef::misc
     class worker_t
     {
     public:
-        const uint64_t id;
+        const u64 id;
 
-        worker_t(uint64_t id);
+        worker_t(u64 id);
         no_default_copy_construct_no_assignment(worker_t);
         ~worker_t();
 

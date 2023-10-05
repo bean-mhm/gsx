@@ -113,10 +113,10 @@ namespace tef::math::transform
         );
     }
 
-    mat2 rotate_2d(float angle, mat2* out_minv)
+    mat2 rotate_2d(f32 angle, mat2* out_minv)
     {
-        float s = sin(angle);
-        float c = cos(angle);
+        f32 s = sin(angle);
+        f32 c = cos(angle);
 
         if (out_minv)
         {
@@ -132,10 +132,10 @@ namespace tef::math::transform
         );
     }
 
-    mat3 rotate_2d_h(float angle, mat3* out_minv)
+    mat3 rotate_2d_h(f32 angle, mat3* out_minv)
     {
-        float s = sin(angle);
-        float c = cos(angle);
+        f32 s = sin(angle);
+        f32 c = cos(angle);
 
         if (out_minv)
         {
@@ -153,10 +153,10 @@ namespace tef::math::transform
         );
     }
 
-    mat3 rotate_3d_x(float angle, mat3* out_minv)
+    mat3 rotate_3d_x(f32 angle, mat3* out_minv)
     {
-        float s = sin(angle);
-        float c = cos(angle);
+        f32 s = sin(angle);
+        f32 c = cos(angle);
 
         mat3 r({
             1, 0, 0,
@@ -170,10 +170,10 @@ namespace tef::math::transform
         return r;
     }
 
-    mat4 rotate_3d_x_h(float angle, mat4* out_minv)
+    mat4 rotate_3d_x_h(f32 angle, mat4* out_minv)
     {
-        float s = sin(angle);
-        float c = cos(angle);
+        f32 s = sin(angle);
+        f32 c = cos(angle);
 
         mat4 r({
             1, 0, 0, 0,
@@ -188,10 +188,10 @@ namespace tef::math::transform
         return r;
     }
 
-    mat3 rotate_3d_y(float angle, mat3* out_minv)
+    mat3 rotate_3d_y(f32 angle, mat3* out_minv)
     {
-        float s = sin(angle);
-        float c = cos(angle);
+        f32 s = sin(angle);
+        f32 c = cos(angle);
 
         mat3 r({
             c, 0, s,
@@ -205,10 +205,10 @@ namespace tef::math::transform
         return r;
     }
 
-    mat4 rotate_3d_y_h(float angle, mat4* out_minv)
+    mat4 rotate_3d_y_h(f32 angle, mat4* out_minv)
     {
-        float s = sin(angle);
-        float c = cos(angle);
+        f32 s = sin(angle);
+        f32 c = cos(angle);
 
         mat4 r({
             c, 0, s, 0,
@@ -223,10 +223,10 @@ namespace tef::math::transform
         return r;
     }
 
-    mat3 rotate_3d_z(float angle, mat3* out_minv)
+    mat3 rotate_3d_z(f32 angle, mat3* out_minv)
     {
-        float s = sin(angle);
-        float c = cos(angle);
+        f32 s = sin(angle);
+        f32 c = cos(angle);
 
         mat3 r({
             c, -s, 0,
@@ -240,10 +240,10 @@ namespace tef::math::transform
         return r;
     }
 
-    mat4 rotate_3d_z_h(float angle, mat4* out_minv)
+    mat4 rotate_3d_z_h(f32 angle, mat4* out_minv)
     {
-        float s = sin(angle);
-        float c = cos(angle);
+        f32 s = sin(angle);
+        f32 c = cos(angle);
 
         mat4 r({
             c, -s, 0, 0,
@@ -258,11 +258,11 @@ namespace tef::math::transform
         return r;
     }
 
-    mat3 rotate_3d(float angle, const vec3& axis, mat3* out_minv)
+    mat3 rotate_3d(f32 angle, const vec3& axis, mat3* out_minv)
     {
         vec3 a = normalize(axis);
-        float s = sin(angle);
-        float c = cos(angle);
+        f32 s = sin(angle);
+        f32 c = cos(angle);
 
         mat3 r;
 
@@ -287,11 +287,11 @@ namespace tef::math::transform
         return r;
     }
 
-    mat4 rotate_3d_h(float angle, const vec3& axis, mat4* out_minv)
+    mat4 rotate_3d_h(f32 angle, const vec3& axis, mat4* out_minv)
     {
         vec3 a = normalize(axis);
-        float s = sin(angle);
-        float c = cos(angle);
+        f32 s = sin(angle);
+        f32 c = cos(angle);
 
         mat4 r;
 

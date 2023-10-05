@@ -73,26 +73,26 @@ namespace tef::str
         return s;
     }
 
-    std::string lpad(const std::string& s, uint64_t length, bool add_space)
+    std::string lpad(const std::string& s, u64 length, bool add_space)
     {
         if (length > s.size())
         {
-            uint64_t n_spaces = (length - s.size());
+            u64 n_spaces = (length - s.size());
             std::string padding;
-            for (uint64_t i = 0; i < n_spaces; i++)
+            for (u64 i = 0; i < n_spaces; i++)
                 padding += " ";
             return padding + s;
         }
         return add_space ? (" " + s) : s;
     }
 
-    std::string rpad(const std::string& s, uint64_t length, bool add_space)
+    std::string rpad(const std::string& s, u64 length, bool add_space)
     {
         if (length > s.size())
         {
-            uint64_t n_spaces = (length - s.size());
+            u64 n_spaces = (length - s.size());
             std::string padding;
-            for (uint64_t i = 0; i < n_spaces; i++)
+            for (u64 i = 0; i < n_spaces; i++)
                 padding += " ";
             return s + padding;
         }
@@ -110,7 +110,7 @@ namespace tef::str
         if (from.empty())
             return;
 
-        uint64_t start_pos = 0;
+        u64 start_pos = 0;
         while ((start_pos = s.find(from, start_pos)) != std::string::npos)
         {
             s.replace(start_pos, from.length(), to);
@@ -126,15 +126,15 @@ namespace tef::str
         return s;
     }
 
-    std::string wordwrap(const std::string& s, uint64_t line_length, uint64_t left_padding)
+    std::string wordwrap(const std::string& s, u64 line_length, u64 left_padding)
     {
         std::istringstream i(s);
         std::ostringstream o("");
 
-        uint64_t length = line_length - left_padding;
+        u64 length = line_length - left_padding;
         line_length = 0;
 
-        uint64_t num_words = 0;
+        u64 num_words = 0;
         std::string word;
 
         while (i >> word)
@@ -142,7 +142,7 @@ namespace tef::str
             if (((line_length + word.size()) > length) && (num_words > 0))
             {
                 o << '\n';
-                for (uint64_t i = 0; i < left_padding; i++)
+                for (u64 i = 0; i < left_padding; i++)
                     o << ' ';
                 line_length = 0;
             }
@@ -150,7 +150,7 @@ namespace tef::str
             if (word.size() > length)
             {
                 o << word.substr(0, length - 1) << "-\n";
-                for (uint64_t i = 0; i < left_padding; i++)
+                for (u64 i = 0; i < left_padding; i++)
                     o << ' ';
                 o << word.substr(length - 1) << ' ';
                 line_length = (word.size() - length + 1) + 1;
@@ -172,7 +172,7 @@ namespace tef::str
     std::string from_list(const std::vector<std::string>& list, const std::string& delimiter)
     {
         std::string result = "";
-        for (uint64_t i = 0; i < list.size(); i++)
+        for (u64 i = 0; i < list.size(); i++)
         {
             if (i > 0) result += delimiter;
             result += list[i];
@@ -184,8 +184,8 @@ namespace tef::str
     {
         out_elements.clear();
 
-        std::uint64_t from = 0;
-        for (std::uint64_t i = 0; i < s.size(); ++i)
+        u64 from = 0;
+        for (u64 i = 0; i < s.size(); ++i)
         {
             if (s[i] == delimiter)
             {
@@ -198,10 +198,10 @@ namespace tef::str
             out_elements.push_back(trim(s.substr(from, s.size() - from)));
     }
 
-    std::string from_data_size(uint64_t bytes)
+    std::string from_data_size(u64 bytes)
     {
         static const char* suffixes[]{ "bytes", "KiB", "MiB", "GiB", "TiB" };
-        static double powers[]
+        static f64 powers[]
         {
             std::pow(1024., 0.), // 1 byte
             std::pow(1024., 1.), // 1 KB
@@ -210,8 +210,8 @@ namespace tef::str
             std::pow(1024., 4.)  // 1 TB
         };
 
-        uint64_t mag = std::clamp(
-            (uint64_t)std::floor(std::log((double)bytes) / std::log(1024.)),
+        u64 mag = std::clamp(
+            (u64)std::floor(std::log((f64)bytes) / std::log(1024.)),
             0ull,
             4ull
         );
@@ -219,13 +219,13 @@ namespace tef::str
         if (mag == 0)
             return std::format("{} {}", bytes, suffixes[mag]);
         else
-            return std::format("{:.1f} {}", (double)bytes / powers[mag], suffixes[mag]);
+            return std::format("{:.1f} {}", (f64)bytes / powers[mag], suffixes[mag]);
     }
 
-    std::string from_large_number(uint64_t n)
+    std::string from_large_number(u64 n)
     {
         static const char* suffixes[]{ "", "K", "M", "B", "T" };
-        static double powers[]
+        static f64 powers[]
         {
             std::pow(1000., 0.), // 1
             std::pow(1000., 1.), // 1K
@@ -234,8 +234,8 @@ namespace tef::str
             std::pow(1000., 4.)  // 1T
         };
 
-        uint64_t mag = std::clamp(
-            (uint64_t)std::floor(std::log((double)n) / std::log(1000.)),
+        u64 mag = std::clamp(
+            (u64)std::floor(std::log((f64)n) / std::log(1000.)),
             0ull,
             4ull
         );
@@ -243,10 +243,10 @@ namespace tef::str
         if (mag == 0)
             return std::format("{}", n);
         else
-            return std::format("{:.1f}{}", (double)n / powers[mag], suffixes[mag]);
+            return std::format("{:.1f}{}", (f64)n / powers[mag], suffixes[mag]);
     }
 
-    std::string from_duration(float seconds)
+    std::string from_duration(f32 seconds)
     {
         if (seconds < 1.f)
         {
@@ -258,9 +258,9 @@ namespace tef::str
         }
         else
         {
-            uint64_t isec = (uint64_t)std::floor(seconds);
-            uint64_t ihr = isec / 3600;
-            uint64_t imin = (isec / 60) % 60;
+            u64 isec = (u64)std::floor(seconds);
+            u64 ihr = isec / 3600;
+            u64 imin = (isec / 60) % 60;
             isec %= 60;
             if (ihr > 0)
             {
@@ -273,11 +273,11 @@ namespace tef::str
         }
     }
 
-    std::string from_elapsed(float seconds)
+    std::string from_elapsed(f32 seconds)
     {
-        uint64_t isec = (uint64_t)std::floor(seconds);
-        uint64_t ihr = isec / 3600;
-        uint64_t imin = (isec / 60) % 60;
+        u64 isec = (u64)std::floor(seconds);
+        u64 ihr = isec / 3600;
+        u64 imin = (isec / 60) % 60;
         isec %= 60;
         return std::format("{:02}:{:02}:{:02}", ihr, imin, isec);
     }
@@ -295,7 +295,7 @@ namespace tef::str
         return std::string(buffer);
     }
 
-    int64_t to_i64(const std::string& s)
+    i64 to_i64(const std::string& s)
     {
         try
         {
@@ -310,7 +310,7 @@ namespace tef::str
         }
     }
 
-    float to_float(const std::string& s)
+    f32 to_f32(const std::string& s)
     {
         try
         {
@@ -319,7 +319,7 @@ namespace tef::str
         catch (const std::exception& e)
         {
             throw std::runtime_error(std::format(
-                "Couldn't parse a float from \"{}\".",
+                "Couldn't parse a f32 from \"{}\".",
                 s
             ).c_str());
         }

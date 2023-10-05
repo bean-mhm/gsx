@@ -7,6 +7,7 @@
 #include <cstdint>
 
 // Internal
+#include "../internal_common/all.h"
 #include "../internal_math/all.h"
 #include "../internal_misc/all.h"
 
@@ -22,7 +23,7 @@ namespace tef::spatial
     public:
         const math::vec2 cell_size;
 
-        hash_grid_2d_t(math::vec2 cell_size, size_t n_containers)
+        hash_grid_2d_t(math::vec2 cell_size, usize n_containers)
             : cell_size(cell_size)
         {
             if (math::min_component(cell_size) <= 0.0f)
@@ -44,16 +45,16 @@ namespace tef::spatial
 
         void query(const math::bounds2& range, std::vector<T*>& out_elements)
         {
-            std::unordered_set<size_t> indices;
+            std::unordered_set<usize> indices;
 
             math::ivec2 start_cell(math::floor(range.pmin / cell_size));
             math::ivec2 end_cell(math::floor(range.pmax / cell_size));
 
-            for (int32_t y = start_cell.y; y <= end_cell.y; y++)
+            for (i32 y = start_cell.y; y <= end_cell.y; y++)
             {
-                for (int32_t x = start_cell.x; x <= end_cell.x; x++)
+                for (i32 x = start_cell.x; x <= end_cell.x; x++)
                 {
-                    size_t container_index = get_container_index(math::ivec2(x, y));
+                    usize container_index = get_container_index(math::ivec2(x, y));
                     indices.insert(container_index);
                 }
             }
@@ -89,9 +90,9 @@ namespace tef::spatial
     private:
         std::vector<std::vector<T>> containers;
 
-        size_t get_container_index(math::ivec2 cell)
+        usize get_container_index(math::ivec2 cell)
         {
-            size_t hash = (size_t)math::abs((cell.x * 92837111) ^ (cell.y * 689287499));
+            usize hash = (usize)math::abs((cell.x * 92837111) ^ (cell.y * 689287499));
             return hash % containers.size();
         }
 

@@ -5,12 +5,8 @@
 #include <chrono>
 #include <cstdint>
 
-#define no_default_construct(CLASS) CLASS() = delete
-#define no_copy_construct(CLASS) CLASS(const CLASS&) = delete
-#define no_assignment(CLASS) CLASS& operator= (const CLASS&) = delete
-#define no_copy_construct_no_assignment(CLASS) no_copy_construct(CLASS); no_assignment(CLASS);
-#define no_default_copy_construct_no_assignment(CLASS) no_default_construct(CLASS); \
-no_copy_construct(CLASS); no_assignment(CLASS);
+// Internal
+#include "../internal_common/all.h"
 
 namespace tef::misc
 {
@@ -30,7 +26,7 @@ namespace tef::misc
     }
 
     template<typename T>
-    void vec_remove(std::vector<T>& vec, size_t pos)
+    void vec_remove(std::vector<T>& vec, usize pos)
     {
         vec.erase(vec.begin() + pos);
     }
@@ -38,7 +34,7 @@ namespace tef::misc
     template<typename T>
     ptrdiff_t vec_find_index(const std::vector<T>& vec, const T& value)
     {
-        for (size_t i = 0; i < vec.size(); i++)
+        for (usize i = 0; i < vec.size(); i++)
         {
             if (value == vec[i])
             {
@@ -54,9 +50,9 @@ namespace tef::misc
         return vec_find_index(vec, value) > -1;
     }
 
-    float elapsed_sec(std::chrono::steady_clock::time_point t_start);
+    f32 elapsed_sec(std::chrono::steady_clock::time_point t_start);
 
-    float elapsed_sec(
+    f32 elapsed_sec(
         std::chrono::steady_clock::time_point t_start,
         std::chrono::steady_clock::time_point t_end
     );

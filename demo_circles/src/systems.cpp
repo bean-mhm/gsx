@@ -3,9 +3,6 @@
 // STD
 #include <iostream>
 
-// TEF
-#include "tef/math.h"
-
 // Internal
 #include "utils.h"
 
@@ -13,7 +10,7 @@
 
 s_movement::s_movement(
     const std::string& name,
-    int32_t update_order,
+    i32 update_order,
     bool run_on_caller_thread,
     std::vector<c_transform>& transforms
 )
@@ -23,10 +20,10 @@ s_movement::s_movement(
 
 void s_movement::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
-    for (size_t i = 0; i < transforms.size(); i++)
+    for (usize i = 0; i < transforms.size(); i++)
     {
         c_transform& transform = transforms[i];
-        float theta = .5f * (i + 1.f) * iter.time;
+        f32 theta = .5f * (i + 1.f) * iter.time;
         transform.pos = 3.f * math::vec2(math::cos(theta), sin(theta));
     }
 }
@@ -35,7 +32,7 @@ void s_movement::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter
 
 s_circle_renderer::s_circle_renderer(
     const std::string& name,
-    int32_t update_order,
+    i32 update_order,
     bool run_on_caller_thread,
     std::vector<c_transform>& transforms,
     std::vector<c_circle>& circles
@@ -51,7 +48,7 @@ void s_circle_renderer::on_update(ecs::world_t& world, const ecs::world_t::iter_
 
     // Render (per-pixel shader)
     constexpr math::uvec2 res(30, 20);
-    float px2uv = get_px2uv_ratio(res);
+    f32 px2uv = get_px2uv_ratio(res);
     for (int y = 0; y < res.y; y++)
     {
         for (int x = 0; x < res.x; x++)
@@ -60,7 +57,7 @@ void s_circle_renderer::on_update(ecs::world_t& world, const ecs::world_t::iter_
             math::vec2 uv = screen_to_uv(math::uvec2(x, y), res);
 
             // Find the distance from the closest circle
-            float dist = 1e9f;
+            f32 dist = 1e9f;
             for (auto& circle : circles)
             {
                 // See if there's a transform component with the same owner

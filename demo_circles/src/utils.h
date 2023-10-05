@@ -1,10 +1,10 @@
 #pragma once
 
 // TEF
-#include "tef/math.h"
+#include "tef/tef.h"
 
 math::vec2 screen_to_uv(math::uvec2 coord, math::uvec2 res);
-float get_px2uv_ratio(math::uvec2 res);
-float sd_circle(math::vec2 p, math::vec2 center, float radius);
+f32 get_px2uv_ratio(math::uvec2 res);
+f32 sd_circle(math::vec2 p, math::vec2 center, f32 radius);
 
 void clear_console();

@@ -6,7 +6,7 @@
 // Internal
 #include "vec2.h"
 #include "vec3.h"
-#include "../internal_misc/all.h"
+#include "../internal_common/all.h"
 
 namespace tef::math
 {
@@ -23,22 +23,22 @@ namespace tef::math
         no_copy_construct_no_assignment(prng_t);
 
         // 32-bit signed integer from -2^31 to 2^31-1
-        int32_t next_i32();
+        i32 next_i32();
 
         // 32-bit signed integer from min to max
-        int32_t next_i32(int32_t min, int32_t max);
+        i32 next_i32(i32 min, i32 max);
 
         // 32-bit unsigned integer from 0 to 2^32-1
-        uint32_t next_u32();
+        u32 next_u32();
 
         // 32-bit unsigned integer from min to max
-        uint32_t next_u32(uint32_t min, uint32_t max);
+        u32 next_u32(u32 min, u32 max);
 
         // 32-bit float from 0 to 1
-        float next_float();
+        f32 next_f32();
 
         // 32-bit float from min to max
-        float next_float(float min, float max);
+        f32 next_f32(f32 min, f32 max);
 
         // 2D point inside the unit circle
         vec2 next_in_circle();
@@ -58,9 +58,9 @@ namespace tef::math
         vec2 next_gauss();
 
     private:
-        uint32_t state[2];
+        u32 state[2];
 
-        void init(uint32_t seed0, uint32_t seed1);
+        void init(u32 seed0, u32 seed1);
 
     };
 

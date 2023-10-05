@@ -5,7 +5,7 @@ namespace tef::ecs
 
     base_system_t::base_system_t(
         const std::string& name,
-        int32_t update_order,
+        i32 update_order,
         bool run_on_caller_thread
     )
         : name(name), update_order(update_order), run_on_caller_thread(run_on_caller_thread)

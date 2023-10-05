@@ -9,25 +9,22 @@
 // OpenMP
 #include <omp.h>
 
-// TEF
-#include "tef/math.h"
-
 // Internal
 #include "constants.h"
 
 using namespace math;
 
-vec2 get_point_of_attraction(float time)
+vec2 get_point_of_attraction(f32 time)
 {
-    float a = .8f * time;
+    f32 a = .8f * time;
     return .7f * vec2(math::cos(a), math::sin(a));
 }
 
 // Signed distance from the edges of the colliders
 // Note: This function must be identical to its GLSL version in plane_src_frag.
-float sd_colliders(vec2 p, float time)
+f32 sd_colliders(vec2 p, f32 time)
 {
-    float d = 1e9;
+    f32 d = 1e9;
 
     // Walls (bounds)
     const vec2 min_pos = vec2(-.9);
@@ -48,7 +45,7 @@ float sd_colliders(vec2 p, float time)
 
 s_boids::s_boids(
     const std::string& name,
-    int32_t update_order,
+    i32 update_order,
     bool run_on_caller_thread,
     std::vector<c_boid>& boids
 )
@@ -58,7 +55,7 @@ s_boids::s_boids(
 
 void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
-    const float dt = min(iter.dt, 0.02f);
+    const f32 dt = min(iter.dt, 0.02f);
 
 #pragma omp parallel for
     for (int i = 0; i < boids.size(); i++)
@@ -76,9 +73,9 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
             // Info about the other boid
             const c_boid& other = boids[j];
             vec2 this_to_other = other.pos - boid.pos;
-            float dist_sqr = dot(this_to_other, this_to_other);
+            f32 dist_sqr = dot(this_to_other, this_to_other);
             if (dist_sqr > boids_attention_sqr) continue;
-            float dist = math::sqrt(dist_sqr);
+            f32 dist = math::sqrt(dist_sqr);
 
             // Steer away from nearby boids
             if (
@@ -88,10 +85,10 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
                 ) > math::cos(1.1f))
             {
                 // How much do I steer away?
-                float fac = 1.f - clamp01(dist / boids_attention);
+                f32 fac = 1.f - clamp01(dist / boids_attention);
 
                 // Steer
-                float angle = radians(20.f * fac * dt);
+                f32 angle = radians(20.f * fac * dt);
                 boid.vel = transform::apply_vector_2d(
                     transform::rotate_2d(angle),
                     boid.vel
@@ -102,12 +99,12 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
             }
 
             // Update the weighted average velocity
-            float weight = 1.f - clamp01(dist / boids_attention);
+            f32 weight = 1.f - clamp01(dist / boids_attention);
             avg_vel += weight * other.vel;
         }
 
         // Try to go in the same direction as the neighbors
-        float lensqr_avg_vel = dot(avg_vel, avg_vel);
+        f32 lensqr_avg_vel = dot(avg_vel, avg_vel);
         if (lensqr_avg_vel > 0)
         {
             boid.vel = mix(boid.vel, avg_vel, min(.3f * dt, 1.f));
@@ -126,7 +123,7 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
         // Get away from the colliders
         {
             // Signed distance
-            float sd = sd_colliders(boid.pos, iter.time);
+            f32 sd = sd_colliders(boid.pos, iter.time);
 
             // Normal
             vec2 normal = normalize(vec2(
@@ -145,15 +142,15 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
             }
 
             // Steer away
-            float pd = max(0.f, sd);
-            float angle = radians(-50.f * math::exp(-15.f * pd) * dt);
+            f32 pd = max(0.f, sd);
+            f32 angle = radians(-50.f * math::exp(-15.f * pd) * dt);
             boid.vel = transform::apply_vector_2d(
                 transform::rotate_2d(angle),
                 boid.vel
             );
 
             // Move away
-            float force = 1. / (100. * pd * pd + .1);
+            f32 force = 1. / (100. * pd * pd + .1);
             boid.vel += force * dt * normal;
         }
     }
@@ -163,7 +160,7 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 
 s_rendering::s_rendering(
     const std::string& name,
-    int32_t update_order,
+    i32 update_order,
     bool run_on_caller_thread,
     GLFWwindow* window,
     std::vector<c_boid>& boids
@@ -211,7 +208,7 @@ void s_rendering::on_start(ecs::world_t& world)
         GLint location = glGetAttribLocation(plane_shader_program, "pos");
         glEnableVertexAttribArray(location);
         glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE,
-            2 * sizeof(float), 0);
+            2 * sizeof(f32), 0);
     }
 
     // Boids VAO
@@ -256,7 +253,7 @@ void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& ite
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
-    float aspect = width / (float)height;
+    f32 aspect = width / (f32)height;
 
     // Clear the screen
     glClearColor(0.f, 0.f, 0.f, 1.f);
@@ -270,8 +267,8 @@ void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& ite
         GLint location = glGetUniformLocation(plane_shader_program, "aspect");
         glUniform2f(
             location,
-            (float)width / min(width, height),
-            (float)height / min(width, height)
+            (f32)width / min(width, height),
+            (f32)height / min(width, height)
         );
     }
     {
@@ -300,8 +297,8 @@ void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& ite
         GLint location = glGetUniformLocation(boids_shader_program, "aspect");
         glUniform2f(
             location,
-            (float)width / min(width, height),
-            (float)height / min(width, height)
+            (f32)width / min(width, height),
+            (f32)height / min(width, height)
         );
     }
     {

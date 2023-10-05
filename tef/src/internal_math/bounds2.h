@@ -6,6 +6,7 @@
 // Internal
 #include "vec2.h"
 #include "utils.h"
+#include "../internal_common/all.h"
 
 namespace tef::math
 {
@@ -56,14 +57,14 @@ namespace tef::math
         }
 
         // Access by index (const reference)
-        constexpr const base_vec2<T>& operator[](int32_t i) const
+        constexpr const base_vec2<T>& operator[](i32 i) const
         {
             if (i == 0) return pmin;
             return pmax;
         }
 
         // Access by index (reference)
-        constexpr base_vec2<T>& operator[](int32_t i)
+        constexpr base_vec2<T>& operator[](i32 i)
         {
             if (i == 0) return pmin;
             return pmax;
@@ -83,7 +84,7 @@ namespace tef::math
         }
 
         // The index of which of the axes is longest
-        constexpr int32_t max_extent() const
+        constexpr i32 max_extent() const
         {
             base_vec2<T> d = diagonal();
             if (d.x > d.y)
@@ -113,7 +114,7 @@ namespace tef::math
         }
 
         // The center and radius of a circle that bounds the bounding box
-        void bounding_circle(base_vec2<T>& center, float& radius) const
+        void bounding_circle(base_vec2<T>& center, f32& radius) const
         {
             center = (pmin + pmax) / 2;
             radius = inside(center, *this) ? distance(center, pmax) : 0;
@@ -187,7 +188,7 @@ namespace tef::math
     }
 
     // Type definitions
-    using bounds2 = base_bounds2<float>;
+    using bounds2 = base_bounds2<f32>;
     using ibounds2 = base_bounds2<int>;
 
     // ibounds2 iterator

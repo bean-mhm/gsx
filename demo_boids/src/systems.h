@@ -1,7 +1,7 @@
 #pragma once
 
 // TEF
-#include "tef/ecs.h"
+#include "tef/tef.h"
 
 // Internal
 #include "components.h"
@@ -14,7 +14,7 @@ struct s_boids : ecs::base_system_t
 
     s_boids(
         const std::string& name,
-        int32_t update_order,
+        i32 update_order,
         bool run_on_caller_thread,
         std::vector<c_boid>& boids
     );
@@ -30,7 +30,7 @@ struct s_rendering : ecs::base_system_t
 
     s_rendering(
         const std::string& name,
-        int32_t update_order,
+        i32 update_order,
         bool run_on_caller_thread,
         GLFWwindow* window,
         std::vector<c_boid>& boids

@@ -3,6 +3,7 @@
 // Internal
 #include "matrix.h"
 #include "utils.h"
+#include "../internal_common/all.h"
 #include "../internal_str/all.h"
 
 namespace tef::math
@@ -46,12 +47,12 @@ namespace tef::math
 
         explicit constexpr operator mat1x2() const
         {
-            return mat1x2({ (float)x, (float)y });
+            return mat1x2({ (f32)x, (f32)y });
         }
 
         explicit constexpr operator mat2x1() const
         {
-            return mat2x1({ (float)x, (float)y });
+            return mat2x1({ (f32)x, (f32)y });
         }
 
         // String
@@ -130,14 +131,14 @@ namespace tef::math
         // this / scalar
         constexpr base_vec2<T> operator/(T s) const
         {
-            float inv = 1.f / (float)s;
+            f32 inv = 1.f / (f32)s;
             return base_vec2<T>(x * inv, y * inv);
         }
 
         // this /= scalar
         constexpr base_vec2<T>& operator/=(T s)
         {
-            float inv = 1.f / (float)s;
+            f32 inv = 1.f / (f32)s;
             x *= inv;
             y *= inv;
             return *this;
@@ -176,21 +177,21 @@ namespace tef::math
         }
 
         // Access by index (copy)
-        constexpr T operator[](int32_t i) const
+        constexpr T operator[](i32 i) const
         {
             if (i == 0) return x;
             return y;
         }
 
         // Access by index (reference)
-        constexpr T& operator[](int32_t i)
+        constexpr T& operator[](i32 i)
         {
             if (i == 0) return x;
             return y;
         }
 
         // Permute by indices
-        constexpr base_vec2<T> permute(int32_t x, int32_t y) const
+        constexpr base_vec2<T> permute(i32 x, i32 y) const
         {
             return base_vec2<T>((*this)[x], (*this)[y]);
         }
@@ -202,7 +203,7 @@ namespace tef::math
         }
 
         // Number of components
-        constexpr int32_t n_components() const
+        constexpr i32 n_components() const
         {
             return 2;
         }
@@ -424,7 +425,7 @@ namespace tef::math
     }
 
     template<typename T>
-    inline base_vec2<T> wrap(const base_vec2<T>& v, float start, float end)
+    inline base_vec2<T> wrap(const base_vec2<T>& v, f32 start, f32 end)
     {
         return start + mod(v - start, end - start);
     }
@@ -448,7 +449,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec2<T> clamp(const base_vec2<T>& v, float min, float max)
+    constexpr base_vec2<T> clamp(const base_vec2<T>& v, f32 min, f32 max)
     {
         return base_vec2<T>(clamp(v.x, min, max), clamp(v.y, min, max));
     }
@@ -460,7 +461,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec2<T> mix(const base_vec2<T>& v1, const base_vec2<T>& v2, float a)
+    constexpr base_vec2<T> mix(const base_vec2<T>& v1, const base_vec2<T>& v2, f32 a)
     {
         return v1 + a * (v2 - v1);
     }
@@ -468,10 +469,10 @@ namespace tef::math
     template<typename T>
     constexpr base_vec2<T> remap(
         const base_vec2<T>& v,
-        float a_start,
-        float a_end,
-        float b_start,
-        float b_end
+        f32 a_start,
+        f32 a_end,
+        f32 b_start,
+        f32 b_end
     )
     {
         return b_start + ((b_end - b_start) / (a_end - a_start)) * (v - a_start);
@@ -480,10 +481,10 @@ namespace tef::math
     template<typename T>
     constexpr base_vec2<T> remap_clamp(
         const base_vec2<T>& v,
-        float a_start,
-        float a_end,
-        float b_start,
-        float b_end
+        f32 a_start,
+        f32 a_end,
+        f32 b_start,
+        f32 b_end
     )
     {
         base_vec2<T> t = clamp01((v - a_start) / (a_end - a_start));
@@ -491,43 +492,43 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec2<T> remap01(const base_vec2<T>& v, float a_start, float a_end)
+    constexpr base_vec2<T> remap01(const base_vec2<T>& v, f32 a_start, f32 a_end)
     {
         return clamp01((v - a_start) / (a_end - a_start));
     }
 
     template<typename T>
-    constexpr base_vec2<T> step(float edge, const base_vec2<T>& v)
+    constexpr base_vec2<T> step(f32 edge, const base_vec2<T>& v)
     {
         return base_vec2<T>(step(edge, v.x), step(edge, v.y));
     }
 
     template<typename T>
-    constexpr base_vec2<T> smoothstep(float edge0, float edge1, const base_vec2<T>& v)
+    constexpr base_vec2<T> smoothstep(f32 edge0, f32 edge1, const base_vec2<T>& v)
     {
         return base_vec2<T>(smoothstep(edge0, edge1, v.x), smoothstep(edge0, edge1, v.y));
     }
 
     template<typename T>
-    constexpr float length_squared(const base_vec2<T>& v)
+    constexpr f32 length_squared(const base_vec2<T>& v)
     {
         return v.x * v.x + v.y * v.y;
     }
 
     template<typename T>
-    inline float length(const base_vec2<T>& v)
+    inline f32 length(const base_vec2<T>& v)
     {
         return sqrt(length_squared(v));
     }
 
     template<typename T>
-    constexpr float distance_squared(const base_vec2<T>& v1, const base_vec2<T>& v2)
+    constexpr f32 distance_squared(const base_vec2<T>& v1, const base_vec2<T>& v2)
     {
         return length_squared(v1 - v2);
     }
 
     template<typename T>
-    inline float distance(const base_vec2<T>& v1, const base_vec2<T>& v2)
+    inline f32 distance(const base_vec2<T>& v1, const base_vec2<T>& v2)
     {
         return length(v1 - v2);
     }
@@ -563,10 +564,10 @@ namespace tef::math
     }
 
     template<typename T>
-    inline base_vec2<T> refract(const base_vec2<T>& I, const base_vec2<T>& N, float eta)
+    inline base_vec2<T> refract(const base_vec2<T>& I, const base_vec2<T>& N, f32 eta)
     {
-        float dp = dot(N, I);
-        float k = 1 - eta * eta * (1 - dp * dp);
+        f32 dp = dot(N, I);
+        f32 k = 1 - eta * eta * (1 - dp * dp);
 
         if (k < 0)
             return 0;
@@ -587,20 +588,20 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr int32_t min_component_index(const base_vec2<T>& v)
+    constexpr i32 min_component_index(const base_vec2<T>& v)
     {
         return (v.x < v.y) ? 0 : 1;
     }
 
     template<typename T>
-    constexpr int32_t max_component_index(const base_vec2<T>& v)
+    constexpr i32 max_component_index(const base_vec2<T>& v)
     {
         return (v.x > v.y) ? 0 : 1;
     }
 
     // Type definitions
-    using vec2 = base_vec2<float>;
-    using ivec2 = base_vec2<int32_t>;
-    using uvec2 = base_vec2<uint32_t>;
+    using vec2 = base_vec2<f32>;
+    using ivec2 = base_vec2<i32>;
+    using uvec2 = base_vec2<u32>;
 
 }

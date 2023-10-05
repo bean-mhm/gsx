@@ -3,6 +3,7 @@
 // Internal
 #include "vec3.h"
 #include "utils.h"
+#include "../internal_common/all.h"
 #include "../internal_str/all.h"
 
 namespace tef::math
@@ -20,7 +21,7 @@ namespace tef::math
         {}
 
         // Evaluate point along the ray
-        constexpr vec3 operator()(float t) const
+        constexpr vec3 operator()(f32 t) const
         {
             return o + d * t;
         }

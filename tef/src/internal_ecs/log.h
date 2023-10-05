@@ -8,8 +8,8 @@
 #include <mutex>
 
 // Internal
+#include "../internal_common/all.h"
 #include "../internal_str/all.h"
-#include "../internal_misc/all.h"
 
 // Note: For internal use only. Do not use this, use world_t::log() instead.
 #define tef_log(world_ptr, log_level, message) if (log_level <= world_ptr->max_log_level) \

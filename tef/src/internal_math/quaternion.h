@@ -5,6 +5,7 @@
 #include "matrix.h"
 #include "transform.h"
 #include "utils.h"
+#include "../internal_common/all.h"
 #include "../internal_str/all.h"
 
 namespace tef::math
@@ -61,26 +62,26 @@ namespace tef::math
         }
 
         // this * scalar
-        constexpr quaternion_t operator*(float s) const
+        constexpr quaternion_t operator*(f32 s) const
         {
             return quaternion_t(v * s);
         }
 
         // this *= scalar
-        constexpr quaternion_t& operator*=(float s)
+        constexpr quaternion_t& operator*=(f32 s)
         {
             v *= s;
             return *this;
         }
 
         // this / scalar
-        constexpr quaternion_t operator/(float s) const
+        constexpr quaternion_t operator/(f32 s) const
         {
             return quaternion_t(v / s);
         }
 
         // this /= scalar
-        constexpr quaternion_t& operator/=(float s)
+        constexpr quaternion_t& operator/=(f32 s)
         {
             v /= s;
             return *this;
@@ -95,9 +96,9 @@ namespace tef::math
         // Generate a 3D homogeneous transformation matrix based on this quaternion (left-handed)
         constexpr mat4 to_transform() const
         {
-            float xx = v.x * v.x, yy = v.y * v.y, zz = v.z * v.z;
-            float xy = v.x * v.y, xz = v.x * v.z, yz = v.y * v.z;
-            float wx = v.x * v.w, wy = v.y * v.w, wz = v.z * v.w;
+            f32 xx = v.x * v.x, yy = v.y * v.y, zz = v.z * v.z;
+            f32 xy = v.x * v.y, xz = v.x * v.z, yz = v.y * v.z;
+            f32 wx = v.x * v.w, wy = v.y * v.w, wz = v.z * v.w;
 
             mat4 r;
             r(0, 0) = 1 - 2 * (yy + zz);
@@ -129,13 +130,13 @@ namespace tef::math
     };
 
     // scalar * quaternion
-    constexpr quaternion_t operator*(float s, const quaternion_t& q)
+    constexpr quaternion_t operator*(f32 s, const quaternion_t& q)
     {
         return q * s;
     }
 
     // Dot product of two quaternions
-    constexpr float dot(const quaternion_t& q1, const quaternion_t& q2)
+    constexpr f32 dot(const quaternion_t& q1, const quaternion_t& q2)
     {
         return dot(q1.v, q2.v);
     }
@@ -147,17 +148,17 @@ namespace tef::math
     }
 
     // Interpolatee between two quaternions using spherical linear interpolation
-    constexpr quaternion_t slerp(const quaternion_t& q1, const quaternion_t& q2, float t)
+    constexpr quaternion_t slerp(const quaternion_t& q1, const quaternion_t& q2, f32 t)
     {
-        float cos_theta = dot(q1, q2);
+        f32 cos_theta = dot(q1, q2);
         if (cos_theta > .9995f)
         {
             return normalize(q1 + t * (q2 - q1));
         }
         else
         {
-            float  theta = std::acos(std::clamp(cos_theta, -1.f, 1.f));
-            float  thetap = theta * t;
+            f32  theta = std::acos(std::clamp(cos_theta, -1.f, 1.f));
+            f32  thetap = theta * t;
             quaternion_t qperp = normalize(q2 - q1 * cos_theta);
             return q1 * std::cos(thetap) + qperp * std::sin(thetap);
         }

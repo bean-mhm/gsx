@@ -5,12 +5,12 @@ namespace tef::math
 
     quaternion_t::quaternion_t(const mat3& m)
     {
-        float mtrace = m(0, 0) + m(1, 1) + m(2, 2);
+        f32 mtrace = m(0, 0) + m(1, 1) + m(2, 2);
         if (mtrace > 0.f)
         {
             // Compute w from matrix trace, then xyz
             // 4w^2 = m(0, 0) + m(1, 1) + m(2, 2) + m(3, 3) (but m(3, 3) == 1)
-            float s = sqrt(mtrace + 1.f);
+            f32 s = sqrt(mtrace + 1.f);
             v.w = s / 2.f;
             s = 0.5f / s;
             v.x = (m(2, 1) - m(1, 2)) * s;
@@ -20,14 +20,14 @@ namespace tef::math
         else
         {
             // Compute largest of $x$, $y$, or $z$, then remaining components
-            const int32_t nxt[3] = { 1, 2, 0 };
-            float q[3];
-            int32_t i = 0;
+            const i32 nxt[3] = { 1, 2, 0 };
+            f32 q[3];
+            i32 i = 0;
             if (m(1, 1) > m(0, 0)) i = 1;
             if (m(2, 2) > m(i, i)) i = 2;
-            int32_t j = nxt[i];
-            int32_t k = nxt[j];
-            float s = sqrt((m(i, i) - (m(j, j) + m(k, k))) + 1.f);
+            i32 j = nxt[i];
+            i32 k = nxt[j];
+            f32 s = sqrt((m(i, i) - (m(j, j) + m(k, k))) + 1.f);
             q[i] = s * 0.5f;
             if (s != 0.f) s = 0.5f / s;
             v.w = (m(k, j) - m(j, k)) * s;

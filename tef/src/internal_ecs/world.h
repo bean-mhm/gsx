@@ -12,6 +12,8 @@
 // Internal
 #include "log.h"
 #include "event.h"
+#include "../internal_common/all.h"
+#include "../internal_misc/all.h"
 
 namespace tef::ecs
 {
@@ -28,13 +30,13 @@ namespace tef::ecs
         struct iter_t
         {
             // Iteration number starting from 0
-            uint64_t i = 0;
+            u64 i = 0;
 
             // Seconds elapsed since the start
-            float time = 0;
+            f32 time = 0;
 
             // Seconds elapsed since the last iteration
-            float dt = 0;
+            f32 dt = 0;
         };
 
         // A name for the world
@@ -84,7 +86,7 @@ namespace tef::ecs
         // Note: Only a single thread can be running the world at a time.
         // Note: Use a max_update_rate of 0 for uncapped update rate.
         // Note: Use a max_run_time of 0 for uncapped run time.
-        void run(const float max_update_rate = 0, const float max_run_time = 0);
+        void run(const f32 max_update_rate = 0, const f32 max_run_time = 0);
 
         // Signal the runner thread to stop, and optionally wait for it if calling from a separate
         // thread. If this is called from the same thread that called run(), wait must be false.
@@ -101,7 +103,7 @@ namespace tef::ecs
         // but the systems inside each group are updated together in parallel.
         struct system_group_t
         {
-            int32_t update_order;
+            i32 update_order;
             std::vector<std::shared_ptr<base_system_t>> systems;
         };
 

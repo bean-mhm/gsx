@@ -137,5 +137,14 @@
     <ClInclude Include="src\internal_str\all.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\internal_common\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\internal_common\macros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\internal_common\all.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

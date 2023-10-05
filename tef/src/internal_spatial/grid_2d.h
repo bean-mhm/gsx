@@ -6,6 +6,7 @@
 #include <cstdint>
 
 // Internal
+#include "../internal_common/all.h"
 #include "../internal_math/all.h"
 #include "../internal_misc/all.h"
 
@@ -30,7 +31,7 @@ namespace tef::spatial
             if (math::min_component(resolution) < 1)
                 throw std::runtime_error("Grid resolution must be at least 1 in each dimension.");
 
-            containers.resize((size_t)resolution.x * (size_t)resolution.y);
+            containers.resize((usize)resolution.x * (usize)resolution.y);
         }
 
         no_default_construct(grid_2d_t);
@@ -41,7 +42,7 @@ namespace tef::spatial
             cell.x = math::clamp(cell.x, 0, resolution.x - 1);
             cell.y = math::clamp(cell.y, 0, resolution.y - 1);
 
-            size_t index = (size_t)cell.y * (size_t)resolution.x + (size_t)cell.x;
+            usize index = (usize)cell.y * (usize)resolution.x + (usize)cell.x;
             containers[index].push_back(element);
         }
 
@@ -55,11 +56,11 @@ namespace tef::spatial
             end_cell.x = math::clamp(end_cell.x, 0, resolution.x - 1);
             end_cell.y = math::clamp(end_cell.y, 0, resolution.y - 1);
 
-            for (size_t y = start_cell.y; y <= end_cell.y; y++)
+            for (usize y = start_cell.y; y <= end_cell.y; y++)
             {
-                for (size_t x = start_cell.x; x <= end_cell.x; x++)
+                for (usize x = start_cell.x; x <= end_cell.x; x++)
                 {
-                    size_t container_index = y * (size_t)resolution.x + x;
+                    usize container_index = y * (usize)resolution.x + x;
                     for (auto& element : containers[container_index])
                     {
                         if (math::inside(element.pos, range))

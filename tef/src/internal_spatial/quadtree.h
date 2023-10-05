@@ -7,6 +7,7 @@
 #include <cstdint>
 
 // Internal
+#include "../internal_common/all.h"
 #include "../internal_math/all.h"
 #include "../internal_misc/all.h"
 
@@ -16,7 +17,7 @@ namespace tef::spatial
     // Quadtree data structure with a given capacity per tile
     // Note: T must have a copy constructor.
     // Note: T must have a field of type tef::math::vec2 named pos, representing the 2D position.
-    template<typename T, uint8_t capacity>
+    template<typename T, u8 capacity>
         requires (capacity <= 255)
     class quadtree_t
     {
@@ -67,7 +68,7 @@ namespace tef::spatial
                 if (!math::overlaps(q->bounds, range))
                     continue;
 
-                for (uint8_t i = 0; i < q->elements.size(); i++)
+                for (u8 i = 0; i < q->elements.size(); i++)
                 {
                     if (math::inside(q->elements[i].pos, range))
                     {
@@ -93,7 +94,7 @@ namespace tef::spatial
                 quadtree_t* q = stack.top();
                 stack.pop();
 
-                for (uint8_t i = 0; i < q->elements.size(); i++)
+                for (u8 i = 0; i < q->elements.size(); i++)
                 {
                     out_elements.push_back(&q->elements[i]);
                 }

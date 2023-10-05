@@ -6,91 +6,94 @@
 #include <cmath>
 #include <cstdint>
 
+// Internal
+#include "../internal_common/all.h"
+
 namespace tef::math
 {
 
-    static constexpr float infinity = std::numeric_limits<float>::infinity();
-    static constexpr float epsilon = 1e-5f;
-    static constexpr float sqrt2 = 1.414213562373095048801688724f;
-    static constexpr float sqrt3 = 1.732050807568877293527446341f;
-    static constexpr float e = 2.718281828459045235360287471f;
-    static constexpr float pi = 3.141592653589793238462643383f;
-    static constexpr float tau = 6.283185307179586476925286766f;
-    static constexpr float pi_over_2 = 1.570796326794896619231321691f;
-    static constexpr float deg2rad = 0.017453292519943295769236907f;
-    static constexpr float rad2deg = 57.29577951308232087679815481f;
+    static constexpr f32 infinity = std::numeric_limits<f32>::infinity();
+    static constexpr f32 epsilon = 1e-5f;
+    static constexpr f32 sqrt2 = 1.414213562373095048801688724f;
+    static constexpr f32 sqrt3 = 1.732050807568877293527446341f;
+    static constexpr f32 e = 2.718281828459045235360287471f;
+    static constexpr f32 pi = 3.141592653589793238462643383f;
+    static constexpr f32 tau = 6.283185307179586476925286766f;
+    static constexpr f32 pi_over_2 = 1.570796326794896619231321691f;
+    static constexpr f32 deg2rad = 0.017453292519943295769236907f;
+    static constexpr f32 rad2deg = 57.29577951308232087679815481f;
 
-    constexpr float radians(float degrees)
+    constexpr f32 radians(f32 degrees)
     {
         return degrees * deg2rad;
     }
 
-    constexpr float degrees(float radians)
+    constexpr f32 degrees(f32 radians)
     {
         return radians * rad2deg;
     }
 
-    inline float sin(float angle)
+    inline f32 sin(f32 angle)
     {
         return std::sin(angle);
     }
 
-    inline float cos(float angle)
+    inline f32 cos(f32 angle)
     {
         return std::cos(angle);
     }
 
-    inline float tan(float angle)
+    inline f32 tan(f32 angle)
     {
         return std::tan(angle);
     }
 
-    inline float asin(float x)
+    inline f32 asin(f32 x)
     {
         return std::asin(x);
     }
 
-    inline float acos(float x)
+    inline f32 acos(f32 x)
     {
         return std::acos(x);
     }
 
-    inline float atan(float y, float x)
+    inline f32 atan(f32 y, f32 x)
     {
         return std::atan2(y, x);
     }
 
-    inline float atan(float y_over_x)
+    inline f32 atan(f32 y_over_x)
     {
         return std::atan(y_over_x);
     }
 
-    inline float sinh(float x)
+    inline f32 sinh(f32 x)
     {
         return std::sinh(x);
     }
 
-    inline float cosh(float x)
+    inline f32 cosh(f32 x)
     {
         return std::cosh(x);
     }
 
-    inline float tanh(float x)
+    inline f32 tanh(f32 x)
     {
         return std::tanh(x);
     }
 
-    inline float asinh(float x)
+    inline f32 asinh(f32 x)
     {
         return std::asinh(x);
     }
 
-    inline float acosh(float x)
+    inline f32 acosh(f32 x)
     {
         return std::acosh(x);
     }
 
-    inline float atanh(float x)
+    inline f32 atanh(f32 x)
     {
         return std::atanh(x);
     }
@@ -101,32 +104,32 @@ namespace tef::math
         return std::pow(x, y);
     }
 
-    inline float exp(float x)
+    inline f32 exp(f32 x)
     {
         return std::exp(x);
     }
 
-    inline float log(float x)
+    inline f32 log(f32 x)
     {
         return std::log(x);
     }
 
-    inline float exp2(float x)
+    inline f32 exp2(f32 x)
     {
         return std::exp2(x);
     }
 
-    inline float log2(float x)
+    inline f32 log2(f32 x)
     {
         return std::log2(x);
     }
 
-    inline float sqrt(float x)
+    inline f32 sqrt(f32 x)
     {
         return std::sqrt(x);
     }
 
-    inline float inversesqrt(float x)
+    inline f32 inversesqrt(f32 x)
     {
         return 1.f / std::sqrt(x);
     }
@@ -175,7 +178,7 @@ namespace tef::math
         return std::fmod(x, y);
     }
 
-    inline float modf(float x, float& i)
+    inline f32 modf(f32 x, f32& i)
     {
         return std::modf(x, &i);
     }
@@ -204,28 +207,28 @@ namespace tef::math
         return std::clamp(x, min, max);
     }
 
-    constexpr float clamp01(float x)
+    constexpr f32 clamp01(f32 x)
     {
         return std::clamp(x, 0.f, 1.f);
     }
 
-    constexpr float mix(float x, float y, float a)
+    constexpr f32 mix(f32 x, f32 y, f32 a)
     {
         return x + a * (y - x);
     }
 
-    constexpr float remap(float x, float a_start, float a_end, float b_start, float b_end)
+    constexpr f32 remap(f32 x, f32 a_start, f32 a_end, f32 b_start, f32 b_end)
     {
         return b_start + ((b_end - b_start) / (a_end - a_start)) * (x - a_start);
     }
 
-    constexpr float remap_clamp(float x, float a_start, float a_end, float b_start, float b_end)
+    constexpr f32 remap_clamp(f32 x, f32 a_start, f32 a_end, f32 b_start, f32 b_end)
     {
-        float t = clamp01((x - a_start) / (a_end - a_start));
+        f32 t = clamp01((x - a_start) / (a_end - a_start));
         return b_start + t * (b_end - b_start);
     }
 
-    constexpr float remap01(float x, float a_start, float a_end)
+    constexpr f32 remap01(f32 x, f32 a_start, f32 a_end)
     {
         return clamp01((x - a_start) / (a_end - a_start));
     }
@@ -237,45 +240,45 @@ namespace tef::math
         return 1;
     }
 
-    constexpr float smoothstep(float edge0, float edge1, float x)
+    constexpr f32 smoothstep(f32 edge0, f32 edge1, f32 x)
     {
-        float t = clamp01((x - edge0) / (edge1 - edge0));
+        f32 t = clamp01((x - edge0) / (edge1 - edge0));
         return t * t * (3.f - 2.f * t);
     }
 
-    inline bool isnan(float x)
+    inline bool isnan(f32 x)
     {
         return std::isnan(x);
     }
 
-    inline bool isinf(float x)
+    inline bool isinf(f32 x)
     {
         return std::isinf(x);
     }
 
     template<typename T>
-    inline uint64_t upper_power_of_2(T v)
+    inline u64 upper_power_of_2(T v)
     {
-        return (uint64_t)std::pow(2., std::ceil(std::log2((double)v)));
+        return (u64)std::pow(2., std::ceil(std::log2((f64)v)));
     }
 
-    constexpr uint32_t i32_to_u32(int32_t v)
+    constexpr u32 i32_to_u32(i32 v)
     {
         return std::max(v, 0);
     }
 
-    constexpr int32_t u32_to_i32(uint32_t v)
+    constexpr i32 u32_to_i32(u32 v)
     {
-        return std::min(v, (uint32_t)INT_MAX);
+        return std::min(v, (u32)INT_MAX);
     }
 
-    inline bool solve_quadratic(float a, float b, float c, float& t0, float& t1)
+    inline bool solve_quadratic(f32 a, f32 b, f32 c, f32& t0, f32& t1)
     {
-        float discrim = b * b - 4 * a * c;
+        f32 discrim = b * b - 4 * a * c;
         if (discrim < 0)
             return false;
-        float root_discrim = sqrt(discrim);
-        float q;
+        f32 root_discrim = sqrt(discrim);
+        f32 q;
         if (b < 0)
         {
             q = -.5f * (b - root_discrim);
@@ -291,9 +294,9 @@ namespace tef::math
         return true;
     }
 
-    inline bool solve_linear_2x2(const float a[2][2], const float b[2], float& x0, float& x1)
+    inline bool solve_linear_2x2(const f32 a[2][2], const f32 b[2], f32& x0, f32& x1)
     {
-        float det = a[0][0] * a[1][1] - a[0][1] * a[1][0];
+        f32 det = a[0][0] * a[1][1] - a[0][1] * a[1][0];
         if (abs(det) < 1e-10f)
             return false;
         x0 = (a[1][1] * b[0] - a[0][1] * b[1]) / det;

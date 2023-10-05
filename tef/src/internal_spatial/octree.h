@@ -7,6 +7,7 @@
 #include <cstdint>
 
 // Internal
+#include "../internal_common/all.h"
 #include "../internal_math/all.h"
 #include "../internal_misc/all.h"
 
@@ -16,7 +17,7 @@ namespace tef::spatial
     // Octree data structure with a given capacity per tile
     // Note: T must have a copy constructor.
     // Note: T must have a field of type tef::math::vec3 named pos, representing the 3D position.
-    template<typename T, uint8_t capacity>
+    template<typename T, u8 capacity>
         requires (capacity <= 255)
     class octree_t
     {
@@ -71,7 +72,7 @@ namespace tef::spatial
                 if (!math::overlaps(t->bounds, range))
                     continue;
 
-                for (uint8_t i = 0; i < t->elements.size(); i++)
+                for (u8 i = 0; i < t->elements.size(); i++)
                 {
                     if (math::inside(t->elements[i].pos, range))
                     {
@@ -101,7 +102,7 @@ namespace tef::spatial
                 octree_t* t = stack.top();
                 stack.pop();
 
-                for (uint8_t i = 0; i < t->elements.size(); i++)
+                for (u8 i = 0; i < t->elements.size(); i++)
                 {
                     out_elements.push_back(&t->elements[i]);
                 }

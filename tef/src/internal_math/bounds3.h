@@ -3,6 +3,7 @@
 // Internal
 #include "vec3.h"
 #include "utils.h"
+#include "../internal_common/all.h"
 
 namespace tef::math
 {
@@ -53,21 +54,21 @@ namespace tef::math
         }
 
         // Access by index (const reference)
-        constexpr const base_vec3<T>& operator[](int32_t i) const
+        constexpr const base_vec3<T>& operator[](i32 i) const
         {
             if (i == 0) return pmin;
             return pmax;
         }
 
         // Access by index (reference)
-        constexpr base_vec3<T>& operator[](int32_t i)
+        constexpr base_vec3<T>& operator[](i32 i)
         {
             if (i == 0) return pmin;
             return pmax;
         }
 
         // The coordinates of one of the eight corners of the bounding box
-        constexpr base_vec3<T> corner(int32_t i) const
+        constexpr base_vec3<T> corner(i32 i) const
         {
             return base_vec3<T>(
                 (*this)[(i & 1)].x,
@@ -97,7 +98,7 @@ namespace tef::math
         }
 
         // The index of which of the axes is longest
-        constexpr int32_t max_extent() const
+        constexpr i32 max_extent() const
         {
             base_vec3<T> d = diagonal();
             if (d.x > d.y && d.x > d.z)
@@ -132,7 +133,7 @@ namespace tef::math
         }
 
         // The center and radius of a sphere that bounds the bounding box
-        void bounding_sphere(base_vec3<T>& center, float& radius) const
+        void bounding_sphere(base_vec3<T>& center, f32& radius) const
         {
             center = (pmin + pmax) / 2;
             radius = inside(center, *this) ? distance(center, pmax) : 0;
@@ -209,7 +210,7 @@ namespace tef::math
     }
 
     // Type definitions
-    using bounds3 = base_bounds3<float>;
+    using bounds3 = base_bounds3<f32>;
     using ibounds3 = base_bounds3<int>;
 
 }

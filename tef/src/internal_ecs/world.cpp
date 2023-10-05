@@ -77,7 +77,7 @@ namespace tef::ecs
             sname
         ));
 
-        for (size_t i = 0; i < systems.size(); i++)
+        for (usize i = 0; i < systems.size(); i++)
         {
             if (systems[i]->name == sname)
             {
@@ -94,7 +94,7 @@ namespace tef::ecs
             sname
         ));
 
-        for (size_t i = 0; i < systems.size();)
+        for (usize i = 0; i < systems.size();)
         {
             if (systems[i]->name == sname)
             {
@@ -113,7 +113,7 @@ namespace tef::ecs
         misc::vec_clear(systems);
     }
 
-    void world_t::run(const float max_update_rate, const float max_run_time)
+    void world_t::run(const f32 max_update_rate, const f32 max_run_time)
     {
         tef_log(this, log_level_t::info, std::format(
             "Preparing to run (max_update_rate = {:.3f} iterations/s, max_run_time = {:.3f} s)",
@@ -143,7 +143,7 @@ namespace tef::ecs
         iter_t iter;
         auto time_start = std::chrono::high_resolution_clock::now();
         auto time_last_iter = time_start;
-        const float min_dt = (max_update_rate == 0) ? 0 : (1.f / max_update_rate);
+        const f32 min_dt = (max_update_rate == 0) ? 0 : (1.f / max_update_rate);
 
         // Start the loop
         while (!should_stop)
@@ -160,11 +160,11 @@ namespace tef::ecs
             update_systems(system_groups, worker_map, iter);
 
             // Don't go faster than the maximum update rate
-            float time_left = min_dt - misc::elapsed_sec(time_last_iter);
+            f32 time_left = min_dt - misc::elapsed_sec(time_last_iter);
             if (time_left > 0)
             {
                 std::this_thread::sleep_for(
-                    std::chrono::nanoseconds((uint64_t)(time_left * 1e9f))
+                    std::chrono::nanoseconds((u64)(time_left * 1e9f))
                 );
             }
 
@@ -213,7 +213,7 @@ namespace tef::ecs
         tef_log(this, log_level_t::info, "Preparing system groups and workers");
 
         // Make a sorted and unique set of the update order values of all systems
-        std::set<int32_t, std::less<int32_t>> update_orders;
+        std::set<i32, std::less<i32>> update_orders;
         for (const auto& system : systems_copy)
         {
             update_orders.insert(system->update_order);
@@ -425,7 +425,7 @@ namespace tef::ecs
     {
         // Stop the systems in serial in the order opposite to that in which they were added. The
         // first system added will be started first and it will be stopped at the end.
-        for (int64_t i = systems_copy.size() - 1; i >= 0; i--)
+        for (isize i = systems_copy.size() - 1; i >= 0; i--)
         {
             const auto& system = systems_copy[i];
             const auto& worker = worker_map[system.get()];

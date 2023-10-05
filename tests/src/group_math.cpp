@@ -4,14 +4,14 @@
 #include <array>
 
 // TEF
-#include "tef/math/math.h"
+#include "tef/tef.h"
 
 // Internal
 #include "test.h"
 
 using namespace math;
 
-inline bool eq_float(float a, float b)
+inline bool eq_f32(f32 a, f32 b)
 {
     return math::abs(a - b) < epsilon;
 }
@@ -19,15 +19,15 @@ inline bool eq_float(float a, float b)
 template<typename T>
 inline bool eq_vec(const T& a, const T& b)
 {
-    return (float)max_component(math::abs(a - b)) < epsilon;
+    return (f32)max_component(math::abs(a - b)) < epsilon;
 }
 
-template<int32_t n_row, int32_t n_col>
+template<i32 n_row, i32 n_col>
 inline bool eq_mat(const base_mat<n_row, n_col>& m1, const base_mat<n_row, n_col>& m2)
 {
-    for (int32_t row = 0; row < n_row; row++)
+    for (i32 row = 0; row < n_row; row++)
     {
-        for (int32_t col = 0; col < n_col; col++)
+        for (i32 col = 0; col < n_col; col++)
         {
             if (math::abs(m1(row, col) - m2(row, col)) >= epsilon)
                 return false;
@@ -75,7 +75,7 @@ static void test_vec2()
     test::assert(eq_vec(inversesqrt(v), vec2(.8543577f, .6900656f)), "inversesqrt(vec2)");
     test::assert(eq_vec(sign(ivec2(-80, 50)), ivec2(-1, 1)), "sign(ivec2)");
     test::assert(eq_vec(clamp01(vec2(.2f, 2.f)), vec2(.2f, 1.f)), "clamp01(vec2)");
-    test::assert(eq_float(distance(vec2(-1, 0), vec2(1, 3)), 3.6055513f), "distance(vec2, vec2)");
+    test::assert(eq_f32(distance(vec2(-1, 0), vec2(1, 3)), 3.6055513f), "distance(vec2, vec2)");
     test::assert(eq_vec(
         reflect(normalize(vec2(1, -1)), vec2(0, 1)),
         vec2(.7071068f)
@@ -128,7 +128,7 @@ static void test_vec3()
     ), "inversesqrt(vec3)");
     test::assert(eq_vec(sign(ivec3(-80, 50, 60)), ivec3(-1, 1, 1)), "sign(ivec3)");
     test::assert(eq_vec(clamp01(vec3(.2f, 2.f, -10.f)), vec3(.2f, 1.f, 0.f)), "clamp01(vec3)");
-    test::assert(eq_float(
+    test::assert(eq_f32(
         distance(vec3(-1, 0, 0), vec3(1, 3, 0))
         , 3.6055513f
     ), "distance(vec3, vec3)");
@@ -183,7 +183,7 @@ static void test_vec4()
     ), "inversesqrt(vec4)");
     test::assert(eq_vec(sign(ivec4(-80, 50, 60, 0)), ivec4(-1, 1, 1, 0)), "sign(ivec4)");
     test::assert(eq_vec(clamp01(vec4(.2f, 2.f, -10.f, 0)), vec4(.2f, 1, 0, 0)), "clamp01(vec4)");
-    test::assert(eq_float(
+    test::assert(eq_f32(
         distance(vec4(-1, 0, 0, 8), vec4(1, 3, 0, -18))
         , 26.2488095f
     ), "distance(vec4, vec4)");
@@ -204,7 +204,7 @@ static void test_bounds2()
         "to_string()"
     );
     bounds2 b(vec2(-1), vec2(1));
-    test::assert(eq_float(b.area(), 4.f), "area()");
+    test::assert(eq_f32(b.area(), 4.f), "area()");
     test::assert(eq_vec(b.lerp(.5), vec2(0)), "lerp()");
     test::assert(eq_vec(b.offset_of(vec2(0)), vec2(.5)), "offset_of()");
     test::assert(
@@ -242,7 +242,7 @@ static void test_bounds3()
         "to_string()"
     );
     bounds3 b(vec3(-1), vec3(1));
-    test::assert(eq_float(b.volume(), 8.f), "volume()");
+    test::assert(eq_f32(b.volume(), 8.f), "volume()");
     test::assert(eq_vec(b.lerp(.5), vec3(0)), "lerp()");
     test::assert(eq_vec(b.offset_of(vec3(0)), vec3(.5)), "offset_of()");
     test::assert(
@@ -289,7 +289,7 @@ static void test_matrix()
         5 * mat2({ 1, 2, 3, 4 }),
         mat2({ 5, 10, 15, 20 })
     ), "scalar * mat2");
-    test::assert(eq_float(
+    test::assert(eq_f32(
         determinant(mat3({ 3, 5, 8, 7, 2.5f, 6, 4, -20, 1 })),
         -747.5f
     ), "determinant(mat3)");
@@ -312,59 +312,59 @@ static void test_matrix()
 static void test_transform()
 {
     test::assert(eq_vec(
-        transform::apply_point2D_h(
-            transform::translate2D_h(vec2(1, -4)),
+        transform::apply_point_2d_h(
+            transform::translate_2d_h(vec2(1, -4)),
             vec2(10, 20)
         ),
         vec2(11, 16)
-    ), "translate2D_h(), apply_point2D_h()");
+    ), "translate_2d_h(), apply_point_2d_h()");
     mat4 inv;
-    transform::translate3D_h(vec3(-100), &inv);
+    transform::translate_3d_h(vec3(-100), &inv);
     test::assert(eq_vec(
-        transform::apply_point3D_h(inv, vec3(2, 9, -2)),
+        transform::apply_point_3d_h(inv, vec3(2, 9, -2)),
         vec3(102, 109, 98)
-    ), "translate3D_h(), apply_point3D_h()");
+    ), "translate_3d_h(), apply_point_3d_h()");
     test::assert(eq_vec(
-        transform::apply_vector3D(
-            transform::scale3D(vec3(10, 20, -40)),
+        transform::apply_vector_3d(
+            transform::scale_3d(vec3(10, 20, -40)),
             vec3(1, 2, -10)
         ),
         vec3(10, 40, 400)
     ), "scale3D(), apply_vector3D()");
     test::assert(eq_vec(
-        transform::apply_point2D_h(
-            transform::translate2D_h(vec2(100)) * transform::rotate2D_h(-pi / 6.f),
+        transform::apply_point_2d_h(
+            transform::translate_2d_h(vec2(100)) * transform::rotate_2d_h(-pi / 6.f),
             vec2(10, 20)
         ),
         vec2(118.6602554f, 112.3205109f)
-    ), "rotate2D_h(), translate2D_h(), apply_point2D_h()");
+    ), "rotate_2d_h(), translate_2d_h(), apply_point_2d_h()");
 }
 
 static void test_prng()
 {
     prng_t prng;
 
-    for (size_t i = 0; i < 100; i++)
+    for (usize i = 0; i < 100; i++)
     {
-        int32_t a = prng.next_i32(-100, 100);
+        i32 a = prng.next_i32(-100, 100);
         test::assert(a >= -100 && a <= 100, std::format("next_i32(-100, 100) = {}", a));
 
-        uint32_t b = prng.next_u32(10, 50);
+        u32 b = prng.next_u32(10, 50);
         test::assert(b >= 10 && b <= 50, std::format("next_u32(10, 50) = {}", b));
     }
 
-    std::array<uint32_t, 100> hist;
+    std::array<u32, 100> hist;
     hist.fill(0);
-    for (size_t i = 0; i < 1000000; i++)
+    for (usize i = 0; i < 1000000; i++)
     {
-        float num = prng.next_float();
-        uint32_t category = (uint32_t)math::floor(num * 99.9999f);
+        f32 num = prng.next_f32();
+        u32 category = (u32)math::floor(num * 99.9999f);
         hist[category]++;
     }
-    for (size_t i = 0; i < 100; i++)
+    for (usize i = 0; i < 100; i++)
     {
-        uint32_t count = hist[i] / 100;
-        test::assert(count > 95 && count < 105, "next_float() distribution");
+        u32 count = hist[i] / 100;
+        test::assert(count > 95 && count < 105, "next_f32() distribution");
     }
 }
 

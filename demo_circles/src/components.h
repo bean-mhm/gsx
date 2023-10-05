@@ -4,19 +4,18 @@
 #include <cstdint>
 
 // TEF
-#include "tef/ecs.h"
-#include "tef/math.h"
+#include "tef/tef.h"
 
 // Transform component
 struct c_transform
 {
-    uint32_t owner;
+    u32 owner;
     math::vec2 pos;
 };
 
 // Circle component
 struct c_circle
 {
-    uint32_t owner;
-    float radius;
+    u32 owner;
+    f32 radius;
 };

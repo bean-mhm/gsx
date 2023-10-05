@@ -8,8 +8,7 @@
 #include <cstdint>
 
 // TEF
-#include "tef/ecs.h"
-#include "tef/math.h"
+#include "tef/tef.h"
 
 // Internal
 #include "constants.h"
@@ -36,16 +35,16 @@ void app_t::run()
 
     // Add boids
     std::vector<c_boid> boids;
-    for (size_t i = 0; i < 100; i++)
+    for (usize i = 0; i < 100; i++)
     {
         c_boid boid;
 
         boid.pos = math::vec2(
-            prng.next_float(boids_min_pos.x, boids_max_pos.x),
-            prng.next_float(boids_min_pos.y, boids_max_pos.y)
+            prng.next_f32(boids_min_pos.x, boids_max_pos.x),
+            prng.next_f32(boids_min_pos.y, boids_max_pos.y)
         );
 
-        float angle = prng.next_float(0, math::tau);
+        f32 angle = prng.next_f32(0, math::tau);
         boid.vel = boids_speed * math::vec2(math::cos(angle), math::sin(angle));
 
         boids.push_back(boid);

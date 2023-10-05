@@ -107,6 +107,9 @@
     <ClCompile Include="src\internal_misc\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\internal_common\all.h" />
+    <ClInclude Include="src\internal_common\macros.h" />
+    <ClInclude Include="src\internal_common\types.h" />
     <ClInclude Include="src\internal_ecs\all.h" />
     <ClInclude Include="src\internal_ecs\event.h" />
     <ClInclude Include="src\internal_ecs\system.h" />

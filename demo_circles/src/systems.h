@@ -4,7 +4,7 @@
 #include <vector>
 
 // TEF
-#include "tef/ecs.h"
+#include "tef/tef.h"
 
 // Internal
 #include "components.h"
@@ -16,7 +16,7 @@ struct s_movement : ecs::base_system_t
 
     s_movement(
         const std::string& name,
-        int32_t update_order,
+        i32 update_order,
         bool run_on_caller_thread,
         std::vector<c_transform>& transforms
     );
@@ -33,7 +33,7 @@ struct s_circle_renderer : ecs::base_system_t
 
     s_circle_renderer(
         const std::string& name,
-        int32_t update_order,
+        i32 update_order,
         bool run_on_caller_thread,
         std::vector<c_transform>& transforms,
         std::vector<c_circle>& circles

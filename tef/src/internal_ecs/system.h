@@ -8,7 +8,7 @@
 // Internal
 #include "event.h"
 #include "world.h"
-#include "../internal_misc/all.h"
+#include "../internal_common/all.h"
 
 namespace tef::ecs
 {
@@ -26,7 +26,7 @@ namespace tef::ecs
         // invoked after a system with a lower order value. Systems with the same order will have
         // their on_update() functions invoked in parallel.
         // Note: Avoid modifying this value when the parent world is running.
-        int32_t update_order = 0;
+        i32 update_order = 0;
 
         // Force the parent world to invoke the abstract functions of this system using the same
         // thread that is running the world. If multiple systems with identical update orders have
@@ -39,7 +39,7 @@ namespace tef::ecs
         std::set<event_type_t> triggers;
 
         // Create a system with given properties.
-        base_system_t(const std::string& name, int32_t update_order, bool run_on_caller_thread);
+        base_system_t(const std::string& name, i32 update_order, bool run_on_caller_thread);
         no_default_copy_construct_no_assignment(base_system_t);
         virtual ~base_system_t();
 

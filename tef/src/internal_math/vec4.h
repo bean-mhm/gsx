@@ -4,6 +4,7 @@
 #include "vec2.h"
 #include "vec3.h"
 #include "utils.h"
+#include "../internal_common/all.h"
 #include "../internal_str/all.h"
 
 namespace tef::math
@@ -71,12 +72,12 @@ namespace tef::math
 
         explicit constexpr operator mat1x4() const
         {
-            return mat1x4({ (float)x, (float)y, (float)z, (float)w });
+            return mat1x4({ (f32)x, (f32)y, (f32)z, (f32)w });
         }
 
         explicit constexpr operator mat4x1() const
         {
-            return mat4x1({ (float)x, (float)y, (float)z, (float)w });
+            return mat4x1({ (f32)x, (f32)y, (f32)z, (f32)w });
         }
 
         // String
@@ -165,14 +166,14 @@ namespace tef::math
         // this / scalar
         constexpr base_vec4<T> operator/(T s) const
         {
-            float inv = 1.f / (float)s;
+            f32 inv = 1.f / (f32)s;
             return base_vec4<T>(x * inv, y * inv, z * inv, w * inv);
         }
 
         // this /= scalar
         constexpr base_vec4<T>& operator/=(T s)
         {
-            float inv = 1.f / (float)s;
+            f32 inv = 1.f / (f32)s;
             x *= inv;
             y *= inv;
             z *= inv;
@@ -215,7 +216,7 @@ namespace tef::math
         }
 
         // Access by index (copy)
-        constexpr T operator[](int32_t i) const
+        constexpr T operator[](i32 i) const
         {
             if (i == 0) return x;
             if (i == 1) return y;
@@ -224,7 +225,7 @@ namespace tef::math
         }
 
         // Access by index (reference)
-        constexpr T& operator[](int32_t i)
+        constexpr T& operator[](i32 i)
         {
             if (i == 0) return x;
             if (i == 1) return y;
@@ -234,23 +235,23 @@ namespace tef::math
 
         // Permute by indices
 
-        constexpr base_vec2<T> permute(int32_t x, int32_t y) const
+        constexpr base_vec2<T> permute(i32 x, i32 y) const
         {
             return base_vec2<T>((*this)[x], (*this)[y]);
         }
 
-        constexpr base_vec3<T> permute(int32_t x, int32_t y, int32_t z) const
+        constexpr base_vec3<T> permute(i32 x, i32 y, i32 z) const
         {
             return base_vec3<T>((*this)[x], (*this)[y], (*this)[z]);
         }
 
-        constexpr base_vec4<T> permute(int32_t x, int32_t y, int32_t z, int32_t w) const
+        constexpr base_vec4<T> permute(i32 x, i32 y, i32 z, i32 w) const
         {
             return base_vec4<T>((*this)[x], (*this)[y], (*this)[z], (*this)[w]);
         }
 
         // Number of components
-        constexpr int32_t n_components() const
+        constexpr i32 n_components() const
         {
             return 4;
         }
@@ -477,7 +478,7 @@ namespace tef::math
     }
 
     template<typename T>
-    inline base_vec4<T> wrap(const base_vec4<T>& v, float start, float end)
+    inline base_vec4<T> wrap(const base_vec4<T>& v, f32 start, f32 end)
     {
         return start + mod(v - start, end - start);
     }
@@ -505,7 +506,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec4<T> clamp(const base_vec4<T>& v, float min, float max)
+    constexpr base_vec4<T> clamp(const base_vec4<T>& v, f32 min, f32 max)
     {
         return base_vec4<T>(
             clamp(v.x, min, max),
@@ -522,7 +523,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec4<T> mix(const base_vec4<T>& v1, const base_vec4<T>& v2, float a)
+    constexpr base_vec4<T> mix(const base_vec4<T>& v1, const base_vec4<T>& v2, f32 a)
     {
         return v1 + a * (v2 - v1);
     }
@@ -530,10 +531,10 @@ namespace tef::math
     template<typename T>
     constexpr base_vec4<T> remap(
         const base_vec4<T>& v,
-        float a_start,
-        float a_end,
-        float b_start,
-        float b_end
+        f32 a_start,
+        f32 a_end,
+        f32 b_start,
+        f32 b_end
     )
     {
         return b_start + ((b_end - b_start) / (a_end - a_start)) * (v - a_start);
@@ -542,10 +543,10 @@ namespace tef::math
     template<typename T>
     constexpr base_vec4<T> remap_clamp(
         const base_vec4<T>& v,
-        float a_start,
-        float a_end,
-        float b_start,
-        float b_end
+        f32 a_start,
+        f32 a_end,
+        f32 b_start,
+        f32 b_end
     )
     {
         base_vec4<T> t = clamp01((v - a_start) / (a_end - a_start));
@@ -553,19 +554,19 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr base_vec4<T> remap01(const base_vec4<T>& v, float a_start, float a_end)
+    constexpr base_vec4<T> remap01(const base_vec4<T>& v, f32 a_start, f32 a_end)
     {
         return clamp01((v - a_start) / (a_end - a_start));
     }
 
     template<typename T>
-    constexpr base_vec4<T> step(float edge, const base_vec4<T>& v)
+    constexpr base_vec4<T> step(f32 edge, const base_vec4<T>& v)
     {
         return base_vec4<T>(step(edge, v.x), step(edge, v.y), step(edge, v.z), step(edge, v.w));
     }
 
     template<typename T>
-    constexpr base_vec4<T> smoothstep(float edge0, float edge1, const base_vec4<T>& v)
+    constexpr base_vec4<T> smoothstep(f32 edge0, f32 edge1, const base_vec4<T>& v)
     {
         return base_vec4<T>(
             smoothstep(edge0, edge1, v.x),
@@ -576,25 +577,25 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr float length_squared(const base_vec4<T>& v)
+    constexpr f32 length_squared(const base_vec4<T>& v)
     {
         return v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w;
     }
 
     template<typename T>
-    inline float length(const base_vec4<T>& v)
+    inline f32 length(const base_vec4<T>& v)
     {
         return sqrt(length_squared(v));
     }
 
     template<typename T>
-    constexpr float distance_squared(const base_vec4<T>& v1, const base_vec4<T>& v2)
+    constexpr f32 distance_squared(const base_vec4<T>& v1, const base_vec4<T>& v2)
     {
         return length_squared(v1 - v2);
     }
 
     template<typename T>
-    inline float distance(const base_vec4<T>& v1, const base_vec4<T>& v2)
+    inline f32 distance(const base_vec4<T>& v1, const base_vec4<T>& v2)
     {
         return length(v1 - v2);
     }
@@ -630,10 +631,10 @@ namespace tef::math
     }
 
     template<typename T>
-    inline base_vec4<T> refract(const base_vec4<T>& I, const base_vec4<T>& N, float eta)
+    inline base_vec4<T> refract(const base_vec4<T>& I, const base_vec4<T>& N, f32 eta)
     {
-        float dp = dot(N, I);
-        float k = 1 - eta * eta * (1 - dp * dp);
+        f32 dp = dot(N, I);
+        f32 k = 1 - eta * eta * (1 - dp * dp);
 
         if (k < 0)
             return 0;
@@ -654,7 +655,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr int32_t min_component_index(const base_vec4<T>& v)
+    constexpr i32 min_component_index(const base_vec4<T>& v)
     {
         return (v.x < v.y)
             ? ((v.x < v.z)
@@ -666,7 +667,7 @@ namespace tef::math
     }
 
     template<typename T>
-    constexpr int32_t max_component_index(const base_vec4<T>& v)
+    constexpr i32 max_component_index(const base_vec4<T>& v)
     {
         return (v.x > v.y)
             ? ((v.x > v.z)
@@ -678,8 +679,8 @@ namespace tef::math
     }
 
     // Type definitions
-    using vec4 = base_vec4<float>;
-    using ivec4 = base_vec4<int32_t>;
-    using uvec4 = base_vec4<uint32_t>;
+    using vec4 = base_vec4<f32>;
+    using ivec4 = base_vec4<i32>;
+    using uvec4 = base_vec4<u32>;
 
 }

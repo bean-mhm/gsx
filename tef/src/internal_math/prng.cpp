@@ -9,7 +9,7 @@
 namespace tef::math
 {
 
-    inline uint32_t rot(uint32_t x, uint32_t k)
+    inline u32 rot(u32 x, u32 k)
     {
         return (x << k) | (x >> (32u - k));
     }
@@ -17,7 +17,7 @@ namespace tef::math
     prng_t::prng_t()
     {
         std::random_device rd;
-        std::uniform_int_distribution<uint32_t> dist(0, UINT32_MAX);
+        std::uniform_int_distribution<u32> dist(0, UINT32_MAX);
         init(dist(rd), dist(rd));
     }
 
@@ -31,8 +31,8 @@ namespace tef::math
         seed += 7.6476101531702f;
         seed *= vec2(10.258331f, 31.833125f);
         init(
-            *reinterpret_cast<uint32_t*>(&seed.x),
-            *reinterpret_cast<uint32_t*>(&seed.y)
+            *reinterpret_cast<u32*>(&seed.x),
+            *reinterpret_cast<u32*>(&seed.y)
         );
     }
 
@@ -42,61 +42,61 @@ namespace tef::math
         seed.x *= seed.z + 10.258331f;
         seed.y *= seed.z + 31.833125f;
         init(
-            *reinterpret_cast<uint32_t*>(&seed.x),
-            *reinterpret_cast<uint32_t*>(&seed.y)
+            *reinterpret_cast<u32*>(&seed.x),
+            *reinterpret_cast<u32*>(&seed.y)
         );
     }
 
-    int32_t prng_t::next_i32()
+    i32 prng_t::next_i32()
     {
-        uint32_t s0 = state[0];
-        uint32_t s1 = state[1];
-        uint32_t result = rot(s0 * 0x9e3779bbu, 5u) * 5u;
+        u32 s0 = state[0];
+        u32 s1 = state[1];
+        u32 result = rot(s0 * 0x9e3779bbu, 5u) * 5u;
         s1 ^= s0;
         state[0] = rot(s0, 26u) ^ s1 ^ (s1 << 9u);
         state[1] = rot(s1, 13u);
-        return *reinterpret_cast<int32_t*>(&result);
+        return *reinterpret_cast<i32*>(&result);
     }
 
-    int32_t prng_t::next_i32(int32_t min, int32_t max)
+    i32 prng_t::next_i32(i32 min, i32 max)
     {
-        return min + (next_u32() % ((uint32_t)(max - min) + 1u));
+        return min + (next_u32() % ((u32)(max - min) + 1u));
     }
 
-    uint32_t prng_t::next_u32()
+    u32 prng_t::next_u32()
     {
-        uint32_t s0 = state[0];
-        uint32_t s1 = state[1];
-        uint32_t result = rot(s0 * 0x9e3779bbu, 5u) * 5u;
+        u32 s0 = state[0];
+        u32 s1 = state[1];
+        u32 result = rot(s0 * 0x9e3779bbu, 5u) * 5u;
         s1 ^= s0;
         state[0] = rot(s0, 26u) ^ s1 ^ (s1 << 9u);
         state[1] = rot(s1, 13u);
         return result;
     }
 
-    uint32_t prng_t::next_u32(uint32_t min, uint32_t max)
+    u32 prng_t::next_u32(u32 min, u32 max)
     {
         return min + (next_u32() % (max - min + 1u));
     }
 
-    float prng_t::next_float()
+    f32 prng_t::next_f32()
     {
-        return (float)next_u32() / (float)(0xffffffffu);
+        return (f32)next_u32() / (f32)(0xffffffffu);
     }
 
-    float prng_t::next_float(float min, float max)
+    f32 prng_t::next_f32(f32 min, f32 max)
     {
-        return min + (next_float() * (max - min));
+        return min + (next_f32() * (max - min));
     }
 
     vec2 prng_t::next_in_circle()
     {
         vec2 v;
-        for (int32_t i = 0; i < 100; i++)
+        for (i32 i = 0; i < 100; i++)
         {
             v = vec2(
-                2.f * next_float() - 1.f,
-                2.f * next_float() - 1.f
+                2.f * next_f32() - 1.f,
+                2.f * next_f32() - 1.f
             );
             if (length_squared(v) <= 1.f) return v;
         }
@@ -106,12 +106,12 @@ namespace tef::math
     vec3 prng_t::next_in_sphere()
     {
         vec3 v;
-        for (int32_t i = 0; i < 100; i++)
+        for (i32 i = 0; i < 100; i++)
         {
             v = vec3(
-                2.f * next_float() - 1.f,
-                2.f * next_float() - 1.f,
-                2.f * next_float() - 1.f
+                2.f * next_f32() - 1.f,
+                2.f * next_f32() - 1.f,
+                2.f * next_f32() - 1.f
             );
             if (length_squared(v) <= 1.f) return v;
         }
@@ -121,12 +121,12 @@ namespace tef::math
     vec2 prng_t::next_on_circle()
     {
         vec2 v;
-        float lensqr;
-        for (int32_t i = 0; i < 100; i++)
+        f32 lensqr;
+        for (i32 i = 0; i < 100; i++)
         {
             v = vec2(
-                2.f * next_float() - 1.f,
-                2.f * next_float() - 1.f
+                2.f * next_f32() - 1.f,
+                2.f * next_f32() - 1.f
             );
             lensqr = length_squared(v);
             if (lensqr <= 1.f && lensqr != 0.f) break;
@@ -137,13 +137,13 @@ namespace tef::math
     vec3 prng_t::next_on_sphere()
     {
         vec3 v;
-        float lensqr;
-        for (int32_t i = 0; i < 100; i++)
+        f32 lensqr;
+        for (i32 i = 0; i < 100; i++)
         {
             v = vec3(
-                2.f * next_float() - 1.f,
-                2.f * next_float() - 1.f,
-                2.f * next_float() - 1.f
+                2.f * next_f32() - 1.f,
+                2.f * next_f32() - 1.f,
+                2.f * next_f32() - 1.f
             );
             lensqr = length_squared(v);
             if (lensqr <= 1.f && lensqr != 0.f) break;
@@ -153,13 +153,13 @@ namespace tef::math
 
     vec2 prng_t::next_gauss()
     {
-        float u1 = next_float();
-        float u2 = next_float();
-        float temp = sqrt(-2.f * log(u1));
+        f32 u1 = next_f32();
+        f32 u2 = next_f32();
+        f32 temp = sqrt(-2.f * log(u1));
         return vec2(temp * cos(tau * u2), temp * sin(tau * u2));
     }
 
-    void prng_t::init(uint32_t seed0, uint32_t seed1)
+    void prng_t::init(u32 seed0, u32 seed1)
     {
         seed0 += 193;
         seed1 += 7771;
