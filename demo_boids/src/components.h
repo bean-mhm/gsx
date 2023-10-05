@@ -1,7 +1,7 @@
 #pragma once
 
 // TEF
-#include "tef/tef.h"
+#include "tef/math.h"
 
 // Boid component
 struct c_boid

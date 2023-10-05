@@ -9,9 +9,11 @@
 // OpenMP
 #include <omp.h>
 
+// TEF
+#include "tef/math.h"
+
 // Internal
 #include "constants.h"
-#include "components.h"
 
 using namespace math;
 
@@ -44,22 +46,22 @@ float sd_colliders(vec2 p, float time)
 
 // s_boids
 
-s_boids::s_boids(const std::string& name, int32_t update_order, bool run_on_caller_thread)
-    : tef::base_system_t(name, update_order, run_on_caller_thread)
+s_boids::s_boids(
+    const std::string& name,
+    int32_t update_order,
+    bool run_on_caller_thread,
+    std::vector<c_boid>& boids
+)
+    : ecs::base_system_t(name, update_order, run_on_caller_thread),
+    boids(boids)
 {}
 
-s_boids::~s_boids()
-{}
-
-void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
+void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
     const float dt = min(iter.dt, 0.02f);
 
-    c_boid* boids; size_t num_boids;
-    world.get_components_of_type<c_boid>(boids, num_boids);
-
 #pragma omp parallel for
-    for (int i = 0; i < num_boids; i++)
+    for (int i = 0; i < boids.size(); i++)
     {
         c_boid& boid = boids[i];
 
@@ -67,7 +69,7 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
         vec2 avg_vel(0);
 
         // Iterate through the neighbors
-        for (int j = 0; j < num_boids; j++)
+        for (int j = 0; j < boids.size(); j++)
         {
             if (i == j) continue;
 
@@ -90,8 +92,8 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
 
                 // Steer
                 float angle = radians(20.f * fac * dt);
-                boid.vel = transform::apply_vector2D(
-                    transform::rotate2D(angle),
+                boid.vel = transform::apply_vector_2d(
+                    transform::rotate_2d(angle),
                     boid.vel
                 );
 
@@ -145,8 +147,8 @@ void s_boids::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
             // Steer away
             float pd = max(0.f, sd);
             float angle = radians(-50.f * math::exp(-15.f * pd) * dt);
-            boid.vel = transform::apply_vector2D(
-                transform::rotate2D(angle),
+            boid.vel = transform::apply_vector_2d(
+                transform::rotate_2d(angle),
                 boid.vel
             );
 
@@ -163,15 +165,14 @@ s_rendering::s_rendering(
     const std::string& name,
     int32_t update_order,
     bool run_on_caller_thread,
-    GLFWwindow* window
+    GLFWwindow* window,
+    std::vector<c_boid>& boids
 )
-    : tef::base_system_t(name, update_order, run_on_caller_thread), window(window)
+    : ecs::base_system_t(name, update_order, run_on_caller_thread), window(window),
+    boids(boids)
 {}
 
-s_rendering::~s_rendering()
-{}
-
-void s_rendering::on_start(tef::world_t& world)
+void s_rendering::on_start(ecs::world_t& world)
 {
     // Enable alpha blending
     // Note: Blending will happen in sRGB and that's not good at all. However, in this case I only
@@ -249,7 +250,7 @@ void s_rendering::on_start(tef::world_t& world)
     }
 }
 
-void s_rendering::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
+void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
     // Render dimensions
     int width, height;
@@ -315,16 +316,12 @@ void s_rendering::on_update(tef::world_t& world, const tef::world_iteration_t& i
     // Bind the boids VAO
     glBindVertexArray(boids_vao);
 
-    // Get a list of the boids
-    c_boid* boids; size_t num_boids;
-    world.get_components_of_type<c_boid>(boids, num_boids);
-
     // Update the boids VBO
     glBindBuffer(GL_ARRAY_BUFFER, boids_vbo);
-    glBufferData(GL_ARRAY_BUFFER, num_boids * sizeof(c_boid), boids, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, boids.size() * sizeof(c_boid), boids.data(), GL_DYNAMIC_DRAW);
 
     // Draw the boids
-    glDrawArrays(GL_POINTS, 0, num_boids);
+    glDrawArrays(GL_POINTS, 0, boids.size());
 
     // Swap front and back buffers
     glfwSwapBuffers(window);
@@ -339,7 +336,7 @@ void s_rendering::on_update(tef::world_t& world, const tef::world_iteration_t& i
     }
 }
 
-void s_rendering::on_stop(tef::world_t& world, const tef::world_iteration_t& iter)
+void s_rendering::on_stop(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
     // Plane
 

@@ -8,7 +8,8 @@
 #include <cstdint>
 
 // TEF
-#include "tef/tef.h"
+#include "tef/ecs.h"
+#include "tef/math.h"
 
 // Internal
 #include "constants.h"
@@ -24,32 +25,36 @@ void app_t::run()
     init_context();
 
     // Create a world
-    tef::world_t world(
+    ecs::world_t world(
         "Boids",
-        tef::log_level_t::info,
-        std::make_shared<tef::ostream_logger_t>(std::cout)
+        ecs::log_level_t::info,
+        std::make_shared<ecs::ostream_logger_t>(std::cout)
     );
 
+    // Create a PRNG
+    math::prng_t prng;
+
     // Add boids
+    std::vector<c_boid> boids;
     for (size_t i = 0; i < 100; i++)
     {
         c_boid boid;
 
         boid.pos = math::vec2(
-            world.prng.next_float(boids_min_pos.x, boids_max_pos.x),
-            world.prng.next_float(boids_min_pos.y, boids_max_pos.y)
+            prng.next_float(boids_min_pos.x, boids_max_pos.x),
+            prng.next_float(boids_min_pos.y, boids_max_pos.y)
         );
 
-        float angle = world.prng.next_float(0, math::tau);
+        float angle = prng.next_float(0, math::tau);
         boid.vel = boids_speed * math::vec2(math::cos(angle), math::sin(angle));
 
-        world.add_component_of_type<c_boid>(boid);
+        boids.push_back(boid);
     }
 
     // Add systems
     {
-        world.add_system(std::make_shared<s_boids>("Boids", 0, false));
-        world.add_system(std::make_shared<s_rendering>("Rendering", 1, true, window));
+        world.add_system(std::make_shared<s_boids>("Boids", 0, false, boids));
+        world.add_system(std::make_shared<s_rendering>("Rendering", 1, true, window, boids));
     }
 
     // Run

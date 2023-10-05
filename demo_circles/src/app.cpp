@@ -8,7 +8,8 @@
 #include <cstdint>
 
 // TEF
-#include "tef/tef.h"
+#include "tef/ecs.h"
+#include "tef/math.h"
 
 // Internal
 #include "components.h"
@@ -18,13 +19,18 @@
 void app_t::run()
 {
     // Create a world
-    tef::world_t world(
+    ecs::world_t world(
         "Circles",
-        tef::log_level_t::verbose,
-        std::make_shared<tef::csv_logger_t>("./log.csv")
+        ecs::log_level_t::verbose,
+        std::make_shared<ecs::csv_logger_t>("./log.csv")
     );
 
-    // Add entities
+    // Create a PRNG
+    math::prng_t prng;
+
+    // Add components
+    std::vector<c_transform> transforms;
+    std::vector<c_circle> circles;
     for (size_t i = 0; i < 5; i++)
     {
         // Add a transform component
@@ -32,22 +38,26 @@ void app_t::run()
         {
             c_transform transform;
             transform.owner = i;
-            world.add_component_of_type<c_transform>(transform);
+            transforms.push_back(transform);
         }
 
         // Add a circle component
         c_circle circle;
         circle.owner = i;
-        circle.radius = world.prng.next_float(.05f, .2f);
-        world.add_component_of_type<c_circle>(circle);
+        circle.radius = prng.next_float(.05f, .2f);
+        circles.push_back(circle);
     }
 
     // Add systems
     {
-        world.add_system(std::make_shared<s_movement>("Movement", 0, false));
-        world.add_system(std::make_shared<s_circle_renderer>("Circle Renderer", 1, false));
+        world.add_system(std::make_shared<s_movement>(
+            "Movement", 0, false, transforms
+        ));
+        world.add_system(std::make_shared<s_circle_renderer>(
+            "Circle Renderer", 1, false, transforms, circles
+        ));
     }
 
     // Run
-    world.run(10, 5);
+    world.run(12, 10);
 }

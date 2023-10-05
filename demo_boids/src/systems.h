@@ -1,34 +1,45 @@
 #pragma once
 
 // TEF
-#include "tef/tef.h"
+#include "tef/ecs.h"
 
 // Internal
+#include "components.h"
 #include "gl_utils.h"
 
 // Boid simulation system
-struct s_boids : tef::base_system_t
+struct s_boids : ecs::base_system_t
 {
-    s_boids(const std::string& name, int32_t update_order, bool run_on_caller_thread);
-    virtual ~s_boids();
+    std::vector<c_boid>& boids;
 
-    virtual void on_update(tef::world_t& world, const tef::world_iteration_t& iter) override;
+    s_boids(
+        const std::string& name,
+        int32_t update_order,
+        bool run_on_caller_thread,
+        std::vector<c_boid>& boids
+    );
+    virtual ~s_boids() = default;
+
+    virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
 };
 
 // OpenGL rendering system
-struct s_rendering : tef::base_system_t
+struct s_rendering : ecs::base_system_t
 {
+    std::vector<c_boid>& boids;
+
     s_rendering(
         const std::string& name,
         int32_t update_order,
         bool run_on_caller_thread,
-        GLFWwindow* window
+        GLFWwindow* window,
+        std::vector<c_boid>& boids
     );
-    virtual ~s_rendering();
+    virtual ~s_rendering() = default;
 
-    virtual void on_start(tef::world_t& world) override;
-    virtual void on_update(tef::world_t& world, const tef::world_iteration_t& iter) override;
-    virtual void on_stop(tef::world_t& world, const tef::world_iteration_t& iter) override;
+    virtual void on_start(ecs::world_t& world) override;
+    virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
+    virtual void on_stop(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
 
 private:
     GLFWwindow* window;

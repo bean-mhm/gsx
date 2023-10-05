@@ -1,20 +1,44 @@
 #pragma once
 
+// STD
+#include <vector>
+
 // TEF
-#include "tef/tef.h"
+#include "tef/ecs.h"
+
+// Internal
+#include "components.h"
 
 // Movement system
-struct s_movement : tef::base_system_t
+struct s_movement : ecs::base_system_t
 {
-    s_movement(const std::string& name, int32_t update_order, bool run_on_caller_thread);
-    virtual ~s_movement();
-    virtual void on_update(tef::world_t& world, const tef::world_iteration_t& iter) override;
+    std::vector<c_transform>& transforms;
+
+    s_movement(
+        const std::string& name,
+        int32_t update_order,
+        bool run_on_caller_thread,
+        std::vector<c_transform>& transforms
+    );
+    virtual ~s_movement() = default;
+
+    virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
 };
 
 // Circle renderer system (ASCII output to the console)
-struct s_circle_renderer : tef::base_system_t
+struct s_circle_renderer : ecs::base_system_t
 {
-    s_circle_renderer(const std::string& name, int32_t update_order, bool run_on_caller_thread);
-    virtual ~s_circle_renderer();
-    virtual void on_update(tef::world_t& world, const tef::world_iteration_t& iter) override;
+    std::vector<c_transform>& transforms;
+    std::vector<c_circle>& circles;
+
+    s_circle_renderer(
+        const std::string& name,
+        int32_t update_order,
+        bool run_on_caller_thread,
+        std::vector<c_transform>& transforms,
+        std::vector<c_circle>& circles
+    );
+    virtual ~s_circle_renderer() = default;
+
+    virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
 };

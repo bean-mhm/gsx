@@ -3,30 +3,29 @@
 // STD
 #include <iostream>
 
+// TEF
+#include "tef/math.h"
+
 // Internal
-#include "components.h"
 #include "utils.h"
 
 // s_movement
 
-s_movement::s_movement(const std::string& name, int32_t update_order, bool run_on_caller_thread)
-    : tef::base_system_t(name, update_order, run_on_caller_thread)
+s_movement::s_movement(
+    const std::string& name,
+    int32_t update_order,
+    bool run_on_caller_thread,
+    std::vector<c_transform>& transforms
+)
+    : ecs::base_system_t(name, update_order, run_on_caller_thread),
+    transforms(transforms)
 {}
 
-s_movement::~s_movement()
-{}
-
-void s_movement::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
+void s_movement::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
-    // Get all transform components
-    c_transform* components; size_t size;
-    world.get_components_of_type<c_transform>(components, size);
-
-    // Iterate and update
-    for (size_t i = 0; i < size; i++)
+    for (size_t i = 0; i < transforms.size(); i++)
     {
-        c_transform& transform = components[i];
-
+        c_transform& transform = transforms[i];
         float theta = .5f * (i + 1.f) * iter.time;
         transform.pos = 3.f * math::vec2(math::cos(theta), sin(theta));
     }
@@ -37,22 +36,18 @@ void s_movement::on_update(tef::world_t& world, const tef::world_iteration_t& it
 s_circle_renderer::s_circle_renderer(
     const std::string& name,
     int32_t update_order,
-    bool run_on_caller_thread
+    bool run_on_caller_thread,
+    std::vector<c_transform>& transforms,
+    std::vector<c_circle>& circles
 )
-    : tef::base_system_t(name, update_order, run_on_caller_thread)
+    : ecs::base_system_t(name, update_order, run_on_caller_thread),
+    transforms(transforms), circles(circles)
 {}
 
-s_circle_renderer::~s_circle_renderer()
-{}
-
-void s_circle_renderer::on_update(tef::world_t& world, const tef::world_iteration_t& iter)
+void s_circle_renderer::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
     // Clear the console
     clear_console();
-
-    // Get all circle components
-    c_circle* components; size_t size;
-    world.get_components_of_type<c_circle>(components, size);
 
     // Render (per-pixel shader)
     constexpr math::uvec2 res(30, 20);
@@ -64,12 +59,21 @@ void s_circle_renderer::on_update(tef::world_t& world, const tef::world_iteratio
             // UV
             math::vec2 uv = screen_to_uv(math::uvec2(x, y), res);
 
-            // Minimum distance from the closest circle
+            // Find the distance from the closest circle
             float dist = 1e9f;
-            for (size_t i = 0; i < size; i++)
+            for (auto& circle : circles)
             {
-                c_circle& circle = components[i];
-                c_transform* transform = world.get_component_of_type_owned_by<c_transform>(circle.owner);
+                // See if there's a transform component with the same owner
+                c_transform* transform = nullptr;
+                for (auto& t : transforms)
+                {
+                    if (t.owner == circle.owner)
+                    {
+                        transform = &t;
+                        break;
+                    }
+                }
+
                 if (transform)
                 {
                     // Use transform.pos as the center
