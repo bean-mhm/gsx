@@ -25,7 +25,7 @@ namespace tef::ecs
     public:
         // Information about the current iteration of the world. This will be passed to systems when
         // the world is running.
-        struct iteration_t
+        struct iter_t
         {
             // Iteration number starting from 0
             uint64_t i = 0;
@@ -145,21 +145,21 @@ namespace tef::ecs
         void process_events(
             const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
             worker_map_t& worker_map,
-            const iteration_t& iter
+            const iter_t& iter
         );
 
         // Note: This function is called internally by run().
         void update_systems(
             std::vector<system_group_t>& system_groups,
             worker_map_t& worker_map,
-            const iteration_t& iter
+            const iter_t& iter
         );
 
         // Note: This function is called internally by run().
         void stop_systems(
             const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
             worker_map_t& worker_map,
-            const iteration_t& iter
+            const iter_t& iter
         );
 
     };

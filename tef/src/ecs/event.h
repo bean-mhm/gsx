@@ -7,6 +7,7 @@
 namespace tef::ecs
 {
 
+    // Event type
     using event_type_t = uint64_t;
 
     // Event

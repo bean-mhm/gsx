@@ -17,13 +17,13 @@ namespace tef::ecs
     void base_system_t::on_start(world_t& world)
     {}
 
-    void base_system_t::on_update(world_t& world, const world_t::iteration_t& iter)
+    void base_system_t::on_update(world_t& world, const world_t::iter_t& iter)
     {}
 
-    void base_system_t::on_trigger(world_t& world, const world_t::iteration_t& iter, const event_t& event)
+    void base_system_t::on_trigger(world_t& world, const world_t::iter_t& iter, const event_t& event)
     {}
 
-    void base_system_t::on_stop(world_t& world, const world_t::iteration_t& iter)
+    void base_system_t::on_stop(world_t& world, const world_t::iter_t& iter)
     {}
 
 }
