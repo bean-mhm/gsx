@@ -6,7 +6,7 @@
 // Internal
 #include "vec2.h"
 #include "vec3.h"
-#include "../misc.h"
+#include "../internal_misc/all.h"
 
 namespace tef::math
 {

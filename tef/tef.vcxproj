@@ -107,9 +107,14 @@
     <ClCompile Include="src\internal_misc\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\internal_ecs\all.h" />
     <ClInclude Include="src\internal_ecs\event.h" />
     <ClInclude Include="src\internal_ecs\system.h" />
     <ClInclude Include="src\internal_ecs\world.h" />
+    <ClInclude Include="src\internal_math\all.h" />
+    <ClInclude Include="src\internal_misc\all.h" />
+    <ClInclude Include="src\internal_spatial\all.h" />
+    <ClInclude Include="src\internal_str\all.h" />
     <ClInclude Include="src\tef.h" />
     <ClInclude Include="src\internal_math\bounds2.h" />
     <ClInclude Include="src\internal_math\bounds3.h" />

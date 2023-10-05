@@ -8,7 +8,7 @@
 // Internal
 #include "event.h"
 #include "world.h"
-#include "../misc.h"
+#include "../internal_misc/all.h"
 
 namespace tef::ecs
 {

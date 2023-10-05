@@ -7,8 +7,8 @@
 #include <cstdint>
 
 // Internal
-#include "../math.h"
-#include "../misc.h"
+#include "../internal_math/all.h"
+#include "../internal_misc/all.h"
 
 namespace tef::spatial
 {

@@ -122,5 +122,20 @@
     <ClInclude Include="src\tef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\internal_ecs\all.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\internal_math\all.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\internal_misc\all.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\internal_spatial\all.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\internal_str\all.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
