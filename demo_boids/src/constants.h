@@ -105,7 +105,7 @@ static constexpr math::vec2 boids_max_pos(.9f, .9f);
 static constexpr f32 boids_speed = .6f;
 static constexpr f32 boids_attention = .2f;
 static constexpr f32 boids_attention_sqr = boids_attention * boids_attention;
-static constexpr f32 boids_size = .03f;
+static constexpr f32 boids_size = .02f;
 
 static const char* boids_src_vert = R"glsl(
     #version 330 core
