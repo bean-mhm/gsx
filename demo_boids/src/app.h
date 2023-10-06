@@ -10,8 +10,8 @@ public:
 
 private:
     static constexpr const char* initial_title = "Boids";
-    static constexpr int initial_width = 800;
-    static constexpr int initial_height = 600;
+    static constexpr int initial_width = 1200;
+    static constexpr int initial_height = 900;
 
     GLFWwindow* window;
 
