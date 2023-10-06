@@ -184,7 +184,7 @@ namespace tef::math
     template<typename T, typename U>
     constexpr base_bounds2<T> expand(const base_bounds2<T>& b, U delta)
     {
-        return base_bounds2<T>(b.pmin - base_vec2<T>(delta), b.pmax + base_vec2<T>(delta));
+        return base_bounds2<T>(b.pmin - base_vec2<T>((T)delta), b.pmax + base_vec2<T>((T)delta));
     }
 
     // Type definitions
