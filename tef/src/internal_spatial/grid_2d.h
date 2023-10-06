@@ -94,7 +94,7 @@ namespace tef::spatial
             }
         }
 
-        void query_all(std::vector<T>& out_elements)
+        void query_all(std::vector<T>& out_elements) const
         {
             for (auto& container : containers)
             {
