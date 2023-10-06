@@ -34,8 +34,11 @@ void app_t::run()
     math::prng_t prng;
 
     // Add boids
-    std::vector<c_boid> boids;
-    for (usize i = 0; i < 100; i++)
+    spatial::grid_2d_t<c_boid> boids(
+        math::bounds2(boids_min_pos, boids_max_pos),
+        math::ivec2(8)
+    );
+    for (usize i = 0; i < 500; i++)
     {
         c_boid boid;
 
@@ -47,7 +50,7 @@ void app_t::run()
         f32 angle = prng.next_f32(0, math::tau);
         boid.vel = boids_speed * math::vec2(math::cos(angle), math::sin(angle));
 
-        boids.push_back(boid);
+        boids.insert(boid);
     }
 
     // Add systems

@@ -47,7 +47,7 @@ s_boids::s_boids(
     const std::string& name,
     i32 update_order,
     bool run_on_caller_thread,
-    std::vector<c_boid>& boids
+    spatial::grid_2d_t<c_boid>& boids
 )
     : ecs::base_system_t(name, update_order, run_on_caller_thread),
     boids(boids)
@@ -57,31 +57,40 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
     const f32 dt = min(iter.dt, 0.02f);
 
+    std::vector<c_boid*> boids_vec;
+    boids.query_all(boids_vec);
+
 #pragma omp parallel for
-    for (int i = 0; i < boids.size(); i++)
+    for (int i = 0; i < boids_vec.size(); i++)
     {
-        c_boid& boid = boids[i];
+        c_boid* boid = boids_vec[i];
 
         // Weighted average of the neighbor velocities
         vec2 avg_vel(0);
 
-        // Iterate through the neighbors
-        for (int j = 0; j < boids.size(); j++)
-        {
-            if (i == j) continue;
+        // Query the neighbors
+        std::vector<c_boid*> neighbors;
+        boids.query(
+            bounds2(boid->pos - boids_attention, boid->pos + boids_attention),
+            neighbors
+        );
 
-            // Info about the other boid
-            const c_boid& other = boids[j];
-            vec2 this_to_other = other.pos - boid.pos;
-            f32 dist_sqr = dot(this_to_other, this_to_other);
+        // Iterate through the neighbors
+        for (auto neighbor : neighbors)
+        {
+            if (neighbor == boid) continue;
+
+            // Info about the neighbor
+            vec2 this_to_neighbor = neighbor->pos - boid->pos;
+            f32 dist_sqr = dot(this_to_neighbor, this_to_neighbor);
             if (dist_sqr > boids_attention_sqr) continue;
             f32 dist = math::sqrt(dist_sqr);
 
             // Steer away from nearby boids
             if (
                 dot(
-                    normalize(boid.vel),
-                    normalize(other.vel)
+                    normalize(boid->vel),
+                    normalize(neighbor->vel)
                 ) > math::cos(1.1f))
             {
                 // How much do I steer away?
@@ -89,71 +98,73 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 
                 // Steer
                 f32 angle = radians(20.f * fac * dt);
-                boid.vel = transform::apply_vector_2d(
+                boid->vel = transform::apply_vector_2d(
                     transform::rotate_2d(angle),
-                    boid.vel
+                    boid->vel
                 );
 
                 // Move away
-                boid.vel -= 5.f * fac * dt * this_to_other;
+                boid->vel -= 5.f * fac * dt * this_to_neighbor;
             }
 
             // Update the weighted average velocity
             f32 weight = 1.f - clamp01(dist / boids_attention);
-            avg_vel += weight * other.vel;
+            avg_vel += weight * neighbor->vel;
         }
 
         // Try to go in the same direction as the neighbors
         f32 lensqr_avg_vel = dot(avg_vel, avg_vel);
         if (lensqr_avg_vel > 0)
         {
-            boid.vel = mix(boid.vel, avg_vel, min(.3f * dt, 1.f));
+            boid->vel = mix(boid->vel, avg_vel, min(.3f * dt, 1.f));
         }
 
         // Try to follow the point of attraction
         vec2 poa = get_point_of_attraction(iter.time);
-        boid.vel = mix(boid.vel, (poa - boid.pos), min(dt, 1.f));
+        boid->vel = mix(boid->vel, (poa - boid->pos), min(dt, 1.f));
 
         // Constant speed
-        boid.vel = boids_speed * normalize(boid.vel);
+        boid->vel = boids_speed * normalize(boid->vel);
 
         // Update position
-        boid.pos += boid.vel * dt;
+        boid->pos += boid->vel * dt;
 
         // Get away from the colliders
         {
             // Signed distance
-            f32 sd = sd_colliders(boid.pos, iter.time);
+            f32 sd = sd_colliders(boid->pos, iter.time);
 
             // Normal
             vec2 normal = normalize(vec2(
-                sd_colliders(boid.pos + vec2(.001, 0), iter.time) - sd,
-                sd_colliders(boid.pos + vec2(0, .001), iter.time) - sd
+                sd_colliders(boid->pos + vec2(.001, 0), iter.time) - sd,
+                sd_colliders(boid->pos + vec2(0, .001), iter.time) - sd
             ));
 
             // If inside
             if (sd < 0)
             {
                 // Snap to outside
-                boid.pos += (.001f - sd) * normal;
+                boid->pos += (.001f - sd) * normal;
 
                 // Bounce
-                boid.vel = reflect(boid.vel, normal);
+                boid->vel = reflect(boid->vel, normal);
             }
 
             // Steer away
             f32 pd = max(0.f, sd);
             f32 angle = radians(-50.f * math::exp(-15.f * pd) * dt);
-            boid.vel = transform::apply_vector_2d(
+            boid->vel = transform::apply_vector_2d(
                 transform::rotate_2d(angle),
-                boid.vel
+                boid->vel
             );
 
             // Move away
             f32 force = 1. / (100. * pd * pd + .1);
-            boid.vel += force * dt * normal;
+            boid->vel += force * dt * normal;
         }
     }
+
+    boids.rebuild();
 }
 
 // s_rendering
@@ -163,7 +174,7 @@ s_rendering::s_rendering(
     i32 update_order,
     bool run_on_caller_thread,
     GLFWwindow* window,
-    std::vector<c_boid>& boids
+    spatial::grid_2d_t<c_boid>& boids
 )
     : ecs::base_system_t(name, update_order, run_on_caller_thread), window(window),
     boids(boids)
@@ -313,12 +324,21 @@ void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& ite
     // Bind the boids VAO
     glBindVertexArray(boids_vao);
 
+    // Get a list of all the boids
+    std::vector<c_boid> boids_vec;
+    boids.query_all(boids_vec);
+
     // Update the boids VBO
     glBindBuffer(GL_ARRAY_BUFFER, boids_vbo);
-    glBufferData(GL_ARRAY_BUFFER, boids.size() * sizeof(c_boid), boids.data(), GL_DYNAMIC_DRAW);
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        boids_vec.size() * sizeof(c_boid),
+        boids_vec.data(),
+        GL_DYNAMIC_DRAW
+    );
 
     // Draw the boids
-    glDrawArrays(GL_POINTS, 0, boids.size());
+    glDrawArrays(GL_POINTS, 0, boids_vec.size());
 
     // Swap front and back buffers
     glfwSwapBuffers(window);
