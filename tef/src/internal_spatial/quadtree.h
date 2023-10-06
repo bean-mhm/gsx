@@ -23,21 +23,47 @@ namespace tef::spatial
     class quadtree_t
     {
     public:
-        const math::bounds2 bounds;
-
         quadtree_t(const math::bounds2& bounds)
-            : bounds(bounds)
+            : _bounds(bounds)
         {}
 
-        no_default_copy_construct_no_assignment(quadtree_t);
+        quadtree_t(const quadtree_t& other)
+            : _bounds(other._bounds)
+        {
+            std::vector<T> elements_vec;
+            other.query_all(elements_vec);
+            for (auto& element : elements_vec)
+            {
+                insert(element);
+            }
+        }
+
+        quadtree_t& operator= (const quadtree_t& other)
+        {
+            clear();
+            _bounds = other._bounds;
+            std::vector<T> elements_vec;
+            other.query_all(elements_vec);
+            for (auto& element : elements_vec)
+            {
+                insert(element);
+            }
+        }
+
+        no_default_construct(quadtree_t);
+
+        math::bounds2 bounds() const
+        {
+            return _bounds;
+        }
 
         usize size() const
         {
             usize count;
-            std::stack<quadtree_t*> stack({ this });
+            std::stack<const quadtree_t*> stack({ this });
             while (!stack.empty())
             {
-                quadtree_t* q = stack.top();
+                const quadtree_t* q = stack.top();
                 stack.pop();
 
                 count += q->elements.size();
@@ -60,7 +86,7 @@ namespace tef::spatial
                 quadtree_t* q = stack.top();
                 stack.pop();
 
-                if (!math::inside(element.pos, q->bounds))
+                if (!math::inside(element.pos, q->_bounds))
                     continue;
 
                 if (q->elements.size() < capacity)
@@ -87,7 +113,7 @@ namespace tef::spatial
                 quadtree_t* q = stack.top();
                 stack.pop();
 
-                if (!math::overlaps(q->bounds, range))
+                if (!math::overlaps(q->_bounds, range))
                     continue;
 
                 for (u8 i = 0; i < q->elements.size(); i++)
@@ -131,12 +157,12 @@ namespace tef::spatial
             }
         }
 
-        void query_all(std::vector<T>& out_elements)
+        void query_all(std::vector<T>& out_elements) const
         {
-            std::stack<quadtree_t*> stack({ this });
+            std::stack<const quadtree_t*> stack({ this });
             while (!stack.empty())
             {
-                quadtree_t* q = stack.top();
+                const quadtree_t* q = stack.top();
                 stack.pop();
 
                 for (u8 i = 0; i < q->elements.size(); i++)
@@ -178,6 +204,7 @@ namespace tef::spatial
         }
 
     private:
+        math::bounds2 _bounds;
         misc::fixed_vector_t<T, capacity> elements;
 
         std::unique_ptr<quadtree_t> bottom_left;
@@ -194,19 +221,19 @@ namespace tef::spatial
             else
                 divided = true;
 
-            math::vec2 center = (bounds.pmin + bounds.pmax) * .5f;
+            math::vec2 center = (_bounds.pmin + _bounds.pmax) * .5f;
 
             bottom_left = std::make_unique<quadtree_t>(
-                math::bounds2(center, bounds.pmin)
+                math::bounds2(center, _bounds.pmin)
             );
             bottom_right = std::make_unique<quadtree_t>(
-                math::bounds2(center, math::vec2(bounds.pmax.x, bounds.pmin.y))
+                math::bounds2(center, math::vec2(_bounds.pmax.x, _bounds.pmin.y))
             );
             top_left = std::make_unique<quadtree_t>(
-                math::bounds2(center, math::vec2(bounds.pmin.x, bounds.pmax.y))
+                math::bounds2(center, math::vec2(_bounds.pmin.x, _bounds.pmax.y))
             );
             top_right = std::make_unique<quadtree_t>(
-                math::bounds2(center, bounds.pmax)
+                math::bounds2(center, _bounds.pmax)
             );
         }
 
