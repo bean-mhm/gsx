@@ -15,8 +15,9 @@ namespace tef::spatial
 {
 
     // Quadtree data structure with a given capacity per tile
-    // Note: T must have a copy constructor.
-    // Note: T must have a field of type tef::math::vec2 named pos, representing the 2D position.
+    // Note: T must be copy constructible.
+    // Note: T must have a public field of type tef::math::vec2 named pos, representing the 2D
+    // position.
     template<typename T, u8 capacity>
         requires (capacity <= 255)
     class quadtree_t
@@ -29,6 +30,27 @@ namespace tef::spatial
         {}
 
         no_default_copy_construct_no_assignment(quadtree_t);
+
+        usize size() const
+        {
+            usize count;
+            std::stack<quadtree_t*> stack({ this });
+            while (!stack.empty())
+            {
+                quadtree_t* q = stack.top();
+                stack.pop();
+
+                count += q->elements.size();
+
+                if (q->divided)
+                {
+                    stack.push(q->bottom_left.get());
+                    stack.push(q->bottom_right.get());
+                    stack.push(q->top_left.get());
+                    stack.push(q->top_right.get());
+                }
+            }
+        }
 
         bool insert(const T& element)
         {
@@ -109,6 +131,29 @@ namespace tef::spatial
             }
         }
 
+        void query_all(std::vector<T>& out_elements)
+        {
+            std::stack<quadtree_t*> stack({ this });
+            while (!stack.empty())
+            {
+                quadtree_t* q = stack.top();
+                stack.pop();
+
+                for (u8 i = 0; i < q->elements.size(); i++)
+                {
+                    out_elements.push_back(q->elements[i]);
+                }
+
+                if (q->divided)
+                {
+                    stack.push(q->bottom_left.get());
+                    stack.push(q->bottom_right.get());
+                    stack.push(q->top_left.get());
+                    stack.push(q->top_right.get());
+                }
+            }
+        }
+
         void clear()
         {
             elements.clear();
@@ -119,6 +164,17 @@ namespace tef::spatial
             top_right = nullptr;
 
             divided = false;
+        }
+
+        void rebuild()
+        {
+            std::vector<T> elements_vec;
+            query_all(elements_vec);
+            clear();
+            for (auto& element : elements_vec)
+            {
+                insert(element);
+            }
         }
 
     private:

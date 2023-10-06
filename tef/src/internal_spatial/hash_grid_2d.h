@@ -15,8 +15,9 @@ namespace tef::spatial
 {
 
     // 2D hash grid data structure
-    // Note: T must have a copy constructor.
-    // Note: T must have a field of type tef::math::vec2 named pos, representing the 2D position.
+    // Note: T must be copy constructible.
+    // Note: T must have a public field of type tef::math::vec2 named pos, representing the 2D
+    // position.
     template<typename T>
     class hash_grid_2d_t
     {
@@ -36,6 +37,16 @@ namespace tef::spatial
         }
 
         no_default_construct(hash_grid_2d_t);
+
+        usize size() const
+        {
+            usize count = 0;
+            for (auto& container : containers)
+            {
+                count += container.size();
+            }
+            return count;
+        }
 
         void insert(const T& element)
         {
@@ -82,9 +93,34 @@ namespace tef::spatial
             }
         }
 
+        void query_all(std::vector<T>& out_elements)
+        {
+            for (auto& container : containers)
+            {
+                for (auto& element : container)
+                {
+                    out_elements.push_back(element);
+                }
+            }
+        }
+
         void clear()
         {
-            misc::vec_clear(containers);
+            for (auto& container : containers)
+            {
+                misc::vec_clear(container);
+            }
+        }
+
+        void rebuild()
+        {
+            std::vector<T> elements_vec;
+            query_all(elements_vec);
+            clear();
+            for (auto& element : elements_vec)
+            {
+                insert(element);
+            }
         }
 
     private:

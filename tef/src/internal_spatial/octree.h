@@ -15,8 +15,9 @@ namespace tef::spatial
 {
 
     // Octree data structure with a given capacity per tile
-    // Note: T must have a copy constructor.
-    // Note: T must have a field of type tef::math::vec3 named pos, representing the 3D position.
+    // Note: T must be copy constructible.
+    // Note: T must have a public field of type tef::math::vec3 named pos, representing the 3D
+    // position.
     template<typename T, u8 capacity>
         requires (capacity <= 255)
     class octree_t
@@ -29,6 +30,31 @@ namespace tef::spatial
         {}
 
         no_default_copy_construct_no_assignment(octree_t);
+
+        usize size() const
+        {
+            usize count;
+            std::stack<octree_t*> stack({ this });
+            while (!stack.empty())
+            {
+                octree_t* t = stack.top();
+                stack.pop();
+
+                count += t->elements.size();
+
+                if (t->divided)
+                {
+                    stack.push(t->back_bottom_left.get());
+                    stack.push(t->back_bottom_right.get());
+                    stack.push(t->back_top_left.get());
+                    stack.push(t->back_top_right.get());
+                    stack.push(t->front_bottom_left.get());
+                    stack.push(t->front_bottom_right.get());
+                    stack.push(t->front_top_left.get());
+                    stack.push(t->front_top_right.get());
+                }
+            }
+        }
 
         bool insert(const T& element)
         {
@@ -121,6 +147,33 @@ namespace tef::spatial
             }
         }
 
+        void query_all(std::vector<T>& out_elements)
+        {
+            std::stack<octree_t*> stack({ this });
+            while (!stack.empty())
+            {
+                octree_t* t = stack.top();
+                stack.pop();
+
+                for (u8 i = 0; i < t->elements.size(); i++)
+                {
+                    out_elements.push_back(t->elements[i]);
+                }
+
+                if (t->divided)
+                {
+                    stack.push(t->back_bottom_left.get());
+                    stack.push(t->back_bottom_right.get());
+                    stack.push(t->back_top_left.get());
+                    stack.push(t->back_top_right.get());
+                    stack.push(t->front_bottom_left.get());
+                    stack.push(t->front_bottom_right.get());
+                    stack.push(t->front_top_left.get());
+                    stack.push(t->front_top_right.get());
+                }
+            }
+        }
+
         void clear()
         {
             elements.clear();
@@ -135,6 +188,17 @@ namespace tef::spatial
             front_top_right = nullptr;
 
             divided = false;
+        }
+
+        void rebuild()
+        {
+            std::vector<T> elements_vec;
+            query_all(elements_vec);
+            clear();
+            for (auto& element : elements_vec)
+            {
+                insert(element);
+            }
         }
 
     private:
