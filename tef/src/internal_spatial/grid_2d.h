@@ -21,12 +21,9 @@ namespace tef::spatial
     class grid_2d_t
     {
     public:
-        const math::bounds2 bounds;
-        const math::ivec2 resolution;
-
         grid_2d_t(math::bounds2 bounds, math::ivec2 resolution)
-            : bounds(bounds),
-            resolution(resolution),
+            : _bounds(bounds),
+            _resolution(resolution),
             cell_ratio(math::vec2(resolution) / bounds.diagonal())
         {
             if (math::min_component(resolution) < 1)
@@ -36,6 +33,16 @@ namespace tef::spatial
         }
 
         no_default_construct(grid_2d_t);
+
+        math::bounds2 bounds() const
+        {
+            return _bounds;
+        }
+
+        math::ivec2 resolution() const
+        {
+            return _resolution;
+        }
 
         usize size() const
         {
@@ -49,29 +56,29 @@ namespace tef::spatial
 
         void insert(const T& element)
         {
-            math::ivec2 cell(math::floor(cell_ratio * (element.pos - bounds.pmin)));
-            cell.x = math::clamp(cell.x, 0, resolution.x - 1);
-            cell.y = math::clamp(cell.y, 0, resolution.y - 1);
+            math::ivec2 cell(math::floor(cell_ratio * (element.pos - _bounds.pmin)));
+            cell.x = math::clamp(cell.x, 0, _resolution.x - 1);
+            cell.y = math::clamp(cell.y, 0, _resolution.y - 1);
 
-            usize index = (usize)cell.y * (usize)resolution.x + (usize)cell.x;
+            usize index = (usize)cell.y * (usize)_resolution.x + (usize)cell.x;
             containers[index].push_back(element);
         }
 
         void query(const math::bounds2& range, std::vector<T*>& out_elements)
         {
-            math::ivec2 start_cell(math::floor(cell_ratio * (range.pmin - bounds.pmin)));
-            start_cell.x = math::clamp(start_cell.x, 0, resolution.x - 1);
-            start_cell.y = math::clamp(start_cell.y, 0, resolution.y - 1);
+            math::ivec2 start_cell(math::floor(cell_ratio * (range.pmin - _bounds.pmin)));
+            start_cell.x = math::clamp(start_cell.x, 0, _resolution.x - 1);
+            start_cell.y = math::clamp(start_cell.y, 0, _resolution.y - 1);
 
-            math::ivec2 end_cell(math::floor(cell_ratio * (range.pmax - bounds.pmin)));
-            end_cell.x = math::clamp(end_cell.x, 0, resolution.x - 1);
-            end_cell.y = math::clamp(end_cell.y, 0, resolution.y - 1);
+            math::ivec2 end_cell(math::floor(cell_ratio * (range.pmax - _bounds.pmin)));
+            end_cell.x = math::clamp(end_cell.x, 0, _resolution.x - 1);
+            end_cell.y = math::clamp(end_cell.y, 0, _resolution.y - 1);
 
             for (usize y = start_cell.y; y <= end_cell.y; y++)
             {
                 for (usize x = start_cell.x; x <= end_cell.x; x++)
                 {
-                    usize container_index = y * (usize)resolution.x + x;
+                    usize container_index = y * (usize)_resolution.x + x;
                     for (auto& element : containers[container_index])
                     {
                         if (math::inside(element.pos, range))
@@ -125,7 +132,9 @@ namespace tef::spatial
         }
 
     private:
-        const math::vec2 cell_ratio;
+        math::bounds2 _bounds;
+        math::ivec2 _resolution;
+        math::vec2 cell_ratio;
         std::vector<std::vector<T>> containers;
 
     };

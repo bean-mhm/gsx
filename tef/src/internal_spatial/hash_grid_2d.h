@@ -11,6 +11,11 @@
 #include "../internal_math/all.h"
 #include "../internal_misc/all.h"
 
+struct test
+{
+    math::vec2 pos;
+};
+
 namespace tef::spatial
 {
 
@@ -22,10 +27,8 @@ namespace tef::spatial
     class hash_grid_2d_t
     {
     public:
-        const math::vec2 cell_size;
-
         hash_grid_2d_t(math::vec2 cell_size, usize n_containers)
-            : cell_size(cell_size)
+            : _cell_size(cell_size)
         {
             if (math::min_component(cell_size) <= 0.0f)
                 throw std::runtime_error("Grid cell size must be positive.");
@@ -37,6 +40,11 @@ namespace tef::spatial
         }
 
         no_default_construct(hash_grid_2d_t);
+
+        math::vec2 cell_size() const
+        {
+            return _cell_size;
+        }
 
         usize size() const
         {
@@ -50,7 +58,7 @@ namespace tef::spatial
 
         void insert(const T& element)
         {
-            math::ivec2 cell(math::floor(element.pos / cell_size));
+            math::ivec2 cell(math::floor(element.pos / _cell_size));
             containers[get_container_index(cell)].push_back(element);
         }
 
@@ -58,8 +66,8 @@ namespace tef::spatial
         {
             std::unordered_set<usize> indices;
 
-            math::ivec2 start_cell(math::floor(range.pmin / cell_size));
-            math::ivec2 end_cell(math::floor(range.pmax / cell_size));
+            math::ivec2 start_cell(math::floor(range.pmin / _cell_size));
+            math::ivec2 end_cell(math::floor(range.pmax / _cell_size));
 
             for (i32 y = start_cell.y; y <= end_cell.y; y++)
             {
@@ -124,6 +132,7 @@ namespace tef::spatial
         }
 
     private:
+        math::vec2 _cell_size;
         std::vector<std::vector<T>> containers;
 
         usize get_container_index(math::ivec2 cell)
