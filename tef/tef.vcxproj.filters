@@ -146,5 +146,8 @@
     <ClInclude Include="src\internal_common\all.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\internal_spatial\base_container.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

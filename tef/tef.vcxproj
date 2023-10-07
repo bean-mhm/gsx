@@ -117,6 +117,7 @@
     <ClInclude Include="src\internal_math\all.h" />
     <ClInclude Include="src\internal_misc\all.h" />
     <ClInclude Include="src\internal_spatial\all.h" />
+    <ClInclude Include="src\internal_spatial\base_container.h" />
     <ClInclude Include="src\internal_str\all.h" />
     <ClInclude Include="src\tef.h" />
     <ClInclude Include="src\internal_math\bounds2.h" />
