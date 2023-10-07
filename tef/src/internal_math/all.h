@@ -11,5 +11,3 @@
 #include "transform.h"
 #include "prng.h"
 #include "utils.h"
-
-namespace math = tef::math;
