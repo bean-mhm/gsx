@@ -7,6 +7,7 @@
 #include <cstdint>
 
 // Internal
+#include "base_container.h"
 #include "../internal_common/all.h"
 #include "../internal_math/all.h"
 #include "../internal_misc/all.h"
@@ -14,13 +15,13 @@
 namespace tef::spatial
 {
 
-    // Quadtree data structure with a given capacity per tile
+    // Quadtree with a given capacity per tile
     // Note: T must be copy constructible.
     // Note: T must have a public field of type tef::math::vec2 named pos, representing the 2D
     // position.
     template<typename T, u8 capacity>
         requires (capacity <= 255)
-    class quadtree_t
+    class quadtree_t : public base_container_t<T>
     {
     public:
         quadtree_t(const math::bounds2& bounds)
@@ -57,7 +58,7 @@ namespace tef::spatial
             return _bounds;
         }
 
-        usize size() const
+        virtual usize size() const override
         {
             usize count;
             std::stack<const quadtree_t*> stack({ this });
@@ -78,7 +79,7 @@ namespace tef::spatial
             }
         }
 
-        bool insert(const T& element)
+        virtual bool insert(const T& element) override
         {
             std::stack<quadtree_t*> stack({ this });
             while (!stack.empty())
@@ -134,7 +135,7 @@ namespace tef::spatial
             }
         }
 
-        void query_all(std::vector<T*>& out_elements)
+        virtual void query_all(std::vector<T*>& out_elements) override
         {
             std::stack<quadtree_t*> stack({ this });
             while (!stack.empty())
@@ -157,7 +158,7 @@ namespace tef::spatial
             }
         }
 
-        void query_all(std::vector<T>& out_elements) const
+        virtual void query_all(std::vector<T>& out_elements) const override
         {
             std::stack<const quadtree_t*> stack({ this });
             while (!stack.empty())
@@ -180,7 +181,7 @@ namespace tef::spatial
             }
         }
 
-        void clear()
+        virtual void clear() override
         {
             elements.clear();
 
@@ -192,7 +193,7 @@ namespace tef::spatial
             divided = false;
         }
 
-        void rebuild()
+        virtual void rebuild() override
         {
             std::vector<T> elements_vec;
             query_all(elements_vec);

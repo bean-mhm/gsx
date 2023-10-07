@@ -7,6 +7,7 @@
 #include <cstdint>
 
 // Internal
+#include "base_container.h"
 #include "../internal_common/all.h"
 #include "../internal_math/all.h"
 #include "../internal_misc/all.h"
@@ -14,12 +15,12 @@
 namespace tef::spatial
 {
 
-    // 2D hash grid data structure
+    // 2D hash grid container
     // Note: T must be copy constructible.
     // Note: T must have a public field of type tef::math::vec2 named pos, representing the 2D
     // position.
     template<typename T>
-    class hash_grid_2d_t
+    class hash_grid_2d_t : public base_container_t<T>
     {
     public:
         hash_grid_2d_t(math::vec2 cell_size, usize n_containers)
@@ -41,7 +42,7 @@ namespace tef::spatial
             return _cell_size;
         }
 
-        usize size() const
+        virtual usize size() const override
         {
             usize count = 0;
             for (auto& container : containers)
@@ -51,10 +52,11 @@ namespace tef::spatial
             return count;
         }
 
-        void insert(const T& element)
+        virtual bool insert(const T& element) override
         {
             math::ivec2 cell(math::floor(element.pos / _cell_size));
             containers[get_container_index(cell)].push_back(element);
+            return true;
         }
 
         void query(const math::bounds2& range, std::vector<T*>& out_elements)
@@ -85,7 +87,7 @@ namespace tef::spatial
             }
         }
 
-        void query_all(std::vector<T*>& out_elements)
+        virtual void query_all(std::vector<T*>& out_elements) override
         {
             for (auto& container : containers)
             {
@@ -96,7 +98,7 @@ namespace tef::spatial
             }
         }
 
-        void query_all(std::vector<T>& out_elements) const
+        virtual void query_all(std::vector<T>& out_elements) const override
         {
             for (auto& container : containers)
             {
@@ -107,7 +109,7 @@ namespace tef::spatial
             }
         }
 
-        void clear()
+        virtual void clear() override
         {
             for (auto& container : containers)
             {
@@ -115,7 +117,7 @@ namespace tef::spatial
             }
         }
 
-        void rebuild()
+        virtual void rebuild() override
         {
             std::vector<T> elements_vec;
             query_all(elements_vec);
