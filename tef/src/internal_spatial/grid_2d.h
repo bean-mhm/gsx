@@ -19,7 +19,7 @@ namespace tef::spatial
     // Note: T must have a public field of type tef::math::vec2 named pos, representing the 2D
     // position.
     template<typename T>
-    class grid_2d_t : public base_container_t<T>
+    class grid_2d_t : public base_container_2d_t<T>
     {
     public:
         grid_2d_t(math::bounds2 bounds, math::ivec2 resolution)
@@ -67,7 +67,7 @@ namespace tef::spatial
             return true;
         }
 
-        void query(const math::bounds2& range, std::vector<T*>& out_elements)
+        virtual void query(const math::bounds2& range, std::vector<T*>& out_elements) override
         {
             math::ivec2 start_cell(math::floor(cell_ratio * (range.pmin - _bounds.pmin)));
             start_cell.x = math::clamp(start_cell.x, 0, _resolution.x - 1);
@@ -97,6 +97,7 @@ namespace tef::spatial
         {
             for (auto& container : containers)
             {
+                out_elements.reserve(out_elements.size() + container.size());
                 for (auto& element : container)
                 {
                     out_elements.push_back(&element);
@@ -108,10 +109,7 @@ namespace tef::spatial
         {
             for (auto& container : containers)
             {
-                for (auto& element : container)
-                {
-                    out_elements.push_back(element);
-                }
+                misc::vec_append(out_elements, container);
             }
         }
 

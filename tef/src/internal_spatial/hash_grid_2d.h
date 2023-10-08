@@ -20,7 +20,7 @@ namespace tef::spatial
     // Note: T must have a public field of type tef::math::vec2 named pos, representing the 2D
     // position.
     template<typename T>
-    class hash_grid_2d_t : public base_container_t<T>
+    class hash_grid_2d_t : public base_container_2d_t<T>
     {
     public:
         hash_grid_2d_t(math::vec2 cell_size, usize n_containers)
@@ -59,7 +59,7 @@ namespace tef::spatial
             return true;
         }
 
-        void query(const math::bounds2& range, std::vector<T*>& out_elements)
+        virtual void query(const math::bounds2& range, std::vector<T*>& out_elements) override
         {
             std::unordered_set<usize> indices;
 
@@ -91,6 +91,7 @@ namespace tef::spatial
         {
             for (auto& container : containers)
             {
+                out_elements.reserve(out_elements.size() + container.size());
                 for (auto& element : container)
                 {
                     out_elements.push_back(&element);
@@ -102,10 +103,7 @@ namespace tef::spatial
         {
             for (auto& container : containers)
             {
-                for (auto& element : container)
-                {
-                    out_elements.push_back(element);
-                }
+                misc::vec_append(out_elements, container);
             }
         }
 
