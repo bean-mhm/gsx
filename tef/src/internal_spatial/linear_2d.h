@@ -13,9 +13,6 @@ namespace tef::spatial
 {
 
     // 2D container with contiguous memory and no spatial optimizations (uses std::vector)
-    // Note: T must be copy constructible.
-    // Note: T must have a public field of type tef::math::vec2 named pos, representing the 2D
-    // position.
     template<typename T>
     class linear_2d_t : public base_container_2d_t<T>
     {

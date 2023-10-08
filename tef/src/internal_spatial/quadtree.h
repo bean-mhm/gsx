@@ -16,9 +16,6 @@ namespace tef::spatial
 {
 
     // Quadtree with a given capacity per tile
-    // Note: T must be copy constructible.
-    // Note: T must have a public field of type tef::math::vec2 named pos, representing the 2D
-    // position.
     template<typename T, u8 capacity>
         requires (capacity <= 255)
     class quadtree_t : public base_container_2d_t<T>

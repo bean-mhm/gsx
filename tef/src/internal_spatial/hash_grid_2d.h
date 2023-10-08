@@ -16,9 +16,6 @@ namespace tef::spatial
 {
 
     // 2D hash grid container
-    // Note: T must be copy constructible.
-    // Note: T must have a public field of type tef::math::vec2 named pos, representing the 2D
-    // position.
     template<typename T>
     class hash_grid_2d_t : public base_container_2d_t<T>
     {

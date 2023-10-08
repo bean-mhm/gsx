@@ -20,6 +20,10 @@ struct test3
 namespace tef::spatial
 {
 
+    // Base class for a 2D container
+    // Note: T must be copy constructible.
+    // Note: T must have a public field of type tef::math::vec2 named pos, representing the 2D
+    // position.
     template<typename T>
     class base_container_2d_t
     {
@@ -39,6 +43,10 @@ namespace tef::spatial
 
     };
 
+    // Base class for a 3D container
+    // Note: T must be copy constructible.
+    // Note: T must have a public field of type tef::math::vec3 named pos, representing the 3D
+    // position.
     template<typename T>
     class base_container_3d_t
     {
