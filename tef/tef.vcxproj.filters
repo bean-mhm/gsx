@@ -149,5 +149,11 @@
     <ClInclude Include="src\internal_spatial\base_container.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\internal_spatial\linear_2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\internal_spatial\linear_3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
