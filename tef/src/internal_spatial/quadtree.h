@@ -21,7 +21,7 @@ namespace tef::spatial
     // position.
     template<typename T, u8 capacity>
         requires (capacity <= 255)
-    class quadtree_t : public base_container_t<T>
+    class quadtree_t : public base_container_2d_t<T>
     {
     public:
         quadtree_t(const math::bounds2& bounds)
@@ -106,7 +106,7 @@ namespace tef::spatial
             return false;
         }
 
-        void query(const math::bounds2& range, std::vector<T*>& out_elements)
+        virtual void query(const math::bounds2& range, std::vector<T*>& out_elements) override
         {
             std::stack<quadtree_t*> stack({ this });
             while (!stack.empty())
@@ -143,6 +143,7 @@ namespace tef::spatial
                 quadtree_t* q = stack.top();
                 stack.pop();
 
+                out_elements.reserve(out_elements.size() + q->elements.size());
                 for (u8 i = 0; i < q->elements.size(); i++)
                 {
                     out_elements.push_back(&q->elements[i]);
@@ -166,6 +167,7 @@ namespace tef::spatial
                 const quadtree_t* q = stack.top();
                 stack.pop();
 
+                out_elements.reserve(out_elements.size() + q->elements.size());
                 for (u8 i = 0; i < q->elements.size(); i++)
                 {
                     out_elements.push_back(q->elements[i]);
