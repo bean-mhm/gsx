@@ -1,5 +1,8 @@
 #pragma once
 
+// STD
+#include <utility>
+
 // Internal
 #include "base_container.h"
 #include "../internal_common/all.h"
@@ -20,6 +23,14 @@ namespace tef::spatial
         std::vector<T> vec;
 
         linear_3d_t() = default;
+
+        linear_3d_t(const std::vector<T>& vec)
+            : vec(vec)
+        {}
+
+        linear_3d_t(std::vector<T>&& vec)
+            : vec(std::move(vec))
+        {}
 
         virtual usize size() const override
         {
