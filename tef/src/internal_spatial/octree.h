@@ -21,7 +21,7 @@ namespace tef::spatial
     // position.
     template<typename T, u8 capacity>
         requires (capacity <= 255)
-    class octree_t : public base_container_t<T>
+    class octree_t : public base_container_3d_t<T>
     {
     public:
         octree_t(const math::bounds3& bounds)
@@ -114,7 +114,7 @@ namespace tef::spatial
             return false;
         }
 
-        void query(const math::bounds3& range, std::vector<T*>& out_elements)
+        virtual void query(const math::bounds3& range, std::vector<T*>& out_elements) override
         {
             std::stack<octree_t*> stack({ this });
             while (!stack.empty())
@@ -155,6 +155,7 @@ namespace tef::spatial
                 octree_t* t = stack.top();
                 stack.pop();
 
+                out_elements.reserve(out_elements.size() + t->elements.size());
                 for (u8 i = 0; i < t->elements.size(); i++)
                 {
                     out_elements.push_back(&t->elements[i]);
@@ -182,6 +183,7 @@ namespace tef::spatial
                 const octree_t* t = stack.top();
                 stack.pop();
 
+                out_elements.reserve(out_elements.size() + t->elements.size());
                 for (u8 i = 0; i < t->elements.size(); i++)
                 {
                     out_elements.push_back(t->elements[i]);
