@@ -60,7 +60,7 @@ namespace tef::spatial
 
         virtual usize size() const override
         {
-            usize count;
+            usize count = 0;
             std::stack<const quadtree_t*> stack({ this });
             while (!stack.empty())
             {
