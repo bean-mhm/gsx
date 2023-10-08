@@ -43,6 +43,22 @@ namespace tef::spatial
             }
         }
 
+        virtual void query(
+            const math::vec3& center,
+            f32 radius,
+            std::vector<T*>& out_elements
+        ) override
+        {
+            const f32 radius_squared = radius * radius;
+            for (auto& element : vec)
+            {
+                if (math::distance_squared(center, element.pos) <= radius_squared)
+                {
+                    out_elements.push_back(&element);
+                }
+            }
+        }
+
         virtual void query_all(std::vector<T*>& out_elements) override
         {
             out_elements.reserve(out_elements.size() + vec.size());
