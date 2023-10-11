@@ -90,6 +90,42 @@ namespace tef::spatial
             }
         }
 
+        virtual void query(const math::circle_t& range, std::vector<T*>& out_elements) override
+        {
+            const math::bounds2 range_b = range.bounds();
+
+            math::ivec2 start_cell(math::floor(cell_ratio * (range_b.pmin - _bounds.pmin)));
+            start_cell.x = math::clamp(start_cell.x, 0, _resolution.x - 1);
+            start_cell.y = math::clamp(start_cell.y, 0, _resolution.y - 1);
+
+            math::ivec2 end_cell(math::floor(cell_ratio * (range_b.pmax - _bounds.pmin)));
+            end_cell.x = math::clamp(end_cell.x, 0, _resolution.x - 1);
+            end_cell.y = math::clamp(end_cell.y, 0, _resolution.y - 1);
+
+            for (usize y = start_cell.y; y <= end_cell.y; y++)
+            {
+                for (usize x = start_cell.x; x <= end_cell.x; x++)
+                {
+                    math::bounds2 cell_bounds(
+                        _bounds.pmin + math::vec2(x, y) / cell_ratio,
+                        _bounds.pmin + math::vec2(x + 1, y + 1) / cell_ratio
+                    );
+
+                    if (!math::overlaps(cell_bounds, range))
+                        continue;
+
+                    usize container_index = y * (usize)_resolution.x + x;
+                    for (auto& element : containers[container_index])
+                    {
+                        if (math::inside(element.pos, range))
+                        {
+                            out_elements.push_back(&element);
+                        }
+                    }
+                }
+            }
+        }
+
         virtual void query_all(std::vector<T*>& out_elements) override
         {
             for (auto& container : containers)
