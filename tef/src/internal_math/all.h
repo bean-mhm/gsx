@@ -6,6 +6,8 @@
 #include "quaternion.h"
 #include "bounds2.h"
 #include "bounds3.h"
+#include "circle.h"
+#include "sphere.h"
 #include "ray.h"
 #include "matrix.h"
 #include "transform.h"
