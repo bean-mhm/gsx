@@ -97,9 +97,11 @@
     <ClCompile Include="src\internal_ecs\event.cpp" />
     <ClCompile Include="src\internal_ecs\system.cpp" />
     <ClCompile Include="src\internal_ecs\world.cpp" />
+    <ClCompile Include="src\internal_math\circle.cpp" />
     <ClCompile Include="src\internal_math\prng.cpp" />
     <ClCompile Include="src\internal_math\quaternion.cpp" />
     <ClCompile Include="src\internal_math\ray.cpp" />
+    <ClCompile Include="src\internal_math\sphere.cpp" />
     <ClCompile Include="src\internal_math\transform.cpp" />
     <ClCompile Include="src\internal_misc\worker.cpp" />
     <ClCompile Include="src\internal_str\utils.cpp" />
@@ -115,6 +117,8 @@
     <ClInclude Include="src\internal_ecs\system.h" />
     <ClInclude Include="src\internal_ecs\world.h" />
     <ClInclude Include="src\internal_math\all.h" />
+    <ClInclude Include="src\internal_math\circle.h" />
+    <ClInclude Include="src\internal_math\sphere.h" />
     <ClInclude Include="src\internal_misc\all.h" />
     <ClInclude Include="src\internal_spatial\all.h" />
     <ClInclude Include="src\internal_spatial\base_container.h" />

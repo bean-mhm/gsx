@@ -67,6 +67,18 @@ namespace tef::math
             return pmax;
         }
 
+        // this == bounds
+        constexpr bool operator==(const base_bounds3<T>& b) const
+        {
+            return pmin == b.pmin && pmax == b.pmax;
+        }
+
+        // this != bounds
+        constexpr bool operator!=(const base_bounds3<T>& b) const
+        {
+            return pmin != b.pmin || pmax != b.pmax;
+        }
+
         // The coordinates of one of the eight corners of the bounding box
         constexpr base_vec3<T> corner(i32 i) const
         {
@@ -130,25 +142,6 @@ namespace tef::math
             if (pmax.y > pmin.y) o.y /= pmax.y - pmin.y;
             if (pmax.z > pmin.z) o.z /= pmax.z - pmin.z;
             return o;
-        }
-
-        // The center and radius of a sphere that bounds the bounding box
-        void bounding_sphere(base_vec3<T>& center, f32& radius) const
-        {
-            center = (pmin + pmax) / 2;
-            radius = inside(center, *this) ? distance(center, pmax) : 0;
-        }
-
-        // this == bounds
-        constexpr bool operator==(const base_bounds3<T>& b) const
-        {
-            return pmin == b.pmin && pmax == b.pmax;
-        }
-
-        // this != bounds
-        constexpr bool operator!=(const base_bounds3<T>& b) const
-        {
-            return pmin != b.pmin || pmax != b.pmax;
         }
 
     };

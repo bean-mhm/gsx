@@ -70,6 +70,18 @@ namespace tef::math
             return pmax;
         }
 
+        // this == bounds
+        constexpr bool operator==(const base_bounds2<T>& b) const
+        {
+            return pmin == b.pmin && pmax == b.pmax;
+        }
+
+        // this != bounds
+        constexpr bool operator!=(const base_bounds2<T>& b) const
+        {
+            return pmin != b.pmin || pmax != b.pmax;
+        }
+
         // The vector along the box diagonal from the minimum point to the maximum point
         constexpr base_vec2<T> diagonal() const
         {
@@ -111,25 +123,6 @@ namespace tef::math
             if (pmax.x > pmin.x) o.x /= pmax.x - pmin.x;
             if (pmax.y > pmin.y) o.y /= pmax.y - pmin.y;
             return o;
-        }
-
-        // The center and radius of a circle that bounds the bounding box
-        void bounding_circle(base_vec2<T>& center, f32& radius) const
-        {
-            center = (pmin + pmax) / 2;
-            radius = inside(center, *this) ? distance(center, pmax) : 0;
-        }
-
-        // this == bounds
-        constexpr bool operator==(const base_bounds2<T>& b) const
-        {
-            return pmin == b.pmin && pmax == b.pmax;
-        }
-
-        // this != bounds
-        constexpr bool operator!=(const base_bounds2<T>& b) const
-        {
-            return pmin != b.pmin || pmax != b.pmax;
         }
 
     };
