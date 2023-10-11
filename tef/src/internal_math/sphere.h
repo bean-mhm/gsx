@@ -47,8 +47,8 @@ namespace tef::math
             return center != s.center || radius != s.radius;
         }
 
-        // A point on the sphere at a given angle
-        vec2 at(f32 angle) const;
+        // A point on the sphere at given theta and phi angles
+        vec3 at(f32 theta, f32 phi) const;
 
         // Bounding box of the sphere
         constexpr bounds3 bounds() const

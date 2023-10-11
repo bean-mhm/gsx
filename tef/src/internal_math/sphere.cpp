@@ -23,9 +23,14 @@ namespace tef::math
         return os;
     }
 
-    vec2 sphere_t::at(f32 angle) const
+    vec3 sphere_t::at(f32 theta, f32 phi) const
     {
-        return center + radius * vec2(math::cos(angle), math::sin(angle));
+        f32 sin_theta = math::sin(theta);
+        return center + radius * vec3(
+            sin_theta * math::cos(phi),
+            sin_theta * math::sin(phi),
+            math::cos(theta)
+        );
     }
 
 }
