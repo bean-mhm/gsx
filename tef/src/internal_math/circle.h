@@ -18,6 +18,10 @@ namespace tef::math
 
         // Constructors
 
+        constexpr circle_t()
+            : center(vec2(0)), radius(1)
+        {}
+
         constexpr circle_t(const vec2& center, f32 radius)
             : center(center), radius(radius)
         {}

@@ -18,6 +18,10 @@ namespace tef::math
 
         // Constructors
 
+        constexpr sphere_t()
+            : center(vec3(0)), radius(1)
+        {}
+
         constexpr sphere_t(const vec3& center, f32 radius)
             : center(center), radius(radius)
         {}
