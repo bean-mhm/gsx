@@ -25,7 +25,7 @@ namespace tef::math
 
     vec3 sphere_t::at(f32 theta, f32 phi) const
     {
-        f32 sin_theta = math::sin(theta);
+        const f32 sin_theta = math::sin(theta);
         return center + radius * vec3(
             sin_theta * math::cos(phi),
             sin_theta * math::sin(phi),
