@@ -124,6 +124,11 @@ namespace tef::math
         return std::log2(x);
     }
 
+    inline f32 squared(f32 x)
+    {
+        return x * x;
+    }
+
     inline f32 sqrt(f32 x)
     {
         return std::sqrt(x);
