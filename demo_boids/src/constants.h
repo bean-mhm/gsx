@@ -102,10 +102,10 @@ static const GLuint plane_elements[] = {
 
 static constexpr math::vec2 boids_min_pos(-.9f, -.9f);
 static constexpr math::vec2 boids_max_pos(.9f, .9f);
-static constexpr f32 boids_speed = .6f;
+static constexpr f32 boids_speed = .5f;
 static constexpr f32 boids_attention = .2f;
 static constexpr f32 boids_attention_sqr = boids_attention * boids_attention;
-static constexpr f32 boids_size = .02f;
+static constexpr f32 boids_size = .03f;
 
 static const char* boids_src_vert = R"glsl(
     #version 330 core
@@ -277,9 +277,9 @@ static const char* boids_src_frag = R"glsl(
         // Render
         float dist = sd_boid(g_uv);
         vec3 col = mix(
-            vec3(.017, .104, .33),
-            vec3(.2, .616, 1),
-            remap01(dist, -.32 + px2uv, -.32)
+            vec3(0, .1, .33),
+            vec3(.1, .6, 1),
+            remap01(dist, -.34 + px2uv, -.34)
         );
 
         // OETF
