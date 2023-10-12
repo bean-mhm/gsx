@@ -36,9 +36,9 @@ void app_t::run()
     // Add boids
     spatial::grid_2d_t<c_boid> boids(
         math::bounds2(boids_min_pos, boids_max_pos),
-        math::ivec2(8)
+        math::ivec2(6)
     );
-    for (usize i = 0; i < 500; i++)
+    for (usize i = 0; i < 200; i++)
     {
         c_boid boid;
 
