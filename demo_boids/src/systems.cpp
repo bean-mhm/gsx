@@ -47,7 +47,7 @@ s_boids::s_boids(
     const std::string& name,
     i32 update_order,
     bool run_on_caller_thread,
-    spatial::grid_2d_t<c_boid>& boids
+    spatial::base_container_2d_t<c_boid>& boids
 )
     : ecs::base_system_t(name, update_order, run_on_caller_thread),
     boids(boids)
@@ -174,7 +174,7 @@ s_rendering::s_rendering(
     i32 update_order,
     bool run_on_caller_thread,
     GLFWwindow* window,
-    spatial::grid_2d_t<c_boid>& boids
+    spatial::base_container_2d_t<c_boid>& boids
 )
     : ecs::base_system_t(name, update_order, run_on_caller_thread), window(window),
     boids(boids)

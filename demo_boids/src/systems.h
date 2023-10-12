@@ -10,13 +10,13 @@
 // Boid simulation system
 struct s_boids : ecs::base_system_t
 {
-    spatial::grid_2d_t<c_boid>& boids;
+    spatial::base_container_2d_t<c_boid>& boids;
 
     s_boids(
         const std::string& name,
         i32 update_order,
         bool run_on_caller_thread,
-        spatial::grid_2d_t<c_boid>& boids
+        spatial::base_container_2d_t<c_boid>& boids
     );
     virtual ~s_boids() = default;
 
@@ -26,14 +26,14 @@ struct s_boids : ecs::base_system_t
 // OpenGL rendering system
 struct s_rendering : ecs::base_system_t
 {
-    spatial::grid_2d_t<c_boid>& boids;
+    spatial::base_container_2d_t<c_boid>& boids;
 
     s_rendering(
         const std::string& name,
         i32 update_order,
         bool run_on_caller_thread,
         GLFWwindow* window,
-        spatial::grid_2d_t<c_boid>& boids
+        spatial::base_container_2d_t<c_boid>& boids
     );
     virtual ~s_rendering() = default;
 
