@@ -90,9 +90,11 @@
     <ClCompile Include="include\tef\internal_ecs\log.cpp" />
     <ClCompile Include="include\tef\internal_ecs\system.cpp" />
     <ClCompile Include="include\tef\internal_ecs\world.cpp" />
+    <ClCompile Include="include\tef\internal_math\circle.cpp" />
     <ClCompile Include="include\tef\internal_math\prng.cpp" />
     <ClCompile Include="include\tef\internal_math\quaternion.cpp" />
     <ClCompile Include="include\tef\internal_math\ray.cpp" />
+    <ClCompile Include="include\tef\internal_math\sphere.cpp" />
     <ClCompile Include="include\tef\internal_math\transform.cpp" />
     <ClCompile Include="include\tef\internal_misc\utils.cpp" />
     <ClCompile Include="include\tef\internal_misc\worker.cpp" />
@@ -113,10 +115,12 @@
     <ClInclude Include="include\tef\internal_math\all.h" />
     <ClInclude Include="include\tef\internal_math\bounds2.h" />
     <ClInclude Include="include\tef\internal_math\bounds3.h" />
+    <ClInclude Include="include\tef\internal_math\circle.h" />
     <ClInclude Include="include\tef\internal_math\matrix.h" />
     <ClInclude Include="include\tef\internal_math\prng.h" />
     <ClInclude Include="include\tef\internal_math\quaternion.h" />
     <ClInclude Include="include\tef\internal_math\ray.h" />
+    <ClInclude Include="include\tef\internal_math\sphere.h" />
     <ClInclude Include="include\tef\internal_math\transform.h" />
     <ClInclude Include="include\tef\internal_math\utils.h" />
     <ClInclude Include="include\tef\internal_math\vec2.h" />
@@ -127,8 +131,11 @@
     <ClInclude Include="include\tef\internal_misc\utils.h" />
     <ClInclude Include="include\tef\internal_misc\worker.h" />
     <ClInclude Include="include\tef\internal_spatial\all.h" />
+    <ClInclude Include="include\tef\internal_spatial\base_container.h" />
     <ClInclude Include="include\tef\internal_spatial\grid_2d.h" />
     <ClInclude Include="include\tef\internal_spatial\hash_grid_2d.h" />
+    <ClInclude Include="include\tef\internal_spatial\linear_2d.h" />
+    <ClInclude Include="include\tef\internal_spatial\linear_3d.h" />
     <ClInclude Include="include\tef\internal_spatial\octree.h" />
     <ClInclude Include="include\tef\internal_spatial\quadtree.h" />
     <ClInclude Include="include\tef\internal_str\all.h" />
