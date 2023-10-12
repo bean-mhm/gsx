@@ -59,19 +59,19 @@ namespace tef::math
     };
 
     // Check if a point is inside a circle
-    constexpr bool inside(const vec2& p, const circle_t& c)
+    inline bool inside(const vec2& p, const circle_t& c)
     {
         return distance_squared(p, c.center) <= squared(c.radius);
     }
 
     // Check if two circles overlap
-    constexpr bool overlaps(const circle_t& c1, const circle_t& c2)
+    inline bool overlaps(const circle_t& c1, const circle_t& c2)
     {
         return distance_squared(c1.center, c2.center) <= squared(c1.radius + c2.radius);
     }
 
     // Check if a circle and a bounding box overlap
-    constexpr bool overlaps(const circle_t& c, const bounds2& b)
+    inline bool overlaps(const circle_t& c, const bounds2& b)
     {
         return inside(b.pmin, c)
             || inside(vec2(b.pmax.x, b.pmin.y), c)
@@ -80,7 +80,7 @@ namespace tef::math
     }
 
     // Check if a circle and a bounding box overlap
-    constexpr bool overlaps(const bounds2& b, const circle_t& c)
+    inline bool overlaps(const bounds2& b, const circle_t& c)
     {
         return overlaps(c, b);
     }

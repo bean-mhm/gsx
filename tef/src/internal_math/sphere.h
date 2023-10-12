@@ -59,19 +59,19 @@ namespace tef::math
     };
 
     // Check if a point is inside a sphere
-    constexpr bool inside(const vec3& p, const sphere_t& s)
+    inline bool inside(const vec3& p, const sphere_t& s)
     {
         return distance_squared(p, s.center) <= squared(s.radius);
     }
 
     // Check if two spheres overlap
-    constexpr bool overlaps(const sphere_t& s1, const sphere_t& s2)
+    inline bool overlaps(const sphere_t& s1, const sphere_t& s2)
     {
         return distance_squared(s1.center, s2.center) <= squared(s1.radius + s2.radius);
     }
 
     // Check if a sphere and a bounding box overlap
-    constexpr bool overlaps(const sphere_t& s, const bounds3& b)
+    inline bool overlaps(const sphere_t& s, const bounds3& b)
     {
         return inside(b.pmin, s)
             || inside(vec3(b.pmax.x, b.pmin.y, b.pmin.z), s)
@@ -84,7 +84,7 @@ namespace tef::math
     }
 
     // Check if a sphere and a bounding box overlap
-    constexpr bool overlaps(const bounds3& b, const sphere_t& s)
+    inline bool overlaps(const bounds3& b, const sphere_t& s)
     {
         return overlaps(s, b);
     }
