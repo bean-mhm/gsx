@@ -73,10 +73,10 @@ namespace tef::math
     // Check if a circle and a bounding box overlap
     constexpr bool overlaps(const circle_t& c, const bounds2& b)
     {
-        return inside(vec2(b.pmin.x, b.pmin.y), c)
+        return inside(b.pmin, c)
             || inside(vec2(b.pmax.x, b.pmin.y), c)
             || inside(vec2(b.pmin.x, b.pmax.y), c)
-            || inside(vec2(b.pmax.x, b.pmax.y), c);
+            || inside(b.pmax, c);
     }
 
     // Check if a circle and a bounding box overlap

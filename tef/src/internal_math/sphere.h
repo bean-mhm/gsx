@@ -73,14 +73,14 @@ namespace tef::math
     // Check if a sphere and a bounding box overlap
     constexpr bool overlaps(const sphere_t& s, const bounds3& b)
     {
-        return inside(vec3(b.pmin.x, b.pmin.y, b.pmin.z), s)
+        return inside(b.pmin, s)
             || inside(vec3(b.pmax.x, b.pmin.y, b.pmin.z), s)
             || inside(vec3(b.pmin.x, b.pmax.y, b.pmin.z), s)
             || inside(vec3(b.pmax.x, b.pmax.y, b.pmin.z), s)
             || inside(vec3(b.pmin.x, b.pmin.y, b.pmax.z), s)
             || inside(vec3(b.pmax.x, b.pmin.y, b.pmax.z), s)
             || inside(vec3(b.pmin.x, b.pmax.y, b.pmax.z), s)
-            || inside(vec3(b.pmax.x, b.pmax.y, b.pmax.z), s);
+            || inside(b.pmax, s);
     }
 
     // Check if a sphere and a bounding box overlap
