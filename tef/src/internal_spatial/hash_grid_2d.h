@@ -84,6 +84,43 @@ namespace tef::spatial
             }
         }
 
+        virtual void query(const math::circle_t& range, std::vector<T*>& out_elements) override
+        {
+            std::unordered_set<usize> indices;
+
+            const math::bounds2 range_b = range.bounds();
+            math::ivec2 start_cell(math::floor(range_b.pmin / _cell_size));
+            math::ivec2 end_cell(math::floor(range_b.pmax / _cell_size));
+
+            for (i32 y = start_cell.y; y <= end_cell.y; y++)
+            {
+                for (i32 x = start_cell.x; x <= end_cell.x; x++)
+                {
+                    math::bounds2 cell_bounds(
+                        math::vec2(x, y) * _cell_size,
+                        math::vec2(x + 1, y + 1) * _cell_size
+                    );
+
+                    if (!math::overlaps(cell_bounds, range))
+                        continue;
+
+                    usize container_index = get_container_index(math::ivec2(x, y));
+                    indices.insert(container_index);
+                }
+            }
+
+            for (int index : indices)
+            {
+                for (auto& element : containers[index])
+                {
+                    if (math::inside(element.pos, range))
+                    {
+                        out_elements.push_back(&element);
+                    }
+                }
+            }
+        }
+
         virtual void query_all(std::vector<T*>& out_elements) override
         {
             for (auto& container : containers)
