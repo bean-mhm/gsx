@@ -132,6 +132,35 @@ namespace tef::spatial
             }
         }
 
+        virtual void query(const math::circle_t& range, std::vector<T*>& out_elements) override
+        {
+            std::stack<quadtree_t*> stack({ this });
+            while (!stack.empty())
+            {
+                quadtree_t* q = stack.top();
+                stack.pop();
+
+                if (!math::overlaps(q->_bounds, range))
+                    continue;
+
+                for (u8 i = 0; i < q->elements.size(); i++)
+                {
+                    if (math::inside(q->elements[i].pos, range))
+                    {
+                        out_elements.push_back(&q->elements[i]);
+                    }
+                }
+
+                if (q->divided)
+                {
+                    stack.push(q->bottom_left.get());
+                    stack.push(q->bottom_right.get());
+                    stack.push(q->top_left.get());
+                    stack.push(q->top_right.get());
+                }
+            }
+        }
+
         virtual void query_all(std::vector<T*>& out_elements) override
         {
             std::stack<quadtree_t*> stack({ this });

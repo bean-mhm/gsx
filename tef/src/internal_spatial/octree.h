@@ -144,6 +144,39 @@ namespace tef::spatial
             }
         }
 
+        virtual void query(const math::sphere_t& range, std::vector<T*>& out_elements) override
+        {
+            std::stack<octree_t*> stack({ this });
+            while (!stack.empty())
+            {
+                octree_t* t = stack.top();
+                stack.pop();
+
+                if (!math::overlaps(t->_bounds, range))
+                    continue;
+
+                for (u8 i = 0; i < t->elements.size(); i++)
+                {
+                    if (math::inside(t->elements[i].pos, range))
+                    {
+                        out_elements.push_back(&t->elements[i]);
+                    }
+                }
+
+                if (t->divided)
+                {
+                    stack.push(t->back_bottom_left.get());
+                    stack.push(t->back_bottom_right.get());
+                    stack.push(t->back_top_left.get());
+                    stack.push(t->back_top_right.get());
+                    stack.push(t->front_bottom_left.get());
+                    stack.push(t->front_bottom_right.get());
+                    stack.push(t->front_top_left.get());
+                    stack.push(t->front_top_right.get());
+                }
+            }
+        }
+
         virtual void query_all(std::vector<T*>& out_elements) override
         {
             std::stack<octree_t*> stack({ this });
