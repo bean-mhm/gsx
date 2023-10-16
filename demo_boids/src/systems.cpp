@@ -71,7 +71,7 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
         // Query the neighbors
         std::vector<c_boid*> neighbors;
         boids.query(
-            bounds2(boid->pos - boids_attention, boid->pos + boids_attention),
+            circle_t(boid->pos, boids_attention),
             neighbors
         );
 
