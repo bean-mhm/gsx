@@ -163,9 +163,7 @@ namespace tef::ecs
             f32 time_left = min_dt - misc::elapsed_sec(time_last_iter);
             if (time_left > 0)
             {
-                std::this_thread::sleep_for(
-                    std::chrono::nanoseconds((u64)(time_left * 1e9f))
-                );
+                misc::sleep(time_left);
             }
 
             // Iteration info
