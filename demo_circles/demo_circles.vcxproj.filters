@@ -27,43 +27,43 @@
     <ClCompile Include="src\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\tef\internal_ecs\event.cpp">
+    <ClCompile Include="include\ecx\internal_ecs\event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\tef\internal_ecs\log.cpp">
+    <ClCompile Include="include\ecx\internal_ecs\log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\tef\internal_ecs\system.cpp">
+    <ClCompile Include="include\ecx\internal_ecs\system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\tef\internal_ecs\world.cpp">
+    <ClCompile Include="include\ecx\internal_ecs\world.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\tef\internal_math\prng.cpp">
+    <ClCompile Include="include\ecx\internal_math\prng.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\tef\internal_math\quaternion.cpp">
+    <ClCompile Include="include\ecx\internal_math\quaternion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\tef\internal_math\ray.cpp">
+    <ClCompile Include="include\ecx\internal_math\ray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\tef\internal_math\transform.cpp">
+    <ClCompile Include="include\ecx\internal_math\transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\tef\internal_misc\utils.cpp">
+    <ClCompile Include="include\ecx\internal_misc\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\tef\internal_misc\worker.cpp">
+    <ClCompile Include="include\ecx\internal_misc\worker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\tef\internal_str\utils.cpp">
+    <ClCompile Include="include\ecx\internal_str\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\tef\internal_math\circle.cpp">
+    <ClCompile Include="include\ecx\internal_math\circle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\tef\internal_math\sphere.cpp">
+    <ClCompile Include="include\ecx\internal_math\sphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,115 +80,115 @@
     <ClInclude Include="src\app.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_common\all.h">
+    <ClInclude Include="include\ecx\internal_common\all.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_common\macros.h">
+    <ClInclude Include="include\ecx\internal_common\macros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_common\types.h">
+    <ClInclude Include="include\ecx\internal_common\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_ecs\all.h">
+    <ClInclude Include="include\ecx\internal_ecs\all.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_ecs\event.h">
+    <ClInclude Include="include\ecx\internal_ecs\event.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_ecs\log.h">
+    <ClInclude Include="include\ecx\internal_ecs\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_ecs\system.h">
+    <ClInclude Include="include\ecx\internal_ecs\system.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_ecs\world.h">
+    <ClInclude Include="include\ecx\internal_ecs\world.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_math\all.h">
+    <ClInclude Include="include\ecx\internal_math\all.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_math\bounds2.h">
+    <ClInclude Include="include\ecx\internal_math\bounds2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_math\bounds3.h">
+    <ClInclude Include="include\ecx\internal_math\bounds3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_math\matrix.h">
+    <ClInclude Include="include\ecx\internal_math\matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_math\prng.h">
+    <ClInclude Include="include\ecx\internal_math\prng.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_math\quaternion.h">
+    <ClInclude Include="include\ecx\internal_math\quaternion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_math\ray.h">
+    <ClInclude Include="include\ecx\internal_math\ray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_math\transform.h">
+    <ClInclude Include="include\ecx\internal_math\transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_math\utils.h">
+    <ClInclude Include="include\ecx\internal_math\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_math\vec2.h">
+    <ClInclude Include="include\ecx\internal_math\vec2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_math\vec3.h">
+    <ClInclude Include="include\ecx\internal_math\vec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_math\vec4.h">
+    <ClInclude Include="include\ecx\internal_math\vec4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_misc\all.h">
+    <ClInclude Include="include\ecx\internal_misc\all.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_misc\fixed_vector.h">
+    <ClInclude Include="include\ecx\internal_misc\fixed_vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_misc\utils.h">
+    <ClInclude Include="include\ecx\internal_misc\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_misc\worker.h">
+    <ClInclude Include="include\ecx\internal_misc\worker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_spatial\all.h">
+    <ClInclude Include="include\ecx\internal_spatial\all.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_spatial\grid_2d.h">
+    <ClInclude Include="include\ecx\internal_spatial\grid_2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_spatial\hash_grid_2d.h">
+    <ClInclude Include="include\ecx\internal_spatial\hash_grid_2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_spatial\octree.h">
+    <ClInclude Include="include\ecx\internal_spatial\octree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_spatial\quadtree.h">
+    <ClInclude Include="include\ecx\internal_spatial\quadtree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_str\all.h">
+    <ClInclude Include="include\ecx\internal_str\all.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_str\utils.h">
+    <ClInclude Include="include\ecx\internal_str\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\tef.h">
+    <ClInclude Include="include\ecx\ecx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_math\circle.h">
+    <ClInclude Include="include\ecx\internal_math\circle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_math\sphere.h">
+    <ClInclude Include="include\ecx\internal_math\sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_spatial\base_container.h">
+    <ClInclude Include="include\ecx\internal_spatial\base_container.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_spatial\linear_2d.h">
+    <ClInclude Include="include\ecx\internal_spatial\linear_2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\tef\internal_spatial\linear_3d.h">
+    <ClInclude Include="include\ecx\internal_spatial\linear_3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

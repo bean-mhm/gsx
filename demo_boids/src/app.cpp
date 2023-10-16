@@ -7,8 +7,8 @@
 #include <cmath>
 #include <cstdint>
 
-// TEF
-#include "tef/tef.h"
+// ECX
+#include "ecx/ecx.h"
 
 // Internal
 #include "constants.h"
