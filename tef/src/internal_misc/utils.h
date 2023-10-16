@@ -3,6 +3,7 @@
 // STD
 #include <vector>
 #include <chrono>
+#include <thread>
 #include <cstdint>
 
 // Internal
@@ -48,6 +49,14 @@ namespace tef::misc
     bool vec_contains(const std::vector<T>& vec, const T& value)
     {
         return vec_find_index(vec, value) > -1;
+    }
+
+    // Sleep using std::this_thread::sleep_for().
+    inline void sleep(f32 seconds)
+    {
+        std::this_thread::sleep_for(
+            std::chrono::nanoseconds((u64)(seconds * 1e9f))
+        );
     }
 
     f32 elapsed_sec(std::chrono::steady_clock::time_point t_start);
