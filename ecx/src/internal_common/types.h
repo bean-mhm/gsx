@@ -3,7 +3,7 @@
 // STD
 #include <cstdint>
 
-namespace tef::common
+namespace ecx::common
 {
 
     using i8 = int8_t;

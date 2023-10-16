@@ -283,6 +283,7 @@ namespace ecx::math
                     r(row, col) = (*this)(row, col);
                 }
             }
+            return r;
         }
 
         // Upper-left n x n sub-matrix
@@ -298,6 +299,7 @@ namespace ecx::math
                     r(row, col) = (*this)(row, col);
                 }
             }
+            return r;
         }
 
         // Number of rows

@@ -39,6 +39,9 @@
     <ClCompile Include="include\ecx\internal_ecs\world.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\ecx\internal_math\circle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="include\ecx\internal_math\prng.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -46,6 +49,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\ecx\internal_math\ray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\ecx\internal_math\sphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\ecx\internal_math\transform.cpp">
@@ -60,33 +66,9 @@
     <ClCompile Include="include\ecx\internal_str\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\ecx\internal_math\circle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\ecx\internal_math\sphere.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\GLFW\glfw3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GLFW\glfw3native.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\app.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GL\eglew.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GL\glew.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GL\glxew.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\GL\wglew.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\gl_utils.h">
@@ -134,6 +116,9 @@
     <ClInclude Include="include\ecx\internal_math\bounds3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\ecx\internal_math\circle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\ecx\internal_math\matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -144,6 +129,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ecx\internal_math\ray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ecx\internal_math\sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ecx\internal_math\transform.h">
@@ -176,10 +164,19 @@
     <ClInclude Include="include\ecx\internal_spatial\all.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\ecx\internal_spatial\base_container.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="include\ecx\internal_spatial\grid_2d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ecx\internal_spatial\hash_grid_2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ecx\internal_spatial\linear_2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ecx\internal_spatial\linear_3d.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ecx\internal_spatial\octree.h">
@@ -197,19 +194,22 @@
     <ClInclude Include="include\ecx\ecx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ecx\internal_math\circle.h">
+    <ClInclude Include="include\GL\eglew.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ecx\internal_math\sphere.h">
+    <ClInclude Include="include\GL\glew.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ecx\internal_spatial\base_container.h">
+    <ClInclude Include="include\GL\glxew.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ecx\internal_spatial\linear_2d.h">
+    <ClInclude Include="include\GL\wglew.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ecx\internal_spatial\linear_3d.h">
+    <ClInclude Include="include\GLFW\glfw3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GLFW\glfw3native.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

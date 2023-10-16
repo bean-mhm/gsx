@@ -121,6 +121,7 @@
     <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\ecx\ecx.h" />
     <ClInclude Include="include\ecx\internal_common\all.h" />
     <ClInclude Include="include\ecx\internal_common\macros.h" />
     <ClInclude Include="include\ecx\internal_common\types.h" />
@@ -157,7 +158,6 @@
     <ClInclude Include="include\ecx\internal_spatial\quadtree.h" />
     <ClInclude Include="include\ecx\internal_str\all.h" />
     <ClInclude Include="include\ecx\internal_str\utils.h" />
-    <ClInclude Include="include\ecx\ecx.h" />
     <ClInclude Include="src\app.h" />
     <ClInclude Include="src\components.h" />
     <ClInclude Include="src\systems.h" />
