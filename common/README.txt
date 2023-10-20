@@ -5,7 +5,7 @@ Here's an example of how you would create a symbolic link on Windows from within
 directory of a project to another directory:
 mklink /D ".\GLFW" "..\..\common\GLFW"
 
-We also use symbolic links to use ECX's source code in the demo projects. Here's an example of how
-you would create a symbolic link to ECX's source files on Windows from within the include
+We also use symbolic links to use GSX's source code in the demo projects. Here's an example of how
+you would create a symbolic link to GSX's source files on Windows from within the include
 directory of a project:
-mklink /D ".\ecx" "..\..\ecx\src"
+mklink /D ".\gsx" "..\..\gsx\src"

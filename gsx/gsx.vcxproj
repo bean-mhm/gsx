@@ -13,19 +13,19 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{eeecfde6-0c45-41c0-b364-f55ac431c722}</ProjectGuid>
-    <RootNamespace>tests</RootNamespace>
+    <ProjectGuid>{a58d4610-02f7-4bd6-8ede-4311d68972f0}</ProjectGuid>
+    <RootNamespace>gsx</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -58,12 +58,16 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <OpenMPSupport>
+      </OpenMPSupport>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -75,73 +79,73 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+      <OpenMPSupport>
+      </OpenMPSupport>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>NotSet</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="include\gsx\internal_ecs\event.cpp" />
-    <ClCompile Include="include\gsx\internal_ecs\log.cpp" />
-    <ClCompile Include="include\gsx\internal_ecs\system.cpp" />
-    <ClCompile Include="include\gsx\internal_ecs\world.cpp" />
-    <ClCompile Include="include\gsx\internal_math\circle.cpp" />
-    <ClCompile Include="include\gsx\internal_math\prng.cpp" />
-    <ClCompile Include="include\gsx\internal_math\quaternion.cpp" />
-    <ClCompile Include="include\gsx\internal_math\ray.cpp" />
-    <ClCompile Include="include\gsx\internal_math\sphere.cpp" />
-    <ClCompile Include="include\gsx\internal_math\transform.cpp" />
-    <ClCompile Include="include\gsx\internal_misc\utils.cpp" />
-    <ClCompile Include="include\gsx\internal_misc\worker.cpp" />
-    <ClCompile Include="include\gsx\internal_str\utils.cpp" />
-    <ClCompile Include="src\group_math.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\group_math.h" />
+    <ClInclude Include="src\internal_common\all.h" />
+    <ClInclude Include="src\internal_common\macros.h" />
+    <ClInclude Include="src\internal_common\types.h" />
+    <ClInclude Include="src\internal_ecs\all.h" />
+    <ClInclude Include="src\internal_ecs\event.h" />
+    <ClInclude Include="src\internal_ecs\log.h" />
+    <ClInclude Include="src\internal_ecs\system.h" />
+    <ClInclude Include="src\internal_ecs\world.h" />
+    <ClInclude Include="src\internal_math\all.h" />
+    <ClInclude Include="src\internal_math\bounds2.h" />
+    <ClInclude Include="src\internal_math\bounds3.h" />
+    <ClInclude Include="src\internal_math\circle.h" />
+    <ClInclude Include="src\internal_math\matrix.h" />
+    <ClInclude Include="src\internal_math\prng.h" />
+    <ClInclude Include="src\internal_math\quaternion.h" />
+    <ClInclude Include="src\internal_math\ray.h" />
+    <ClInclude Include="src\internal_math\sphere.h" />
+    <ClInclude Include="src\internal_math\transform.h" />
+    <ClInclude Include="src\internal_math\utils.h" />
+    <ClInclude Include="src\internal_math\vec2.h" />
+    <ClInclude Include="src\internal_math\vec3.h" />
+    <ClInclude Include="src\internal_math\vec4.h" />
+    <ClInclude Include="src\internal_misc\all.h" />
+    <ClInclude Include="src\internal_misc\fixed_vector.h" />
+    <ClInclude Include="src\internal_misc\utils.h" />
+    <ClInclude Include="src\internal_misc\worker.h" />
+    <ClInclude Include="src\internal_spatial\all.h" />
+    <ClInclude Include="src\internal_spatial\base_container.h" />
+    <ClInclude Include="src\internal_spatial\grid_2d.h" />
+    <ClInclude Include="src\internal_spatial\hash_grid_2d.h" />
+    <ClInclude Include="src\internal_spatial\linear_2d.h" />
+    <ClInclude Include="src\internal_spatial\linear_3d.h" />
+    <ClInclude Include="src\internal_spatial\octree.h" />
+    <ClInclude Include="src\internal_spatial\quadtree.h" />
+    <ClInclude Include="src\internal_str\all.h" />
+    <ClInclude Include="src\internal_str\utils.h" />
+    <ClInclude Include="src\gsx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\gsx\gsx.h" />
-    <ClInclude Include="include\gsx\internal_common\all.h" />
-    <ClInclude Include="include\gsx\internal_common\macros.h" />
-    <ClInclude Include="include\gsx\internal_common\types.h" />
-    <ClInclude Include="include\gsx\internal_ecs\all.h" />
-    <ClInclude Include="include\gsx\internal_ecs\event.h" />
-    <ClInclude Include="include\gsx\internal_ecs\log.h" />
-    <ClInclude Include="include\gsx\internal_ecs\system.h" />
-    <ClInclude Include="include\gsx\internal_ecs\world.h" />
-    <ClInclude Include="include\gsx\internal_math\all.h" />
-    <ClInclude Include="include\gsx\internal_math\bounds2.h" />
-    <ClInclude Include="include\gsx\internal_math\bounds3.h" />
-    <ClInclude Include="include\gsx\internal_math\circle.h" />
-    <ClInclude Include="include\gsx\internal_math\matrix.h" />
-    <ClInclude Include="include\gsx\internal_math\prng.h" />
-    <ClInclude Include="include\gsx\internal_math\quaternion.h" />
-    <ClInclude Include="include\gsx\internal_math\ray.h" />
-    <ClInclude Include="include\gsx\internal_math\sphere.h" />
-    <ClInclude Include="include\gsx\internal_math\transform.h" />
-    <ClInclude Include="include\gsx\internal_math\utils.h" />
-    <ClInclude Include="include\gsx\internal_math\vec2.h" />
-    <ClInclude Include="include\gsx\internal_math\vec3.h" />
-    <ClInclude Include="include\gsx\internal_math\vec4.h" />
-    <ClInclude Include="include\gsx\internal_misc\all.h" />
-    <ClInclude Include="include\gsx\internal_misc\fixed_vector.h" />
-    <ClInclude Include="include\gsx\internal_misc\utils.h" />
-    <ClInclude Include="include\gsx\internal_misc\worker.h" />
-    <ClInclude Include="include\gsx\internal_spatial\all.h" />
-    <ClInclude Include="include\gsx\internal_spatial\base_container.h" />
-    <ClInclude Include="include\gsx\internal_spatial\grid_2d.h" />
-    <ClInclude Include="include\gsx\internal_spatial\hash_grid_2d.h" />
-    <ClInclude Include="include\gsx\internal_spatial\linear_2d.h" />
-    <ClInclude Include="include\gsx\internal_spatial\linear_3d.h" />
-    <ClInclude Include="include\gsx\internal_spatial\octree.h" />
-    <ClInclude Include="include\gsx\internal_spatial\quadtree.h" />
-    <ClInclude Include="include\gsx\internal_str\all.h" />
-    <ClInclude Include="include\gsx\internal_str\utils.h" />
-    <ClInclude Include="src\test.h" />
+    <ClCompile Include="src\internal_ecs\event.cpp" />
+    <ClCompile Include="src\internal_ecs\log.cpp" />
+    <ClCompile Include="src\internal_ecs\system.cpp" />
+    <ClCompile Include="src\internal_ecs\world.cpp" />
+    <ClCompile Include="src\internal_math\circle.cpp" />
+    <ClCompile Include="src\internal_math\prng.cpp" />
+    <ClCompile Include="src\internal_math\quaternion.cpp" />
+    <ClCompile Include="src\internal_math\ray.cpp" />
+    <ClCompile Include="src\internal_math\sphere.cpp" />
+    <ClCompile Include="src\internal_math\transform.cpp" />
+    <ClCompile Include="src\internal_misc\utils.cpp" />
+    <ClCompile Include="src\internal_misc\worker.cpp" />
+    <ClCompile Include="src\internal_str\utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

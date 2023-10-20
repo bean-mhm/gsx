@@ -1,10 +1,10 @@
-# What is ECX?
+# What is GSX?
 
-ECX is a C++20 library providing many of the basic stuff needed to build a game, simulation, or any other type of graphics projects.
+GSX is a C++20 library providing many of the basic stuff needed to build a game, simulation, or any other type of graphics projects.
 
-# `ecx::ecs`
+# `gsx::ecs`
 
-ECX lets you quickly write systems and create a world that manages those systems.
+GSX lets you quickly write systems and create a world that manages those systems.
 
 ## Systems
 
@@ -20,7 +20,7 @@ A world holds a list of systems, and has a run() function that starts a loop and
 
 ## Parallelization
 
-ECX supports system parallelization with custom ordering. For example, the following can be easily done using update orders:
+GSX supports system parallelization with custom ordering. For example, the following can be easily done using update orders:
 
 1. Run System A and wait for it to finish.
 
@@ -30,11 +30,11 @@ ECX supports system parallelization with custom ordering. For example, the follo
 
 ## Loggers
 
-ECX lets you write your own custom logger for a world, while also providing some built-in loggers by default, including a CSV logger and a `std::ostream` logger, which can be used to output to the console `std::cout` or a file.
+GSX lets you write your own custom logger for a world, while also providing some built-in loggers by default, including a CSV logger and a `std::ostream` logger, which can be used to output to the console `std::cout` or a file.
 
-# `ecx::math`
+# `gsx::math`
 
-ECX provides a GLSL-like math and linear algebra library, useful for many graphical applications and simulations.
+GSX provides a GLSL-like math and linear algebra library, useful for many graphical applications and simulations.
 
 - Vectors
 - Quaternions
@@ -46,9 +46,9 @@ ECX provides a GLSL-like math and linear algebra library, useful for many graphi
 - Random Number Generators
 - ...
 
-# `ecx::spatial`
+# `gsx::spatial`
 
-You might often store a list of particles or objects, and later need to find the ones that are a certain distance away from a point (or closer), or inside a bounding box. A naive implementation of this usually results in a time complexity of O(N^2) which is far from ideal. For this, ECX provides spatial data structures, specifically designed to solve this issue by optimizing the way they store your objects.
+You might often store a list of particles or objects, and later need to find the ones that are a certain distance away from a point (or closer), or inside a bounding box. A naive implementation of this usually results in a time complexity of O(N^2) which is far from ideal. For this, GSX provides spatial data structures, specifically designed to solve this issue by optimizing the way they store your objects.
 
 - Base Container 2D/3D: An abstract class meant to store, query, and manage objects with spatial properties.
 - Grid 2D/3D
@@ -59,7 +59,7 @@ You might often store a list of particles or objects, and later need to find the
 
 # More
 
-ECX also provides other utility functions and classes that can be found in namespaces `ecx::str`, `ecx::misc`, and `ecx::common`.
+GSX also provides other utility functions and classes that can be found in namespaces `gsx::str`, `gsx::misc`, and `gsx::common`.
 
 # Demos
 

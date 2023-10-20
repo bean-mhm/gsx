@@ -3,8 +3,8 @@
 // STD
 #include <array>
 
-// ECX
-#include "ecx/ecx.h"
+// GSX
+#include "gsx/gsx.h"
 
 // Internal
 #include "test.h"

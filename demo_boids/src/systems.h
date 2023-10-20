@@ -1,7 +1,7 @@
 #pragma once
 
-// ECX
-#include "ecx/ecx.h"
+// GSX
+#include "gsx/gsx.h"
 
 // Internal
 #include "components.h"
