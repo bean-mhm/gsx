@@ -30,13 +30,6 @@ world.add_system(
 world.run();
 ```
 
-## Namespaces
-The `gsx` namespace will be used by default, because the `gsx.h` header contains this line:
-```cpp
-using namespace gsx;
-```
-You shouldn't worry about name conflicts, as there are no classes or functions directly inside `gsx`, but rather more namespaces. For example, `gsx::math`, `gsx::ecs`, etc.
-
 ## Systems
 
 A system is just an abstract class that defines what happens at the start, in each iteration, at the end, and when the system is triggered by an event.
@@ -180,6 +173,14 @@ The `gsx::common` namespace will be used by default, so you don't need a prefix 
 # More
 
 GSX provides other utility functions and classes that can be found in namespaces `gsx::str`, `gsx::misc`.
+
+# Namespaces
+
+The `gsx` namespace will be used by default, because the `gsx.h` header contains this line:
+```cpp
+using namespace gsx;
+```
+You shouldn't worry about name conflicts, as there are no classes or functions directly inside `gsx`, but rather more namespaces. For example, `gsx::math`, `gsx::ecs`, etc.
 
 # Demos
 
