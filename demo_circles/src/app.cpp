@@ -58,5 +58,5 @@ void app_t::run()
     }
 
     // Run
-    world.run(12, 10);
+    world.run(10, 8);
 }
