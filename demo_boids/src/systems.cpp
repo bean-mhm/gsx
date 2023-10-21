@@ -251,36 +251,36 @@ void s_rendering::on_start(ecs::world_t& world)
             2 * sizeof(f32), 0);
     }
 
-    // Boids VAO
-    glGenVertexArrays(1, &boids_vao);
+    // Boid VAO
+    glGenVertexArrays(1, &boid_vao);
 
-    // Boids VBO
-    glGenBuffers(1, &boids_vbo);
+    // Boid VBO
+    glGenBuffers(1, &boid_vbo);
 
-    // Boids shaders
-    make_shader(boids_vert_shader, "boids vertex shader", GL_VERTEX_SHADER, boid_src_vert);
-    make_shader(boids_geo_shader, "boids geometry shader", GL_GEOMETRY_SHADER, boid_src_geo);
-    make_shader(boids_frag_shader, "boids fragment shader", GL_FRAGMENT_SHADER, boid_src_frag);
+    // Boid shaders
+    make_shader(boid_vert_shader, "boid vertex shader", GL_VERTEX_SHADER, boid_src_vert);
+    make_shader(boid_geo_shader, "boid geometry shader", GL_GEOMETRY_SHADER, boid_src_geo);
+    make_shader(boid_frag_shader, "boid fragment shader", GL_FRAGMENT_SHADER, boid_src_frag);
 
-    // Boids shader program
-    boids_shader_program = glCreateProgram();
-    glAttachShader(boids_shader_program, boids_vert_shader);
-    glAttachShader(boids_shader_program, boids_geo_shader);
-    glAttachShader(boids_shader_program, boids_frag_shader);
-    glBindFragDataLocation(boids_shader_program, 0, "out_col");
-    glLinkProgram(boids_shader_program);
+    // Boid shader program
+    boid_shader_program = glCreateProgram();
+    glAttachShader(boid_shader_program, boid_vert_shader);
+    glAttachShader(boid_shader_program, boid_geo_shader);
+    glAttachShader(boid_shader_program, boid_frag_shader);
+    glBindFragDataLocation(boid_shader_program, 0, "out_col");
+    glLinkProgram(boid_shader_program);
 
-    // Boids vertex attributes
-    glBindVertexArray(boids_vao);
-    glBindBuffer(GL_ARRAY_BUFFER, boids_vbo);
+    // Boid vertex attributes
+    glBindVertexArray(boid_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, boid_vbo);
     {
-        GLint location = glGetAttribLocation(boids_shader_program, "pos");
+        GLint location = glGetAttribLocation(boid_shader_program, "pos");
         glEnableVertexAttribArray(location);
         glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE,
             sizeof(c_boid), (void*)offsetof(c_boid, pos));
     }
     {
-        GLint location = glGetAttribLocation(boids_shader_program, "vel");
+        GLint location = glGetAttribLocation(boid_shader_program, "vel");
         glEnableVertexAttribArray(location);
         glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE,
             sizeof(c_boid), (void*)offsetof(c_boid, vel));
@@ -329,12 +329,12 @@ void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& ite
     // Draw the plane
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-    // Bind the boids shader program
-    glUseProgram(boids_shader_program);
+    // Bind the boid shader program
+    glUseProgram(boid_shader_program);
 
-    // Boids uniforms
+    // Boid uniforms
     {
-        GLint location = glGetUniformLocation(boids_shader_program, "aspect");
+        GLint location = glGetUniformLocation(boid_shader_program, "aspect");
         glUniform2f(
             location,
             (f32)width / min(width, height),
@@ -342,23 +342,23 @@ void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& ite
         );
     }
     {
-        GLint location = glGetUniformLocation(boids_shader_program, "boid_size");
+        GLint location = glGetUniformLocation(boid_shader_program, "boid_size");
         glUniform1f(location, boid_size);
     }
     {
-        GLint location = glGetUniformLocation(boids_shader_program, "px2uv");
+        GLint location = glGetUniformLocation(boid_shader_program, "px2uv");
         glUniform1f(location, (2.f / min(width, height)) / boid_size);
     }
 
-    // Bind the boids VAO
-    glBindVertexArray(boids_vao);
+    // Bind the boid VAO
+    glBindVertexArray(boid_vao);
 
     // Get a list of all the boids
     std::vector<c_boid> boids_vec;
     boids.query_all(boids_vec);
 
-    // Update the boids VBO
-    glBindBuffer(GL_ARRAY_BUFFER, boids_vbo);
+    // Update the boid VBO
+    glBindBuffer(GL_ARRAY_BUFFER, boid_vbo);
     glBufferData(
         GL_ARRAY_BUFFER,
         boids_vec.size() * sizeof(c_boid),
@@ -366,7 +366,7 @@ void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& ite
         GL_DYNAMIC_DRAW
     );
 
-    // Draw the boids
+    // Draw the boid
     glDrawArrays(GL_POINTS, 0, boids_vec.size());
 
     // Swap front and back buffers
@@ -396,11 +396,11 @@ void s_rendering::on_stop(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 
     // Boids
 
-    glDeleteProgram(boids_shader_program);
-    glDeleteShader(boids_frag_shader);
-    glDeleteShader(boids_geo_shader);
-    glDeleteShader(boids_vert_shader);
+    glDeleteProgram(boid_shader_program);
+    glDeleteShader(boid_frag_shader);
+    glDeleteShader(boid_geo_shader);
+    glDeleteShader(boid_vert_shader);
 
-    glDeleteBuffers(1, &boids_vbo);
-    glDeleteVertexArrays(1, &boids_vao);
+    glDeleteBuffers(1, &boid_vbo);
+    glDeleteVertexArrays(1, &boid_vao);
 }

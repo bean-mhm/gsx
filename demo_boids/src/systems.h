@@ -77,11 +77,11 @@ private:
     GLuint plane_frag_shader = 0;
     GLuint plane_shader_program = 0;
 
-    GLuint boids_vao = 0;
-    GLuint boids_vbo = 0;
-    GLuint boids_vert_shader = 0;
-    GLuint boids_geo_shader = 0;
-    GLuint boids_frag_shader = 0;
-    GLuint boids_shader_program = 0;
+    GLuint boid_vao = 0;
+    GLuint boid_vbo = 0;
+    GLuint boid_vert_shader = 0;
+    GLuint boid_geo_shader = 0;
+    GLuint boid_frag_shader = 0;
+    GLuint boid_shader_program = 0;
 
 };
