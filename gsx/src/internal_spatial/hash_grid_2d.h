@@ -72,7 +72,7 @@ namespace gsx::spatial
                 }
             }
 
-            for (int index : indices)
+            for (usize index : indices)
             {
                 for (auto& element : containers[index])
                 {
@@ -109,7 +109,7 @@ namespace gsx::spatial
                 }
             }
 
-            for (int index : indices)
+            for (usize index : indices)
             {
                 for (auto& element : containers[index])
                 {

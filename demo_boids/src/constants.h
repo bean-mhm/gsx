@@ -1,8 +1,5 @@
 #pragma once
 
-// STD
-#include <cstdint>
-
 // GSX
 #include "gsx/gsx.h"
 

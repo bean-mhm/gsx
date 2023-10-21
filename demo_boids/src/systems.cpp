@@ -78,7 +78,7 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
     boids.query_all(boids_vec);
 
 #pragma omp parallel for
-    for (int i = 0; i < boids_vec.size(); i++)
+    for (i32 i = 0; i < boids_vec.size(); i++)
     {
         c_boid* boid = boids_vec[i];
 
@@ -290,7 +290,7 @@ void s_rendering::on_start(ecs::world_t& world)
 void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
     // Render dimensions
-    int width, height;
+    i32 width, height;
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
     f32 aspect = width / (f32)height;

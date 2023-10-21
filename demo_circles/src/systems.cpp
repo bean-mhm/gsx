@@ -49,9 +49,9 @@ void s_circle_renderer::on_update(ecs::world_t& world, const ecs::world_t::iter_
     // Render (per-pixel shader)
     constexpr math::uvec2 res(30, 20);
     f32 px2uv = get_px2uv_ratio(res);
-    for (int y = 0; y < res.y; y++)
+    for (i32 y = 0; y < res.y; y++)
     {
-        for (int x = 0; x < res.x; x++)
+        for (i32 x = 0; x < res.x; x++)
         {
             // UV
             math::vec2 uv = screen_to_uv(math::uvec2(x, y), res);
