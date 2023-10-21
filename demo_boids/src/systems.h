@@ -1,5 +1,8 @@
 #pragma once
 
+// STD
+#include <vector>
+
 // GSX
 #include "gsx/gsx.h"
 
@@ -7,25 +10,48 @@
 #include "components.h"
 #include "gl_utils.h"
 
-// Boid simulation system
-struct s_boids : ecs::base_system_t
+// Boid attractors system
+class s_attractors : public ecs::base_system_t
 {
+public:
+    std::vector<c_attractor>& attractors;
+
+    s_attractors(
+        const std::string& name,
+        i32 update_order,
+        bool run_on_caller_thread,
+        std::vector<c_attractor>& attractors
+    );
+    virtual ~s_attractors() = default;
+
+    virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
+
+};
+
+// Boid simulation system
+class s_boids : public ecs::base_system_t
+{
+public:
     spatial::base_container_2d_t<c_boid>& boids;
+    std::vector<c_attractor>& attractors;
 
     s_boids(
         const std::string& name,
         i32 update_order,
         bool run_on_caller_thread,
-        spatial::base_container_2d_t<c_boid>& boids
+        spatial::base_container_2d_t<c_boid>& boids,
+        std::vector<c_attractor>& attractors
     );
     virtual ~s_boids() = default;
 
     virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
+
 };
 
 // OpenGL rendering system
-struct s_rendering : ecs::base_system_t
+class s_rendering : public ecs::base_system_t
 {
+public:
     spatial::base_container_2d_t<c_boid>& boids;
 
     s_rendering(
