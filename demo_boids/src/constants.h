@@ -74,7 +74,7 @@ static const char* plane_src_frag = R"glsl(
         );
         col = mix(
             col,
-            vec3(.3, .7, 1),
+            vec3(.2, .7, 1),
             remap01(dist, -px2uv, 0.)
         );
 
@@ -277,8 +277,8 @@ static const char* boid_src_frag = R"glsl(
         // Render
         float dist = sd_boid(g_uv);
         vec3 col = mix(
-            vec3(0, .1, .33),
-            vec3(.1, .6, 1),
+            vec3(.4, .04, .06),
+            vec3(.9, .6, 0),
             remap01(dist, -.34 + px2uv, -.34)
         );
 
