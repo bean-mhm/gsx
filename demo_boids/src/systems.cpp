@@ -14,12 +14,6 @@
 
 using namespace math;
 
-vec2 get_point_of_attraction(f32 time)
-{
-    f32 a = .8f * time;
-    return .7f * vec2(math::cos(a), math::sin(a));
-}
-
 // Signed distance from the edges of the colliders
 // Note: This function must be identical to its GLSL version in plane_src_frag.
 f32 sd_colliders(vec2 p, f32 time)
@@ -41,16 +35,39 @@ f32 sd_colliders(vec2 p, f32 time)
     return d;
 }
 
+// s_attractors
+
+s_attractors::s_attractors(
+    const std::string& name,
+    i32 update_order,
+    bool run_on_caller_thread,
+    std::vector<c_attractor>& attractors
+)
+    : ecs::base_system_t(name, update_order, run_on_caller_thread),
+    attractors(attractors)
+{}
+
+void s_attractors::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
+{
+    if (attractors.size() < 1)
+        return;
+
+    // Rotate the first attractor
+    f32 angle = .8f * iter.time;
+    attractors[0].pos = .7f * vec2(math::cos(angle), math::sin(angle));
+}
+
 // s_boids
 
 s_boids::s_boids(
     const std::string& name,
     i32 update_order,
     bool run_on_caller_thread,
-    spatial::base_container_2d_t<c_boid>& boids
+    spatial::base_container_2d_t<c_boid>& boids,
+    std::vector<c_attractor>& attractors
 )
     : ecs::base_system_t(name, update_order, run_on_caller_thread),
-    boids(boids)
+    boids(boids), attractors(attractors)
 {}
 
 void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
@@ -71,7 +88,7 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
         // Query the neighbors
         std::vector<c_boid*> neighbors;
         boids.query(
-            circle_t(boid->pos, boids_attention),
+            circle_t(boid->pos, boid_attention_radius),
             neighbors
         );
 
@@ -83,7 +100,12 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
             // Info about the neighbor
             vec2 this_to_neighbor = neighbor->pos - boid->pos;
             f32 dist_sqr = dot(this_to_neighbor, this_to_neighbor);
-            if (dist_sqr > boids_attention_sqr) continue;
+
+            // Discard if outside of the attention radius
+            if (dist_sqr > boid_attention_radius_sqr)
+                continue;
+
+            // Distance from the neighbor
             f32 dist = math::sqrt(dist_sqr);
 
             // Steer away from nearby boids
@@ -94,7 +116,7 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
                 ) > math::cos(1.1f))
             {
                 // How much do I steer away?
-                f32 fac = 1.f - clamp01(dist / boids_attention);
+                f32 fac = 1.f - clamp01(dist / boid_attention_radius);
 
                 // Steer
                 f32 angle = radians(20.f * fac * dt);
@@ -108,7 +130,7 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
             }
 
             // Update the weighted average velocity
-            f32 weight = 1.f - clamp01(dist / boids_attention);
+            f32 weight = 1.f - clamp01(dist / boid_attention_radius);
             avg_vel += weight * neighbor->vel;
         }
 
@@ -119,12 +141,19 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
             boid->vel = mix(boid->vel, avg_vel, min(.3f * dt, 1.f));
         }
 
-        // Try to follow the point of attraction
-        vec2 poa = get_point_of_attraction(iter.time);
-        boid->vel = mix(boid->vel, (poa - boid->pos), min(dt, 1.f));
+        // Attractors
+        for (const auto& attractor : attractors)
+        {
+            vec2 target_vel = boid_speed * normalize(attractor.pos - boid->pos);
+            boid->vel = mix(
+                boid->vel,
+                target_vel,
+                clamp(attractor.strength * dt, -1.f, 1.f)
+            );
+        }
 
         // Constant speed
-        boid->vel = boids_speed * normalize(boid->vel);
+        boid->vel = boid_speed * normalize(boid->vel);
 
         // Update position
         boid->pos += boid->vel * dt;
@@ -229,9 +258,9 @@ void s_rendering::on_start(ecs::world_t& world)
     glGenBuffers(1, &boids_vbo);
 
     // Boids shaders
-    make_shader(boids_vert_shader, "boids vertex shader", GL_VERTEX_SHADER, boids_src_vert);
-    make_shader(boids_geo_shader, "boids geometry shader", GL_GEOMETRY_SHADER, boids_src_geo);
-    make_shader(boids_frag_shader, "boids fragment shader", GL_FRAGMENT_SHADER, boids_src_frag);
+    make_shader(boids_vert_shader, "boids vertex shader", GL_VERTEX_SHADER, boid_src_vert);
+    make_shader(boids_geo_shader, "boids geometry shader", GL_GEOMETRY_SHADER, boid_src_geo);
+    make_shader(boids_frag_shader, "boids fragment shader", GL_FRAGMENT_SHADER, boid_src_frag);
 
     // Boids shader program
     boids_shader_program = glCreateProgram();
@@ -313,12 +342,12 @@ void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& ite
         );
     }
     {
-        GLint location = glGetUniformLocation(boids_shader_program, "boids_size");
-        glUniform1f(location, boids_size);
+        GLint location = glGetUniformLocation(boids_shader_program, "boid_size");
+        glUniform1f(location, boid_size);
     }
     {
         GLint location = glGetUniformLocation(boids_shader_program, "px2uv");
-        glUniform1f(location, (2.f / min(width, height)) / boids_size);
+        glUniform1f(location, (2.f / min(width, height)) / boid_size);
     }
 
     // Bind the boids VAO
