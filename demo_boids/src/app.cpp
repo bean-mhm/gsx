@@ -33,9 +33,26 @@ void app_t::run()
     // Create a PRNG
     math::prng_t prng;
 
+    // Add boid attractors
+    std::vector<c_attractor> attractors;
+    {
+        // The first attractor will be rotating around the origin by the attractors system
+        c_attractor attractor;
+        attractor.pos = math::vec2(0);
+        attractor.strength = 1.5;
+        attractors.push_back(attractor);
+    }
+    {
+        // This one will move the boids away from the bottom
+        c_attractor attractor;
+        attractor.pos = math::vec2(0, boid_min_pos.y);
+        attractor.strength = -.8;
+        attractors.push_back(attractor);
+    }
+
     // Add boids
     spatial::grid_2d_t<c_boid> boids(
-        math::bounds2(boids_min_pos, boids_max_pos),
+        math::bounds2(boid_min_pos, boid_max_pos),
         math::ivec2(6)
     );
     for (usize i = 0; i < 200; i++)
@@ -43,20 +60,21 @@ void app_t::run()
         c_boid boid;
 
         boid.pos = math::vec2(
-            prng.next_f32(boids_min_pos.x, boids_max_pos.x),
-            prng.next_f32(boids_min_pos.y, boids_max_pos.y)
+            prng.next_f32(boid_min_pos.x, boid_max_pos.x),
+            prng.next_f32(boid_min_pos.y, boid_max_pos.y)
         );
 
         f32 angle = prng.next_f32(0, math::tau);
-        boid.vel = boids_speed * math::vec2(math::cos(angle), math::sin(angle));
+        boid.vel = boid_speed * math::vec2(math::cos(angle), math::sin(angle));
 
         boids.insert(boid);
     }
 
     // Add systems
     {
-        world.add_system(std::make_shared<s_boids>("Boids", 0, false, boids));
-        world.add_system(std::make_shared<s_rendering>("Rendering", 1, true, window, boids));
+        world.add_system(std::make_shared<s_attractors>("Attractors", 0, false, attractors));
+        world.add_system(std::make_shared<s_boids>("Boids", 1, false, boids, attractors));
+        world.add_system(std::make_shared<s_rendering>("Rendering", 2, true, window, boids));
     }
 
     // Run
