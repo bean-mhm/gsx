@@ -100,14 +100,14 @@ static const GLuint plane_elements[] = {
 
 // Boids
 
-static constexpr math::vec2 boids_min_pos(-.9f, -.9f);
-static constexpr math::vec2 boids_max_pos(.9f, .9f);
-static constexpr f32 boids_speed = .5f;
-static constexpr f32 boids_attention = .2f;
-static constexpr f32 boids_attention_sqr = boids_attention * boids_attention;
-static constexpr f32 boids_size = .03f;
+static constexpr math::vec2 boid_min_pos(-.9f, -.9f);
+static constexpr math::vec2 boid_max_pos(.9f, .9f);
+static constexpr f32 boid_speed = .5f;
+static constexpr f32 boid_attention_radius = .2f;
+static constexpr f32 boid_attention_radius_sqr = boid_attention_radius * boid_attention_radius;
+static constexpr f32 boid_size = .03f;
 
-static const char* boids_src_vert = R"glsl(
+static const char* boid_src_vert = R"glsl(
     #version 330 core
 
     in vec2 pos;
@@ -123,14 +123,14 @@ static const char* boids_src_vert = R"glsl(
     }
 )glsl";
 
-static const char* boids_src_geo = R"glsl(
+static const char* boid_src_geo = R"glsl(
     #version 330 core
 
     layout(points) in;
     layout(triangle_strip, max_vertices = 6) out;
 
     uniform vec2 aspect;
-    uniform float boids_size;
+    uniform float boid_size;
 
     in vec2 v_pos[];
     in vec2 v_vel[];
@@ -158,34 +158,34 @@ static const char* boids_src_geo = R"glsl(
         float angle = atan(v_vel[0].x, -v_vel[0].y) + PI;
 
         // Top left
-        gl_Position = gen_vertex(vec2(-boids_size, boids_size), angle);
+        gl_Position = gen_vertex(vec2(-boid_size, boid_size), angle);
         g_uv = vec2(-1, 1);
         EmitVertex();
 
         // Top right
-        gl_Position = gen_vertex(vec2(boids_size, boids_size), angle);
+        gl_Position = gen_vertex(vec2(boid_size, boid_size), angle);
         g_uv = vec2(1, 1);
         EmitVertex();
 
         // Bottom left
-        gl_Position = gen_vertex(vec2(-boids_size, -boids_size), angle);
+        gl_Position = gen_vertex(vec2(-boid_size, -boid_size), angle);
         g_uv = vec2(-1, -1);
         EmitVertex();
 
         EndPrimitive();
 
         // Bottom left
-        gl_Position = gen_vertex(vec2(-boids_size, -boids_size), angle);
+        gl_Position = gen_vertex(vec2(-boid_size, -boid_size), angle);
         g_uv = vec2(-1, -1);
         EmitVertex();
 
         // Top right
-        gl_Position = gen_vertex(vec2(boids_size, boids_size), angle);
+        gl_Position = gen_vertex(vec2(boid_size, boid_size), angle);
         g_uv = vec2(1, 1);
         EmitVertex();
 
         // Bottom right
-        gl_Position = gen_vertex(vec2(boids_size, -boids_size), angle);
+        gl_Position = gen_vertex(vec2(boid_size, -boid_size), angle);
         g_uv = vec2(1, -1);
         EmitVertex();
 
@@ -193,7 +193,7 @@ static const char* boids_src_geo = R"glsl(
     }
 )glsl";
 
-static const char* boids_src_frag = R"glsl(
+static const char* boid_src_frag = R"glsl(
     #version 330 core
 
     uniform float px2uv;
