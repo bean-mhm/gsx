@@ -277,7 +277,7 @@ static const char* boid_src_frag = R"glsl(
         // Render
         float dist = sd_boid(g_uv);
         vec3 col = mix(
-            vec3(.4, .04, .06),
+            vec3(.5, .05, .07),
             vec3(.9, .6, 0),
             remap01(dist, -.34 + px2uv, -.34)
         );
