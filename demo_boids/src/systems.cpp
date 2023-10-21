@@ -205,8 +205,8 @@ s_rendering::s_rendering(
     GLFWwindow* window,
     spatial::base_container_2d_t<c_boid>& boids
 )
-    : ecs::base_system_t(name, update_order, run_on_caller_thread), window(window),
-    boids(boids)
+    : ecs::base_system_t(name, update_order, run_on_caller_thread),
+    window(window), boids(boids)
 {}
 
 void s_rendering::on_start(ecs::world_t& world)
@@ -366,7 +366,7 @@ void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& ite
         GL_DYNAMIC_DRAW
     );
 
-    // Draw the boid
+    // Draw the boids
     glDrawArrays(GL_POINTS, 0, boids_vec.size());
 
     // Swap front and back buffers
