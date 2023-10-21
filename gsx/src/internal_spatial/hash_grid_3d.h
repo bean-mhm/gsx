@@ -20,7 +20,7 @@ namespace gsx::spatial
     class hash_grid_3d_t : public base_container_3d_t<T>
     {
     public:
-        hash_grid_3d_t(math::vec3 cell_size, usize n_containers)
+        hash_grid_3d_t(math::vec3 cell_size, u32 n_containers)
             : _cell_size(cell_size)
         {
             if (math::min_component(cell_size) <= 0.0f)
