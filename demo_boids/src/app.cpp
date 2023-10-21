@@ -2,10 +2,7 @@
 
 // STD
 #include <iostream>
-#include <string>
 #include <stdexcept>
-#include <cmath>
-#include <cstdint>
 
 // GSX
 #include "gsx/gsx.h"
