@@ -293,7 +293,6 @@ void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& ite
     i32 width, height;
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
-    f32 aspect = width / (f32)height;
 
     // Clear the screen
     glClearColor(0.f, 0.f, 0.f, 1.f);
