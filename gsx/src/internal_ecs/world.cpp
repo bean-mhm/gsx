@@ -115,14 +115,22 @@ namespace gsx::ecs
 
     void world_t::run(const f32 max_update_rate, const f32 max_run_time)
     {
-        gsx_log(this, log_level_t::info, std::format(
-            "Preparing to run (max_update_rate = {:.3f} iterations/s, max_run_time = {:.3f} s)",
-            max_update_rate,
-            max_run_time
-        ));
+        gsx_log(this, log_level_t::info, "Preparing to run");
+
+        if (max_update_rate != 0)
+            gsx_log(this, log_level_t::info, std::format(
+                "max_update_rate = {:.3f} iterations/s",
+                max_update_rate
+            ));
+
+        if (max_run_time != 0)
+            gsx_log(this, log_level_t::info, std::format(
+                "max_run_time = {:.3f} s",
+                max_run_time
+            ));
 
         // If the world is already running, wait for it to stop
-        stop(false);
+        should_stop = true;
         std::scoped_lock lock(mutex_run);
         should_stop = false;
 
