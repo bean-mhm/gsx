@@ -33,6 +33,8 @@ namespace gsx::str
 
     std::string wordwrap(const std::string& s, u64 line_length, u64 left_padding = 0);
 
+    std::string from_file(const std::string& path);
+
     std::string from_list(const std::vector<std::string>& list, const std::string& delimiter);
     void to_list(const std::string& s, char delimiter, std::vector<std::string>& out_elements);
 

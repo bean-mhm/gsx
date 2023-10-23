@@ -1,6 +1,7 @@
 #include "utils.h"
 
 // STD
+#include <fstream>
 #include <sstream>
 #include <algorithm>
 #include <stdexcept>
@@ -167,6 +168,25 @@ namespace gsx::str
         std::string result = o.str();
         result = result.substr(0, result.size() - 1);
         return result;
+    }
+
+    std::string from_file(const std::string& path)
+    {
+        std::ifstream f(path);
+        if (!f)
+        {
+            throw std::runtime_error(std::format(
+                "Couldn't open file \"{}\".",
+                path
+            ).c_str());
+        }
+
+        std::ostringstream s;
+        s << f.rdbuf();
+
+        f.close();
+        
+        return s.str();
     }
 
     std::string from_list(const std::vector<std::string>& list, const std::string& delimiter)
