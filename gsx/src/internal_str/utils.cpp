@@ -330,6 +330,21 @@ namespace gsx::str
         }
     }
 
+    u64 to_u64(const std::string& s)
+    {
+        try
+        {
+            return std::stoull(s);
+        }
+        catch (const std::exception& e)
+        {
+            throw std::runtime_error(std::format(
+                "Couldn't parse a 64-bit unsigned integer from \"{}\".",
+                s
+            ).c_str());
+        }
+    }
+
     f32 to_f32(const std::string& s)
     {
         try
@@ -339,7 +354,22 @@ namespace gsx::str
         catch (const std::exception& e)
         {
             throw std::runtime_error(std::format(
-                "Couldn't parse a f32 from \"{}\".",
+                "Couldn't parse a 32-bit floating point number from \"{}\".",
+                s
+            ).c_str());
+        }
+    }
+
+    f64 to_f64(const std::string& s)
+    {
+        try
+        {
+            return std::stod(s);
+        }
+        catch (const std::exception& e)
+        {
+            throw std::runtime_error(std::format(
+                "Couldn't parse a 64-bit floating point number from \"{}\".",
                 s
             ).c_str());
         }

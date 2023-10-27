@@ -61,6 +61,8 @@ namespace gsx::str
     }
 
     i64 to_i64(const std::string& s);
+    u64 to_u64(const std::string& s);
     f32 to_f32(const std::string& s);
+    f64 to_f64(const std::string& s);
 
 }
