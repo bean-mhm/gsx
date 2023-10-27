@@ -132,35 +132,59 @@ namespace gsx::ecs
 
         // Note: This function is called internally by run().
         void prepare_system_groups_and_workers(
-            const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
+            std::vector<std::shared_ptr<base_system_t>>& systems_copy,
             std::vector<system_group_t>& out_system_groups,
             worker_map_t& out_worker_map
         );
 
-        // Note: This function is called internally by run().
         void start_systems(
-            const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
-            worker_map_t& worker_map
-        );
-
-        // Note: This function is called internally by run().
-        void process_events(
-            const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
+            std::vector<std::shared_ptr<base_system_t>>& systems_copy,
             worker_map_t& worker_map,
-            const iter_t& iter
+            bool& out_started_all_systems
         );
 
-        // Note: This function is called internally by run().
+        void process_events(
+            std::vector<std::shared_ptr<base_system_t>>& systems_copy,
+            worker_map_t& worker_map,
+            const iter_t& iter,
+            bool& out_processed_all_events
+        );
+
         void update_systems(
             std::vector<system_group_t>& system_groups,
             worker_map_t& worker_map,
+            const iter_t& iter,
+            bool& out_updated_all_systems
+        );
+
+        void stop_systems(
+            std::vector<std::shared_ptr<base_system_t>>& systems_copy,
+            worker_map_t& worker_map,
             const iter_t& iter
         );
 
-        // Note: This function is called internally by run().
-        void stop_systems(
-            const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
-            worker_map_t& worker_map,
+        bool try_start_system(
+            std::shared_ptr<base_system_t>& system,
+            const std::shared_ptr<misc::worker_t>& worker
+        );
+
+        bool try_trigger_system(
+            std::shared_ptr<base_system_t>& system,
+            const std::shared_ptr<misc::worker_t>& worker,
+            const iter_t& iter,
+            const event_t& event
+        );
+
+        bool try_update_system(
+            std::shared_ptr<base_system_t>& system,
+            const system_group_t& group,
+            const std::shared_ptr<misc::worker_t>& worker,
+            const iter_t& iter
+        );
+
+        void try_stop_system(
+            std::shared_ptr<base_system_t>& system,
+            const std::shared_ptr<misc::worker_t>& worker,
             const iter_t& iter
         );
 

@@ -143,9 +143,8 @@ namespace gsx::ecs
         prepare_system_groups_and_workers(systems_copy, system_groups, worker_map);
 
         // Start up the systems
-        start_systems(systems_copy, worker_map);
-
-        gsx_log(this, log_level_t::info, "Starting the loop");
+        bool started_all_systems;
+        start_systems(systems_copy, worker_map, started_all_systems);
 
         // Iteration info
         iter_t iter;
@@ -153,40 +152,55 @@ namespace gsx::ecs
         auto time_last_iter = time_start;
         const f32 min_dt = (max_update_rate == 0) ? 0 : (1.f / max_update_rate);
 
-        // Start the loop
-        while (!should_stop)
+        if (started_all_systems)
         {
-            gsx_log(this, log_level_t::verbose, std::format(
-                "Loop iteration {} (elapsed = {:.3f} s, dt = {:.3f} s)",
-                iter.i, iter.time, iter.dt
-            ));
+            gsx_log(this, log_level_t::info, "Starting the loop");
 
-            // Process new events, if any
-            process_events(systems_copy, worker_map, iter);
-
-            // Update the systems
-            update_systems(system_groups, worker_map, iter);
-
-            // Don't go faster than the maximum update rate
-            f32 time_left = min_dt - misc::elapsed_sec(time_last_iter);
-            if (time_left > 0)
+            // Start the loop
+            while (!should_stop)
             {
-                misc::sleep(time_left);
-            }
+                gsx_log(this, log_level_t::verbose, std::format(
+                    "Loop iteration {} (elapsed = {:.3f} s, dt = {:.3f} s)",
+                    iter.i, iter.time, iter.dt
+                ));
 
-            // Iteration info
-            iter.i++;
-            iter.time = misc::elapsed_sec(time_start);
-            iter.dt = misc::elapsed_sec(time_last_iter);
-            time_last_iter = std::chrono::high_resolution_clock::now();
+                bool processed_all_events = false;
+                bool updated_all_systems = false;
 
-            // Stop running if the maximum run time is exceeded
-            if (max_run_time != 0 && iter.time > max_run_time)
-            {
-                gsx_log(this, log_level_t::info,
-                    "Breaking the loop because the maximum run time was exceeded");
+                // Process new events, if any
+                process_events(systems_copy, worker_map, iter, processed_all_events);
 
-                break;
+                // Update the systems
+                if (processed_all_events)
+                {
+                    update_systems(system_groups, worker_map, iter, updated_all_systems);
+                }
+
+                // Don't go faster than the maximum update rate
+                f32 time_left = min_dt - misc::elapsed_sec(time_last_iter);
+                if (time_left > 0)
+                {
+                    misc::sleep(time_left);
+                }
+
+                // Iteration info
+                iter.i++;
+                iter.time = misc::elapsed_sec(time_start);
+                iter.dt = misc::elapsed_sec(time_last_iter);
+                time_last_iter = std::chrono::high_resolution_clock::now();
+
+                // Stop running if one or more system failed to update or get triggered
+                if (!processed_all_events || !updated_all_systems)
+                    break;
+
+                // Stop running if the maximum run time is exceeded
+                if (max_run_time != 0 && iter.time > max_run_time)
+                {
+                    gsx_log(this, log_level_t::info,
+                        "Breaking the loop because the maximum run time was exceeded");
+
+                    break;
+                }
             }
         }
 
@@ -211,7 +225,7 @@ namespace gsx::ecs
     }
 
     void world_t::prepare_system_groups_and_workers(
-        const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
+        std::vector<std::shared_ptr<base_system_t>>& systems_copy,
         std::vector<system_group_t>& out_system_groups,
         worker_map_t& out_worker_map
     )
@@ -220,7 +234,7 @@ namespace gsx::ecs
 
         // Make a sorted and unique set of the update order values of all systems
         std::set<i32, std::less<i32>> update_orders;
-        for (const auto& system : systems_copy)
+        for (auto& system : systems_copy)
         {
             update_orders.insert(system->update_order);
         }
@@ -233,7 +247,7 @@ namespace gsx::ecs
             group.update_order = curr_order;
 
             // Gather every system in the world with the current update order
-            for (const auto& system : systems_copy)
+            for (auto& system : systems_copy)
             {
                 if (system->update_order == curr_order)
                 {
@@ -246,7 +260,7 @@ namespace gsx::ecs
             // system, then there will also be no paralellization and no need for a worker.
             if (group.systems.size() > 1)
             {
-                for (const auto& system : group.systems)
+                for (auto& system : group.systems)
                 {
                     if (system->run_on_caller_thread)
                     {
@@ -271,87 +285,79 @@ namespace gsx::ecs
     }
 
     void world_t::start_systems(
-        const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
-        worker_map_t& worker_map
+        std::vector<std::shared_ptr<base_system_t>>& systems_copy,
+        worker_map_t& worker_map,
+        bool& out_started_all_systems
     )
     {
+        out_started_all_systems = true;
+
         // Start the systems in serial in the order in which they were added
-        for (const auto& system : systems_copy)
+        for (auto& system : systems_copy)
         {
-            const auto& worker = worker_map[system.get()];
+            auto& worker = worker_map[system.get()];
             if (worker)
             {
                 worker->enqueue(
-                    [this, &system, &worker]()
+                    [this, &system, &worker, &out_started_all_systems]()
                     {
-                        gsx_log(this, log_level_t::info, std::format(
-                            "Starting system named \"{}\" on worker thread #{}",
-                            system->name,
-                            worker->id
-                        ));
-
-                        system->on_start(*this);
+                        if (!try_start_system(system, worker))
+                        {
+                            out_started_all_systems = false;
+                        }
                     }
                 );
                 worker->wait();
             }
             else
             {
-                gsx_log(this, log_level_t::info, std::format(
-                    "Starting system named \"{}\" on the world runner thread",
-                    system->name
-                ));
-
-                system->on_start(*this);
+                if (!try_start_system(system, worker))
+                {
+                    out_started_all_systems = false;
+                }
             }
         }
     }
 
     void world_t::process_events(
-        const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
+        std::vector<std::shared_ptr<base_system_t>>& systems_copy,
         worker_map_t& worker_map,
-        const iter_t& iter
+        const iter_t& iter,
+        bool& out_processed_all_events
     )
     {
+        out_processed_all_events = true;
+
         std::unique_lock lock(mutex_events);
         while (!events.empty())
         {
             auto event = events.front();
             events.pop_front();
             lock.unlock();
-            for (const auto& system : systems_copy)
+            for (auto& system : systems_copy)
             {
                 if (system->triggers.contains(event.type))
                 {
-                    const auto& worker = worker_map[system.get()];
+                    auto& worker = worker_map[system.get()];
                     if (worker)
                     {
                         worker->enqueue(
-                            [this, &iter, &system, &event, &worker]()
+                            [this, &system, &worker, &iter, &event, &out_processed_all_events]()
                             {
-                                gsx_log(this, log_level_t::verbose, std::format(
-                                    "Using event of type {} to trigger system named \"{}\" "
-                                    "on worker thread #{}",
-                                    event.type,
-                                    system->name,
-                                    worker->id
-                                ));
-
-                                system->on_trigger(*this, iter, event);
+                                if (!try_trigger_system(system, worker, iter, event))
+                                {
+                                    out_processed_all_events = false;
+                                }
                             }
                         );
                         worker->wait();
                     }
                     else
                     {
-                        gsx_log(this, log_level_t::verbose, std::format(
-                            "Using event of type {} to trigger system named \"{}\" on the "
-                            "world runner thread",
-                            event.type,
-                            system->name
-                        ));
-
-                        system->on_trigger(*this, iter, event);
+                        if (!try_trigger_system(system, worker, iter, event))
+                        {
+                            out_processed_all_events = false;
+                        }
                     }
                 }
             }
@@ -362,10 +368,13 @@ namespace gsx::ecs
     void world_t::update_systems(
         std::vector<system_group_t>& system_groups,
         worker_map_t& worker_map,
-        const iter_t& iter
+        const iter_t& iter,
+        bool& out_updated_all_systems
     )
     {
-        for (const auto& group : system_groups)
+        out_updated_all_systems = true;
+
+        for (auto& group : system_groups)
         {
             gsx_log(this, log_level_t::verbose, std::format(
                 "Updating {} system(s) at order {}",
@@ -374,47 +383,40 @@ namespace gsx::ecs
             ));
 
             // First, update every system in the group that needs to run on a worker thread.
-            for (const auto& system : group.systems)
+            for (auto& system : group.systems)
             {
-                const auto& worker = worker_map[system.get()];
+                auto& worker = worker_map[system.get()];
                 if (worker)
                 {
                     worker->enqueue(
-                        [this, &iter, &group, &system, &worker]()
+                        [this, &system, &group, &worker, &iter, &out_updated_all_systems]()
                         {
-                            gsx_log(this, log_level_t::verbose, std::format(
-                                "Updating system named \"{}\" at order {} on worker thread #{}",
-                                system->name,
-                                group.update_order,
-                                worker->id
-                            ));
-
-                            system->on_update(*this, iter);
+                            if (!try_update_system(system, group, worker, iter))
+                            {
+                                out_updated_all_systems = false;
+                            }
                         }
                     );
                 }
             }
 
             // Then, update every system in the group that needs to run on this thread.
-            for (const auto& system : group.systems)
+            for (auto& system : group.systems)
             {
-                const auto& worker = worker_map[system.get()];
+                auto& worker = worker_map[system.get()];
                 if (!worker)
                 {
-                    gsx_log(this, log_level_t::verbose, std::format(
-                        "Updating system named \"{}\" at order {} on the world runner thread",
-                        system->name,
-                        group.update_order
-                    ));
-
-                    system->on_update(*this, iter);
+                    if (!try_update_system(system, group, worker, iter))
+                    {
+                        out_updated_all_systems = false;
+                    }
                 }
             }
 
             // Wait for all the workers to finish their job
-            for (const auto& v : worker_map)
+            for (auto& v : worker_map)
             {
-                const auto& worker = v.second;
+                auto& worker = v.second;
                 if (worker)
                 {
                     worker->wait();
@@ -424,7 +426,7 @@ namespace gsx::ecs
     }
 
     void world_t::stop_systems(
-        const std::vector<std::shared_ptr<base_system_t>>& systems_copy,
+        std::vector<std::shared_ptr<base_system_t>>& systems_copy,
         worker_map_t& worker_map,
         const iter_t& iter
     )
@@ -433,33 +435,181 @@ namespace gsx::ecs
         // first system added will be started first and it will be stopped at the end.
         for (isize i = systems_copy.size() - 1; i >= 0; i--)
         {
-            const auto& system = systems_copy[i];
-            const auto& worker = worker_map[system.get()];
+            auto& system = systems_copy[i];
+            auto& worker = worker_map[system.get()];
             if (worker)
             {
                 worker->enqueue(
                     [this, &iter, &system, &worker]()
                     {
-                        gsx_log(this, log_level_t::info, std::format(
-                            "Stopping system named \"{}\" on worker thread #{}",
-                            system->name,
-                            worker->id
-                        ));
-
-                        system->on_stop(*this, iter);
+                        try_stop_system(system, worker, iter);
                     }
                 );
                 worker->wait();
             }
             else
             {
-                gsx_log(this, log_level_t::info, std::format(
-                    "Stopping system named \"{}\" on the world runner thread",
-                    system->name
-                ));
-
-                system->on_stop(*this, iter);
+                try_stop_system(system, worker, iter);
             }
+        }
+    }
+
+    bool world_t::try_start_system(
+        std::shared_ptr<base_system_t>& system,
+        const std::shared_ptr<misc::worker_t>& worker
+    )
+    {
+        if (worker)
+        {
+            gsx_log(this, log_level_t::info, std::format(
+                "Starting system named \"{}\" on worker thread #{}",
+                system->name,
+                worker->id
+            ));
+        }
+        else
+        {
+            gsx_log(this, log_level_t::info, std::format(
+                "Starting system named \"{}\" on the world runner thread",
+                system->name
+            ));
+        }
+
+        try
+        {
+            system->on_start(*this);
+            return true;
+        }
+        catch (const std::exception& e)
+        {
+            gsx_log(this, log_level_t::error, std::format(
+                "System named \"{}\" couldn't start: \"{}\"",
+                system->name,
+                e.what()
+            ));
+        }
+
+        return false;
+    }
+
+    bool world_t::try_trigger_system(
+        std::shared_ptr<base_system_t>& system,
+        const std::shared_ptr<misc::worker_t>& worker,
+        const iter_t& iter,
+        const event_t& event
+    )
+    {
+        if (worker)
+        {
+            gsx_log(this, log_level_t::verbose, std::format(
+                "Using event of type {} to trigger system named \"{}\" on worker thread #{}",
+                event.type,
+                system->name,
+                worker->id
+            ));
+        }
+        else
+        {
+            gsx_log(this, log_level_t::verbose, std::format(
+                "Using event of type {} to trigger system named \"{}\" on the world runner "
+                "thread",
+                event.type,
+                system->name
+            ));
+        }
+
+        try
+        {
+            system->on_trigger(*this, iter, event);
+            return true;
+        }
+        catch (const std::exception& e)
+        {
+            gsx_log(this, log_level_t::error, std::format(
+                "System named \"{}\" couldn't be triggered: \"{}\"",
+                system->name,
+                e.what()
+            ));
+        }
+
+        return false;
+    }
+
+    bool world_t::try_update_system(
+        std::shared_ptr<base_system_t>& system,
+        const system_group_t& group,
+        const std::shared_ptr<misc::worker_t>& worker,
+        const iter_t& iter
+    )
+    {
+        if (worker)
+        {
+            gsx_log(this, log_level_t::verbose, std::format(
+                "Updating system named \"{}\" at order {} on worker thread #{}",
+                system->name,
+                group.update_order,
+                worker->id
+            ));
+        }
+        else
+        {
+            gsx_log(this, log_level_t::verbose, std::format(
+                "Updating system named \"{}\" at order {} on the world runner thread",
+                system->name,
+                group.update_order
+            ));
+        }
+
+        try
+        {
+            system->on_update(*this, iter);
+            return true;
+        }
+        catch (const std::exception& e)
+        {
+            gsx_log(this, log_level_t::error, std::format(
+                "System named \"{}\" couldn't update: \"{}\"",
+                system->name,
+                e.what()
+            ));
+        }
+
+        return false;
+    }
+
+    void world_t::try_stop_system(
+        std::shared_ptr<base_system_t>& system,
+        const std::shared_ptr<misc::worker_t>& worker,
+        const iter_t& iter
+    )
+    {
+        if (worker)
+        {
+            gsx_log(this, log_level_t::info, std::format(
+                "Stopping system named \"{}\" on worker thread #{}",
+                system->name,
+                worker->id
+            ));
+        }
+        else
+        {
+            gsx_log(this, log_level_t::info, std::format(
+                "Stopping system named \"{}\" on the world runner thread",
+                system->name
+            ));
+        }
+
+        try
+        {
+            system->on_stop(*this, iter);
+        }
+        catch (const std::exception& e)
+        {
+            gsx_log(this, log_level_t::error, std::format(
+                "System named \"{}\" couldn't stop: \"{}\"",
+                system->name,
+                e.what()
+            ));
         }
     }
 
