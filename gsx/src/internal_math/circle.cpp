@@ -17,20 +17,20 @@ namespace gsx::math
         );
     }
 
-    std::ostream& operator<<(std::ostream& os, const circle_t& r)
+    std::ostream& operator<<(std::ostream& os, const circle_t& c)
     {
-        os << r.to_string();
+        os << c.to_string();
         return os;
-    }
-
-    vec2 circle_t::at(f32 angle) const
-    {
-        return center + radius * vec2(math::cos(angle), math::sin(angle));
     }
 
     vec2 circle_t::unit_at(f32 angle)
     {
         return vec2(math::cos(angle), math::sin(angle));
+    }
+
+    vec2 circle_t::at(f32 angle) const
+    {
+        return center + radius * unit_at(angle);
     }
 
 }
