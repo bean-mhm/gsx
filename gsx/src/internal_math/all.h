@@ -8,6 +8,8 @@
 #include "bounds3.h"
 #include "circle.h"
 #include "sphere.h"
+#include "polar.h"
+#include "spherical.h"
 #include "ray.h"
 #include "matrix.h"
 #include "transform.h"
