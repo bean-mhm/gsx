@@ -33,4 +33,14 @@ namespace gsx::math
         );
     }
 
+    vec3 sphere_t::unit_at(f32 theta, f32 phi)
+    {
+        const f32 sin_theta = math::sin(theta);
+        return vec3(
+            sin_theta * math::cos(phi),
+            sin_theta * math::sin(phi),
+            math::cos(theta)
+        );
+    }
+
 }

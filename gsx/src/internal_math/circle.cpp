@@ -28,4 +28,9 @@ namespace gsx::math
         return center + radius * vec2(math::cos(angle), math::sin(angle));
     }
 
+    vec2 circle_t::unit_at(f32 angle)
+    {
+        return vec2(math::cos(angle), math::sin(angle));
+    }
+
 }
