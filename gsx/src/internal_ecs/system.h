@@ -65,8 +65,7 @@ namespace gsx::ecs
         // Called when triggered by an event.
         // Note: Avoid starting separate threads that keep running after returning from this
         // function.
-        virtual void on_trigger(world_t& world, const iteration_t& iter,
-            const event_t& event);
+        virtual void on_trigger(world_t& world, const iteration_t& iter, const event_t& event);
 
         // Called in every iteration when the world is running. A system would typically get a
         // list of components it's interested in, iterate over them, and update them. The
