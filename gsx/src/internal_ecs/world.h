@@ -21,24 +21,24 @@ namespace gsx::ecs
     // Forward decleration
     class base_system_t;
 
+    // Information about the current iteration of the world. This will be passed to systems when
+    // the world is running.
+    struct iteration_t
+    {
+        // Iteration number starting from 0
+        u64 i = 0;
+
+        // Seconds elapsed since the start
+        f32 time = 0;
+
+        // Seconds elapsed since the last iteration
+        f32 dt = 0;
+    };
+
     // A world for holding and managing a collection of components and systems
     class world_t
     {
     public:
-        // Information about the current iteration of the world. This will be passed to systems when
-        // the world is running.
-        struct iter_t
-        {
-            // Iteration number starting from 0
-            u64 i = 0;
-
-            // Seconds elapsed since the start
-            f32 time = 0;
-
-            // Seconds elapsed since the last iteration
-            f32 dt = 0;
-        };
-
         // A name for the world
         const std::string name;
 
@@ -140,27 +140,27 @@ namespace gsx::ecs
         void start_systems(
             std::vector<std::shared_ptr<base_system_t>>& systems_copy,
             worker_map_t& worker_map,
-            bool& out_started_all_systems
+            bool& out_did_start_all
         );
 
         void process_events(
             std::vector<std::shared_ptr<base_system_t>>& systems_copy,
             worker_map_t& worker_map,
-            const iter_t& iter,
-            bool& out_processed_all_events
+            const iteration_t& iter,
+            bool& out_did_process_all
         );
 
         void update_systems(
             std::vector<system_group_t>& system_groups,
             worker_map_t& worker_map,
-            const iter_t& iter,
-            bool& out_updated_all_systems
+            const iteration_t& iter,
+            bool& out_did_update_all
         );
 
         void stop_systems(
             std::vector<std::shared_ptr<base_system_t>>& systems_copy,
             worker_map_t& worker_map,
-            const iter_t& iter
+            const iteration_t& iter
         );
 
         bool try_start_system(
@@ -171,7 +171,7 @@ namespace gsx::ecs
         bool try_trigger_system(
             std::shared_ptr<base_system_t>& system,
             const std::shared_ptr<misc::worker_t>& worker,
-            const iter_t& iter,
+            const iteration_t& iter,
             const event_t& event
         );
 
@@ -179,13 +179,13 @@ namespace gsx::ecs
             std::shared_ptr<base_system_t>& system,
             const system_group_t& group,
             const std::shared_ptr<misc::worker_t>& worker,
-            const iter_t& iter
+            const iteration_t& iter
         );
 
         void try_stop_system(
             std::shared_ptr<base_system_t>& system,
             const std::shared_ptr<misc::worker_t>& worker,
-            const iter_t& iter
+            const iteration_t& iter
         );
 
     };
