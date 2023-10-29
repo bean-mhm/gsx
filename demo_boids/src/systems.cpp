@@ -37,17 +37,17 @@ f32 sd_colliders(vec2 p, f32 time)
 
 // s_attractors
 
-s_attractors::s_attractors(
+attractor_system_t::attractor_system_t(
     const std::string& name,
     i32 update_order,
     bool run_on_caller_thread,
-    std::vector<c_attractor>& attractors
+    std::vector<attractor_t>& attractors
 )
     : ecs::base_system_t(name, update_order, run_on_caller_thread),
     attractors(attractors)
 {}
 
-void s_attractors::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
+void attractor_system_t::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
     if (attractors.size() < 1)
         return;
@@ -59,34 +59,34 @@ void s_attractors::on_update(ecs::world_t& world, const ecs::world_t::iter_t& it
 
 // s_boids
 
-s_boids::s_boids(
+boid_system_t::boid_system_t(
     const std::string& name,
     i32 update_order,
     bool run_on_caller_thread,
-    spatial::base_container_2d_t<c_boid>& boids,
-    std::vector<c_attractor>& attractors
+    spatial::base_container_2d_t<boid_t>& boids,
+    std::vector<attractor_t>& attractors
 )
     : ecs::base_system_t(name, update_order, run_on_caller_thread),
     boids(boids), attractors(attractors)
 {}
 
-void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
+void boid_system_t::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
     const f32 dt = min(iter.dt, 0.02f);
 
-    std::vector<c_boid*> boids_vec;
+    std::vector<boid_t*> boids_vec;
     boids.query_all(boids_vec);
 
 #pragma omp parallel for
     for (i32 i = 0; i < boids_vec.size(); i++)
     {
-        c_boid* boid = boids_vec[i];
+        boid_t* boid = boids_vec[i];
 
         // Weighted average of the neighbor velocities
         vec2 avg_vel(0);
 
         // Query the neighbors
-        std::vector<c_boid*> neighbors;
+        std::vector<boid_t*> neighbors;
         boids.query(
             circle_t(boid->pos, boid_attention_radius),
             neighbors
@@ -198,18 +198,18 @@ void s_boids::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 
 // s_rendering
 
-s_rendering::s_rendering(
+render_system_t::render_system_t(
     const std::string& name,
     i32 update_order,
     bool run_on_caller_thread,
     GLFWwindow* window,
-    spatial::base_container_2d_t<c_boid>& boids
+    spatial::base_container_2d_t<boid_t>& boids
 )
     : ecs::base_system_t(name, update_order, run_on_caller_thread),
     window(window), boids(boids)
 {}
 
-void s_rendering::on_start(ecs::world_t& world)
+void render_system_t::on_start(ecs::world_t& world)
 {
     // Enable alpha blending
     // Note: Blending will happen in sRGB and that's not good at all. However, in this case I only
@@ -277,17 +277,17 @@ void s_rendering::on_start(ecs::world_t& world)
         GLint location = glGetAttribLocation(boid_shader_program, "pos");
         glEnableVertexAttribArray(location);
         glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE,
-            sizeof(c_boid), (void*)offsetof(c_boid, pos));
+            sizeof(boid_t), (void*)offsetof(boid_t, pos));
     }
     {
         GLint location = glGetAttribLocation(boid_shader_program, "vel");
         glEnableVertexAttribArray(location);
         glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE,
-            sizeof(c_boid), (void*)offsetof(c_boid, vel));
+            sizeof(boid_t), (void*)offsetof(boid_t, vel));
     }
 }
 
-void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
+void render_system_t::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
     // Render dimensions
     i32 width, height;
@@ -353,14 +353,14 @@ void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& ite
     glBindVertexArray(boid_vao);
 
     // Get a list of all the boids
-    std::vector<c_boid> boids_vec;
+    std::vector<boid_t> boids_vec;
     boids.query_all(boids_vec);
 
     // Update the boid VBO
     glBindBuffer(GL_ARRAY_BUFFER, boid_vbo);
     glBufferData(
         GL_ARRAY_BUFFER,
-        boids_vec.size() * sizeof(c_boid),
+        boids_vec.size() * sizeof(boid_t),
         boids_vec.data(),
         GL_DYNAMIC_DRAW
     );
@@ -381,7 +381,7 @@ void s_rendering::on_update(ecs::world_t& world, const ecs::world_t::iter_t& ite
     }
 }
 
-void s_rendering::on_stop(ecs::world_t& world, const ecs::world_t::iter_t& iter)
+void render_system_t::on_stop(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
     // Plane
 

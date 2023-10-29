@@ -32,30 +32,30 @@ void app_t::run()
     math::prng_t prng;
 
     // Add boid attractors
-    std::vector<c_attractor> attractors;
+    std::vector<attractor_t> attractors;
     {
         // The first attractor will be rotating around the origin by the attractors system
-        c_attractor attractor;
+        attractor_t attractor;
         attractor.pos = math::vec2(0);
         attractor.strength = 1.5;
         attractors.push_back(attractor);
     }
     {
         // This one will move the boids away from the bottom
-        c_attractor attractor;
+        attractor_t attractor;
         attractor.pos = math::vec2(0, boid_min_pos.y);
         attractor.strength = -.8;
         attractors.push_back(attractor);
     }
 
     // Add boids
-    spatial::grid_2d_t<c_boid> boids(
+    spatial::grid_2d_t<boid_t> boids(
         math::bounds2(boid_min_pos, boid_max_pos),
         math::ivec2(6)
     );
     for (usize i = 0; i < 200; i++)
     {
-        c_boid boid;
+        boid_t boid;
 
         boid.pos = math::vec2(
             prng.next_f32(boid_min_pos.x, boid_max_pos.x),
@@ -70,9 +70,17 @@ void app_t::run()
 
     // Add systems
     {
-        world.add_system(std::make_shared<s_attractors>("Attractors", 0, false, attractors));
-        world.add_system(std::make_shared<s_boids>("Boids", 1, false, boids, attractors));
-        world.add_system(std::make_shared<s_rendering>("Rendering", 2, true, window, boids));
+        world.add_system(std::make_shared<attractor_system_t>(
+            "Attractor", 0, false, attractors
+        ));
+
+        world.add_system(std::make_shared<boid_system_t>(
+            "Boid", 1, false, boids, attractors
+        ));
+
+        world.add_system(std::make_shared<render_system_t>(
+            "Render", 2, true, window, boids
+        ));
     }
 
     // Run

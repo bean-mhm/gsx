@@ -10,65 +10,65 @@
 #include "components.h"
 #include "gl_utils.h"
 
-// Boid attractors system
-class s_attractors : public ecs::base_system_t
+// Boid attractor system
+class attractor_system_t : public ecs::base_system_t
 {
 public:
-    s_attractors(
+    attractor_system_t(
         const std::string& name,
         i32 update_order,
         bool run_on_caller_thread,
-        std::vector<c_attractor>& attractors
+        std::vector<attractor_t>& attractors
     );
-    virtual ~s_attractors() = default;
+    virtual ~attractor_system_t() = default;
 
     virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
 
 private:
-    std::vector<c_attractor>& attractors;
+    std::vector<attractor_t>& attractors;
 
 };
 
 // Boid simulation system
-class s_boids : public ecs::base_system_t
+class boid_system_t : public ecs::base_system_t
 {
 public:
-    s_boids(
+    boid_system_t(
         const std::string& name,
         i32 update_order,
         bool run_on_caller_thread,
-        spatial::base_container_2d_t<c_boid>& boids,
-        std::vector<c_attractor>& attractors
+        spatial::base_container_2d_t<boid_t>& boids,
+        std::vector<attractor_t>& attractors
     );
-    virtual ~s_boids() = default;
+    virtual ~boid_system_t() = default;
 
     virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
 
 private:
-    spatial::base_container_2d_t<c_boid>& boids;
-    std::vector<c_attractor>& attractors;
+    spatial::base_container_2d_t<boid_t>& boids;
+    std::vector<attractor_t>& attractors;
 
 };
 
-// OpenGL rendering system
-class s_rendering : public ecs::base_system_t
+// OpenGL render system
+class render_system_t : public ecs::base_system_t
 {
 public:
-    s_rendering(
+    render_system_t(
         const std::string& name,
         i32 update_order,
         bool run_on_caller_thread,
         GLFWwindow* window,
-        spatial::base_container_2d_t<c_boid>& boids
+        spatial::base_container_2d_t<boid_t>& boids
     );
-    virtual ~s_rendering() = default;
+    virtual ~render_system_t() = default;
 
     virtual void on_start(ecs::world_t& world) override;
     virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
     virtual void on_stop(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
 
 private:
-    spatial::base_container_2d_t<c_boid>& boids;
+    spatial::base_container_2d_t<boid_t>& boids;
 
     GLFWwindow* window;
 

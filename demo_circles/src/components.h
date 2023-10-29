@@ -7,14 +7,14 @@
 #include "gsx/gsx.h"
 
 // Transform component
-struct c_transform
+struct transform_t
 {
     u32 owner;
     math::vec2 pos;
 };
 
 // Circle component
-struct c_circle
+struct circle_t
 {
     u32 owner;
     f32 radius;

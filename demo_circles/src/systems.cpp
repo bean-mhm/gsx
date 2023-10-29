@@ -8,21 +8,21 @@
 
 // s_movement
 
-s_movement::s_movement(
+movement_system_t::movement_system_t(
     const std::string& name,
     i32 update_order,
     bool run_on_caller_thread,
-    std::vector<c_transform>& transforms
+    std::vector<transform_t>& transforms
 )
     : ecs::base_system_t(name, update_order, run_on_caller_thread),
     transforms(transforms)
 {}
 
-void s_movement::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
+void movement_system_t::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
     for (usize i = 0; i < transforms.size(); i++)
     {
-        c_transform& transform = transforms[i];
+        transform_t& transform = transforms[i];
         f32 theta = .5f * (i + 1.f) * iter.time;
         transform.pos = 3.f * math::vec2(math::cos(theta), sin(theta));
     }
@@ -30,18 +30,18 @@ void s_movement::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter
 
 // s_circle_renderer
 
-s_circle_renderer::s_circle_renderer(
+render_system_t::render_system_t(
     const std::string& name,
     i32 update_order,
     bool run_on_caller_thread,
-    std::vector<c_transform>& transforms,
-    std::vector<c_circle>& circles
+    std::vector<transform_t>& transforms,
+    std::vector<circle_t>& circles
 )
     : ecs::base_system_t(name, update_order, run_on_caller_thread),
     transforms(transforms), circles(circles)
 {}
 
-void s_circle_renderer::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
+void render_system_t::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
 {
     // Clear the console
     clear_console();
@@ -61,7 +61,7 @@ void s_circle_renderer::on_update(ecs::world_t& world, const ecs::world_t::iter_
             for (auto& circle : circles)
             {
                 // See if there's a transform component with the same owner
-                c_transform* transform = nullptr;
+                transform_t* transform = nullptr;
                 for (auto& t : transforms)
                 {
                     if (t.owner == circle.owner)

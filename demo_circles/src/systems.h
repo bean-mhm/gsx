@@ -10,38 +10,38 @@
 #include "components.h"
 
 // Movement system
-class s_movement : public ecs::base_system_t
+class movement_system_t : public ecs::base_system_t
 {
 public:
-    std::vector<c_transform>& transforms;
+    std::vector<transform_t>& transforms;
 
-    s_movement(
+    movement_system_t(
         const std::string& name,
         i32 update_order,
         bool run_on_caller_thread,
-        std::vector<c_transform>& transforms
+        std::vector<transform_t>& transforms
     );
-    virtual ~s_movement() = default;
+    virtual ~movement_system_t() = default;
 
     virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
 
 };
 
-// Circle renderer system (ASCII output to the console)
-class s_circle_renderer : public ecs::base_system_t
+// Circle render system (ASCII output to the console)
+class render_system_t : public ecs::base_system_t
 {
 public:
-    std::vector<c_transform>& transforms;
-    std::vector<c_circle>& circles;
+    std::vector<transform_t>& transforms;
+    std::vector<circle_t>& circles;
 
-    s_circle_renderer(
+    render_system_t(
         const std::string& name,
         i32 update_order,
         bool run_on_caller_thread,
-        std::vector<c_transform>& transforms,
-        std::vector<c_circle>& circles
+        std::vector<transform_t>& transforms,
+        std::vector<circle_t>& circles
     );
-    virtual ~s_circle_renderer() = default;
+    virtual ~render_system_t() = default;
 
     virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
 
