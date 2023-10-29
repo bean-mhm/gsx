@@ -34,7 +34,9 @@ namespace gsx::ecs
         bool run_on_world_thread = false;
 
         // Constructor
-        execution_scheme_t(i32 update_order, bool run_on_world_thread = false);
+        constexpr execution_scheme_t(i32 update_order, bool run_on_world_thread = false)
+            : update_order(update_order), run_on_world_thread(run_on_world_thread)
+        {}
     };
 
     // Abstract class for a system

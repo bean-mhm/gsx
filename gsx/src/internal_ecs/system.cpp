@@ -25,8 +25,4 @@ namespace gsx::ecs
     void base_system_t::on_stop(world_t& world, const iteration_t& iter)
     {}
 
-    execution_scheme_t::execution_scheme_t(i32 update_order, bool run_on_world_thread)
-        : update_order(update_order), run_on_world_thread(run_on_world_thread)
-    {}
-
 }
