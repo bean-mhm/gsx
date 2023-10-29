@@ -6,7 +6,9 @@
 
 int main()
 {
-	test_group_math();
+    test_group_math();
 
-	return 0;
+    std::cout << "\nPress [Enter] to quit...\n";
+    std::cin.get();
+    return 0;
 }
