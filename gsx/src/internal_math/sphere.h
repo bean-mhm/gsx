@@ -33,7 +33,7 @@ namespace gsx::math
         std::string to_string() const;
 
         // Print
-        friend std::ostream& operator<<(std::ostream& os, const sphere_t& r);
+        friend std::ostream& operator<<(std::ostream& os, const sphere_t& s);
 
         // this == sphere
         constexpr bool operator==(const sphere_t& s) const
@@ -47,11 +47,11 @@ namespace gsx::math
             return center != s.center || radius != s.radius;
         }
 
-        // A point on the sphere at given theta and phi angles
-        vec3 at(f32 theta, f32 phi) const;
-
         // A point on the unit sphere at given theta and phi angles
         static vec3 unit_at(f32 theta, f32 phi);
+
+        // A point on the sphere at given theta and phi angles
+        vec3 at(f32 theta, f32 phi) const;
 
         // Bounding box of the sphere
         constexpr bounds3 bounds() const

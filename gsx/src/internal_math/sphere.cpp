@@ -17,20 +17,10 @@ namespace gsx::math
         );
     }
 
-    std::ostream& operator<<(std::ostream& os, const sphere_t& r)
+    std::ostream& operator<<(std::ostream& os, const sphere_t& s)
     {
-        os << r.to_string();
+        os << s.to_string();
         return os;
-    }
-
-    vec3 sphere_t::at(f32 theta, f32 phi) const
-    {
-        const f32 sin_theta = math::sin(theta);
-        return center + radius * vec3(
-            sin_theta * math::cos(phi),
-            sin_theta * math::sin(phi),
-            math::cos(theta)
-        );
     }
 
     vec3 sphere_t::unit_at(f32 theta, f32 phi)
@@ -41,6 +31,11 @@ namespace gsx::math
             sin_theta * math::sin(phi),
             math::cos(theta)
         );
+    }
+
+    vec3 sphere_t::at(f32 theta, f32 phi) const
+    {
+        return center + radius * unit_at(theta, phi);
     }
 
 }
