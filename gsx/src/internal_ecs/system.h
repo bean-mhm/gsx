@@ -48,18 +48,18 @@ namespace gsx::ecs
         // function.
         virtual void on_start(world_t& world);
 
+        // Called when triggered by an event.
+        // Note: Avoid starting separate threads that keep running after returning from this
+        // function.
+        virtual void on_trigger(world_t& world, const world_t::iter_t& iter,
+            const event_t& event);
+
         // Called in every iteration when the world is running. A system would typically get a
         // list of components it's interested in, iterate over them, and update them. The
         // iteration can be manually parallelized by the user for improved performance.
         // Note: Avoid starting separate threads that keep running after returning from this
         // function.
         virtual void on_update(world_t& world, const world_t::iter_t& iter);
-
-        // Called when triggered by an event.
-        // Note: Avoid starting separate threads that keep running after returning from this
-        // function.
-        virtual void on_trigger(world_t& world, const world_t::iter_t& iter,
-            const event_t& event);
 
         // Called when the world stops running, in the opposite order to that in which the systems
         // were added.
