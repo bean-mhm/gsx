@@ -22,6 +22,25 @@ inline bool eq_vec(const T& a, const T& b)
     return (f32)max_component(math::abs(a - b)) < epsilon;
 }
 
+inline bool eq_polar(const polar_t& a, const polar_t& b)
+{
+    return min(
+        math::abs(a.r - b.r),
+        math::abs(a.theta - b.theta)
+    ) < epsilon;
+}
+
+inline bool eq_spherical(const spherical_t& a, const spherical_t& b)
+{
+    return min(
+        min(
+            math::abs(a.r - b.r),
+            math::abs(a.theta - b.theta)
+        ),
+        math::abs(a.phi - b.phi)
+    ) < epsilon;
+}
+
 template<i32 n_row, i32 n_col>
 inline bool eq_mat(const base_mat<n_row, n_col>& m1, const base_mat<n_row, n_col>& m2)
 {
@@ -273,6 +292,30 @@ static void test_bounds3()
     ), "inside(point, bounds)");
 }
 
+static void test_polar()
+{
+    test::assert(eq_vec(
+        polar_t(2.f, -pi / 6.f).cartesian(),
+        vec2(1.7320508f, -1)
+    ), "cartesian()");
+    test::assert(eq_polar(
+        polar_t(vec2(1.7320508f, -1)),
+        polar_t(2.f, -pi / 6.f)
+    ), "polar_t(vec2 cartesian)");
+}
+
+static void test_spherical()
+{
+    test::assert(eq_vec(
+        spherical_t(.5f, 1.2f, 1.8f).cartesian(),
+        vec3(-.1058806f, .4538320f, .1811789f)
+    ), "cartesian()");
+    test::assert(eq_spherical(
+        spherical_t(vec3(-.1058806f, .4538320f, .1811789f)),
+        spherical_t(.5f, 1.2f, 1.8f)
+    ), "spherical_t(vec3 cartesian)");
+}
+
 static void test_matrix()
 {
     test::assert(is_identity(mat4()), "is_identity(mat4)");
@@ -376,6 +419,8 @@ void test_group_math()
     test::run("vec4", test_vec4);
     test::run("bounds2", test_bounds2);
     test::run("bounds3", test_bounds3);
+    test::run("polar", test_polar);
+    test::run("spherical", test_spherical);
     test::run("matrix", test_matrix);
     test::run("transform", test_transform);
     test::run("prng", test_prng);
