@@ -54,6 +54,12 @@
     <ClCompile Include="src\internal_math\sphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\internal_math\polar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\internal_math\spherical.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\internal_misc\utils.h">
@@ -171,6 +177,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\internal_spatial\hash_grid_3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\internal_math\polar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\internal_math\spherical.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

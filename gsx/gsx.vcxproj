@@ -107,10 +107,12 @@
     <ClInclude Include="src\internal_math\bounds3.h" />
     <ClInclude Include="src\internal_math\circle.h" />
     <ClInclude Include="src\internal_math\matrix.h" />
+    <ClInclude Include="src\internal_math\polar.h" />
     <ClInclude Include="src\internal_math\prng.h" />
     <ClInclude Include="src\internal_math\quaternion.h" />
     <ClInclude Include="src\internal_math\ray.h" />
     <ClInclude Include="src\internal_math\sphere.h" />
+    <ClInclude Include="src\internal_math\spherical.h" />
     <ClInclude Include="src\internal_math\transform.h" />
     <ClInclude Include="src\internal_math\utils.h" />
     <ClInclude Include="src\internal_math\vec2.h" />
@@ -140,10 +142,12 @@
     <ClCompile Include="src\internal_ecs\system.cpp" />
     <ClCompile Include="src\internal_ecs\world.cpp" />
     <ClCompile Include="src\internal_math\circle.cpp" />
+    <ClCompile Include="src\internal_math\polar.cpp" />
     <ClCompile Include="src\internal_math\prng.cpp" />
     <ClCompile Include="src\internal_math\quaternion.cpp" />
     <ClCompile Include="src\internal_math\ray.cpp" />
     <ClCompile Include="src\internal_math\sphere.cpp" />
+    <ClCompile Include="src\internal_math\spherical.cpp" />
     <ClCompile Include="src\internal_math\transform.cpp" />
     <ClCompile Include="src\internal_misc\utils.cpp" />
     <ClCompile Include="src\internal_misc\worker.cpp" />

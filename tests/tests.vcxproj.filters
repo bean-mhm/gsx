@@ -63,6 +63,12 @@
     <ClCompile Include="include\gsx\internal_str\utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\gsx\internal_math\polar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\gsx\internal_math\spherical.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\test.h">
@@ -183,6 +189,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\gsx\internal_spatial\hash_grid_3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gsx\internal_math\polar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gsx\internal_math\spherical.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
