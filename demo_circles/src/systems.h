@@ -17,13 +17,12 @@ public:
 
     movement_system_t(
         const std::string& name,
-        i32 update_order,
-        bool run_on_caller_thread,
+        const ecs::execution_scheme_t& exec_scheme,
         std::vector<transform_t>& transforms
     );
     virtual ~movement_system_t() = default;
 
-    virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
+    virtual void on_update(ecs::world_t& world, const ecs::iteration_t& iter) override;
 
 };
 
@@ -36,13 +35,12 @@ public:
 
     render_system_t(
         const std::string& name,
-        i32 update_order,
-        bool run_on_caller_thread,
+        const ecs::execution_scheme_t& exec_scheme,
         std::vector<transform_t>& transforms,
         std::vector<circle_t>& circles
     );
     virtual ~render_system_t() = default;
 
-    virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
+    virtual void on_update(ecs::world_t& world, const ecs::iteration_t& iter) override;
 
 };

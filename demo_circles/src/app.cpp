@@ -48,11 +48,11 @@ void app_t::run()
     // Add systems
     {
         world.add_system(std::make_shared<movement_system_t>(
-            "Movement", 0, false, transforms
+            "Movement", ecs::execution_scheme_t(0), transforms
         ));
 
         world.add_system(std::make_shared<render_system_t>(
-            "Circle Renderer", 1, false, transforms, circles
+            "Circle Renderer", ecs::execution_scheme_t(1), transforms, circles
         ));
     }
 

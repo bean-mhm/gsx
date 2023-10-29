@@ -16,13 +16,12 @@ class attractor_system_t : public ecs::base_system_t
 public:
     attractor_system_t(
         const std::string& name,
-        i32 update_order,
-        bool run_on_caller_thread,
+        const ecs::execution_scheme_t& exec_scheme,
         std::vector<attractor_t>& attractors
     );
     virtual ~attractor_system_t() = default;
 
-    virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
+    virtual void on_update(ecs::world_t& world, const ecs::iteration_t& iter) override;
 
 private:
     std::vector<attractor_t>& attractors;
@@ -35,14 +34,13 @@ class boid_system_t : public ecs::base_system_t
 public:
     boid_system_t(
         const std::string& name,
-        i32 update_order,
-        bool run_on_caller_thread,
+        const ecs::execution_scheme_t& exec_scheme,
         spatial::base_container_2d_t<boid_t>& boids,
         std::vector<attractor_t>& attractors
     );
     virtual ~boid_system_t() = default;
 
-    virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
+    virtual void on_update(ecs::world_t& world, const ecs::iteration_t& iter) override;
 
 private:
     spatial::base_container_2d_t<boid_t>& boids;
@@ -56,16 +54,15 @@ class render_system_t : public ecs::base_system_t
 public:
     render_system_t(
         const std::string& name,
-        i32 update_order,
-        bool run_on_caller_thread,
+        const ecs::execution_scheme_t& exec_scheme,
         GLFWwindow* window,
         spatial::base_container_2d_t<boid_t>& boids
     );
     virtual ~render_system_t() = default;
 
     virtual void on_start(ecs::world_t& world) override;
-    virtual void on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
-    virtual void on_stop(ecs::world_t& world, const ecs::world_t::iter_t& iter) override;
+    virtual void on_update(ecs::world_t& world, const ecs::iteration_t& iter) override;
+    virtual void on_stop(ecs::world_t& world, const ecs::iteration_t& iter) override;
 
 private:
     spatial::base_container_2d_t<boid_t>& boids;

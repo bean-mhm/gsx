@@ -71,15 +71,15 @@ void app_t::run()
     // Add systems
     {
         world.add_system(std::make_shared<attractor_system_t>(
-            "Attractor", 0, false, attractors
+            "Attractor", ecs::execution_scheme_t(0), attractors
         ));
 
         world.add_system(std::make_shared<boid_system_t>(
-            "Boid", 1, false, boids, attractors
+            "Boid", ecs::execution_scheme_t(1), boids, attractors
         ));
 
         world.add_system(std::make_shared<render_system_t>(
-            "Render", 2, true, window, boids
+            "Render", ecs::execution_scheme_t(2, true), window, boids
         ));
     }
 

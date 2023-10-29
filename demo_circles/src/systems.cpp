@@ -10,15 +10,14 @@
 
 movement_system_t::movement_system_t(
     const std::string& name,
-    i32 update_order,
-    bool run_on_caller_thread,
+    const ecs::execution_scheme_t& exec_scheme,
     std::vector<transform_t>& transforms
 )
-    : ecs::base_system_t(name, update_order, run_on_caller_thread),
+    : ecs::base_system_t(name, exec_scheme),
     transforms(transforms)
 {}
 
-void movement_system_t::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
+void movement_system_t::on_update(ecs::world_t& world, const ecs::iteration_t& iter)
 {
     for (usize i = 0; i < transforms.size(); i++)
     {
@@ -32,16 +31,15 @@ void movement_system_t::on_update(ecs::world_t& world, const ecs::world_t::iter_
 
 render_system_t::render_system_t(
     const std::string& name,
-    i32 update_order,
-    bool run_on_caller_thread,
+    const ecs::execution_scheme_t& exec_scheme,
     std::vector<transform_t>& transforms,
     std::vector<circle_t>& circles
 )
-    : ecs::base_system_t(name, update_order, run_on_caller_thread),
+    : ecs::base_system_t(name, exec_scheme),
     transforms(transforms), circles(circles)
 {}
 
-void render_system_t::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
+void render_system_t::on_update(ecs::world_t& world, const ecs::iteration_t& iter)
 {
     // Clear the console
     clear_console();

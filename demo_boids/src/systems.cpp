@@ -39,15 +39,14 @@ f32 sd_colliders(vec2 p, f32 time)
 
 attractor_system_t::attractor_system_t(
     const std::string& name,
-    i32 update_order,
-    bool run_on_caller_thread,
+    const ecs::execution_scheme_t& exec_scheme,
     std::vector<attractor_t>& attractors
 )
-    : ecs::base_system_t(name, update_order, run_on_caller_thread),
+    : ecs::base_system_t(name, exec_scheme),
     attractors(attractors)
 {}
 
-void attractor_system_t::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
+void attractor_system_t::on_update(ecs::world_t& world, const ecs::iteration_t& iter)
 {
     if (attractors.size() < 1)
         return;
@@ -61,16 +60,15 @@ void attractor_system_t::on_update(ecs::world_t& world, const ecs::world_t::iter
 
 boid_system_t::boid_system_t(
     const std::string& name,
-    i32 update_order,
-    bool run_on_caller_thread,
+    const ecs::execution_scheme_t& exec_scheme,
     spatial::base_container_2d_t<boid_t>& boids,
     std::vector<attractor_t>& attractors
 )
-    : ecs::base_system_t(name, update_order, run_on_caller_thread),
+    : ecs::base_system_t(name, exec_scheme),
     boids(boids), attractors(attractors)
 {}
 
-void boid_system_t::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
+void boid_system_t::on_update(ecs::world_t& world, const ecs::iteration_t& iter)
 {
     const f32 dt = min(iter.dt, 0.02f);
 
@@ -200,12 +198,11 @@ void boid_system_t::on_update(ecs::world_t& world, const ecs::world_t::iter_t& i
 
 render_system_t::render_system_t(
     const std::string& name,
-    i32 update_order,
-    bool run_on_caller_thread,
+    const ecs::execution_scheme_t& exec_scheme,
     GLFWwindow* window,
     spatial::base_container_2d_t<boid_t>& boids
 )
-    : ecs::base_system_t(name, update_order, run_on_caller_thread),
+    : ecs::base_system_t(name, exec_scheme),
     window(window), boids(boids)
 {}
 
@@ -287,7 +284,7 @@ void render_system_t::on_start(ecs::world_t& world)
     }
 }
 
-void render_system_t::on_update(ecs::world_t& world, const ecs::world_t::iter_t& iter)
+void render_system_t::on_update(ecs::world_t& world, const ecs::iteration_t& iter)
 {
     // Render dimensions
     i32 width, height;
@@ -381,7 +378,7 @@ void render_system_t::on_update(ecs::world_t& world, const ecs::world_t::iter_t&
     }
 }
 
-void render_system_t::on_stop(ecs::world_t& world, const ecs::world_t::iter_t& iter)
+void render_system_t::on_stop(ecs::world_t& world, const ecs::iteration_t& iter)
 {
     // Plane
 
