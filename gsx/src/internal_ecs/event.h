@@ -22,6 +22,7 @@ namespace gsx::ecs
         // Event data
         std::any data;
 
+        // Constructor
         event_t(event_type_t type, const std::any& data);
     };
 
