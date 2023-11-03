@@ -468,9 +468,23 @@ namespace gsx::math
     }
 
     template<typename T>
-    constexpr base_vec3<T> clamp(const base_vec3<T>& v, f32 min, f32 max)
+    constexpr base_vec3<T> clamp(const base_vec3<T>& v, T min, T max)
     {
         return base_vec3<T>(clamp(v.x, min, max), clamp(v.y, min, max), clamp(v.z, min, max));
+    }
+
+    template<typename T>
+    constexpr base_vec3<T> clamp(
+        const base_vec3<T>& v,
+        const base_vec3<T>& min,
+        const base_vec3<T>& max
+    )
+    {
+        return base_vec3<T>(
+            clamp(v.x, min.x, max.x),
+            clamp(v.y, min.y, max.y),
+            clamp(v.z, min.z, max.z)
+        );
     }
 
     template<typename T>
