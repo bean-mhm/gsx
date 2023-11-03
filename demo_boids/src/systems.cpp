@@ -1,11 +1,5 @@
 #include "systems.h"
 
-// STD
-#include <string>
-#include <algorithm>
-#include <execution>
-#include <cstdint>
-
 // OpenMP
 #include <omp.h>
 
