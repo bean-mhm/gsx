@@ -55,7 +55,7 @@ void attractor_system_t::on_update(ecs::world_t& world, const ecs::iteration_t& 
 boid_system_t::boid_system_t(
     const std::string& name,
     const ecs::execution_scheme_t& exec_scheme,
-    spatial::base_container_2d_t<boid_t>& boids,
+    spatial::base_structure_2d_t<boid_t>& boids,
     std::vector<attractor_t>& attractors
 )
     : ecs::base_system_t(name, exec_scheme),
@@ -194,7 +194,7 @@ render_system_t::render_system_t(
     const std::string& name,
     const ecs::execution_scheme_t& exec_scheme,
     GLFWwindow* window,
-    spatial::base_container_2d_t<boid_t>& boids
+    spatial::base_structure_2d_t<boid_t>& boids
 )
     : ecs::base_system_t(name, exec_scheme),
     window(window), boids(boids)

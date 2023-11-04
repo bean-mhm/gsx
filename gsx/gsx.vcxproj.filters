@@ -158,7 +158,7 @@
     <ClInclude Include="src\internal_common\all.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\internal_spatial\base_container.h">
+    <ClInclude Include="src\internal_spatial\base_structure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\internal_spatial\linear_2d.h">

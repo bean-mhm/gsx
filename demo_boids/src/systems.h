@@ -35,7 +35,7 @@ public:
     boid_system_t(
         const std::string& name,
         const ecs::execution_scheme_t& exec_scheme,
-        spatial::base_container_2d_t<boid_t>& boids,
+        spatial::base_structure_2d_t<boid_t>& boids,
         std::vector<attractor_t>& attractors
     );
     virtual ~boid_system_t() = default;
@@ -43,7 +43,7 @@ public:
     virtual void on_update(ecs::world_t& world, const ecs::iteration_t& iter) override;
 
 private:
-    spatial::base_container_2d_t<boid_t>& boids;
+    spatial::base_structure_2d_t<boid_t>& boids;
     std::vector<attractor_t>& attractors;
 
 };
@@ -56,7 +56,7 @@ public:
         const std::string& name,
         const ecs::execution_scheme_t& exec_scheme,
         GLFWwindow* window,
-        spatial::base_container_2d_t<boid_t>& boids
+        spatial::base_structure_2d_t<boid_t>& boids
     );
     virtual ~render_system_t() = default;
 
@@ -65,7 +65,7 @@ public:
     virtual void on_stop(ecs::world_t& world, const ecs::iteration_t& iter) override;
 
 private:
-    spatial::base_container_2d_t<boid_t>& boids;
+    spatial::base_structure_2d_t<boid_t>& boids;
 
     GLFWwindow* window;
 

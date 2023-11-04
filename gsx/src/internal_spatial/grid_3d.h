@@ -6,7 +6,7 @@
 #include <cstdint>
 
 // Internal
-#include "base_container.h"
+#include "base_structure.h"
 #include "../internal_common/all.h"
 #include "../internal_math/all.h"
 #include "../internal_misc/all.h"
@@ -16,7 +16,7 @@ namespace gsx::spatial
 
     // 3D grid container
     template<typename T>
-    class grid_3d_t : public base_container_3d_t<T>
+    class grid_3d_t : public base_structure_3d_t<T>
     {
     public:
         grid_3d_t(math::bounds3 bounds, math::ivec3 resolution)
@@ -50,23 +50,6 @@ namespace gsx::spatial
                 count += container.size();
             }
             return count;
-        }
-
-        virtual bool insert(const T& element) override
-        {
-            math::ivec3 cell(math::floor(cell_ratio * (element.pos - _bounds.pmin)));
-            cell.x = math::clamp(cell.x, 0, _resolution.x - 1);
-            cell.y = math::clamp(cell.y, 0, _resolution.y - 1);
-            cell.z = math::clamp(cell.z, 0, _resolution.z - 1);
-
-            usize index =
-                (usize)cell.z * (usize)_resolution.x * (usize)_resolution.y
-                + (usize)cell.y * (usize)_resolution.x
-                + (usize)cell.x;
-
-            containers[index].push_back(element);
-
-            return true;
         }
 
         virtual void query(const math::bounds3& range, std::vector<T*>& out_elements) override
@@ -167,6 +150,23 @@ namespace gsx::spatial
             {
                 misc::vec_append(out_elements, container);
             }
+        }
+
+        virtual bool insert(const T& element) override
+        {
+            math::ivec3 cell(math::floor(cell_ratio * (element.pos - _bounds.pmin)));
+            cell.x = math::clamp(cell.x, 0, _resolution.x - 1);
+            cell.y = math::clamp(cell.y, 0, _resolution.y - 1);
+            cell.z = math::clamp(cell.z, 0, _resolution.z - 1);
+
+            usize index =
+                (usize)cell.z * (usize)_resolution.x * (usize)_resolution.y
+                + (usize)cell.y * (usize)_resolution.x
+                + (usize)cell.x;
+
+            containers[index].push_back(element);
+
+            return true;
         }
 
         virtual void clear() override

@@ -7,7 +7,7 @@
 #include <cstdint>
 
 // Internal
-#include "base_container.h"
+#include "base_structure.h"
 #include "../internal_common/all.h"
 #include "../internal_math/all.h"
 #include "../internal_misc/all.h"
@@ -18,7 +18,7 @@ namespace gsx::spatial
     // Quadtree with a given capacity per tile
     template<typename T, u8 capacity>
         requires (capacity <= 255)
-    class quadtree_t : public base_container_2d_t<T>
+    class quadtree_t : public base_structure_2d_t<T>
     {
     public:
         quadtree_t(const math::bounds2& bounds)
@@ -74,33 +74,6 @@ namespace gsx::spatial
                     stack.push(q->top_right.get());
                 }
             }
-        }
-
-        virtual bool insert(const T& element) override
-        {
-            std::stack<quadtree_t*> stack({ this });
-            while (!stack.empty())
-            {
-                quadtree_t* q = stack.top();
-                stack.pop();
-
-                if (!math::inside(element.pos, q->_bounds))
-                    continue;
-
-                if (q->elements.size() < capacity)
-                {
-                    q->elements.push_back(element);
-                    return true;
-                }
-
-                q->subdivide();
-
-                stack.push(q->bottom_left.get());
-                stack.push(q->bottom_right.get());
-                stack.push(q->top_left.get());
-                stack.push(q->top_right.get());
-            }
-            return false;
         }
 
         virtual void query(const math::bounds2& range, std::vector<T*>& out_elements) override
@@ -207,6 +180,33 @@ namespace gsx::spatial
                     stack.push(q->top_right.get());
                 }
             }
+        }
+
+        virtual bool insert(const T& element) override
+        {
+            std::stack<quadtree_t*> stack({ this });
+            while (!stack.empty())
+            {
+                quadtree_t* q = stack.top();
+                stack.pop();
+
+                if (!math::inside(element.pos, q->_bounds))
+                    continue;
+
+                if (q->elements.size() < capacity)
+                {
+                    q->elements.push_back(element);
+                    return true;
+                }
+
+                q->subdivide();
+
+                stack.push(q->bottom_left.get());
+                stack.push(q->bottom_right.get());
+                stack.push(q->top_left.get());
+                stack.push(q->top_right.get());
+            }
+            return false;
         }
 
         virtual void clear() override

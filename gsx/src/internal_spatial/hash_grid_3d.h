@@ -7,7 +7,7 @@
 #include <cstdint>
 
 // Internal
-#include "base_container.h"
+#include "base_structure.h"
 #include "../internal_common/all.h"
 #include "../internal_math/all.h"
 #include "../internal_misc/all.h"
@@ -17,7 +17,7 @@ namespace gsx::spatial
 
     // 3D hash grid container
     template<typename T>
-    class hash_grid_3d_t : public base_container_3d_t<T>
+    class hash_grid_3d_t : public base_structure_3d_t<T>
     {
     public:
         hash_grid_3d_t(math::vec3 cell_size, u32 n_containers)
@@ -47,13 +47,6 @@ namespace gsx::spatial
                 count += container.size();
             }
             return count;
-        }
-
-        virtual bool insert(const T& element) override
-        {
-            math::ivec3 cell(math::floor(element.pos / _cell_size));
-            containers[get_container_index(cell)].push_back(element);
-            return true;
         }
 
         virtual void query(const math::bounds3& range, std::vector<T*>& out_elements) override
@@ -145,6 +138,13 @@ namespace gsx::spatial
             {
                 misc::vec_append(out_elements, container);
             }
+        }
+
+        virtual bool insert(const T& element) override
+        {
+            math::ivec3 cell(math::floor(element.pos / _cell_size));
+            containers[get_container_index(cell)].push_back(element);
+            return true;
         }
 
         virtual void clear() override

@@ -4,7 +4,7 @@
 #include <utility>
 
 // Internal
-#include "base_container.h"
+#include "base_structure.h"
 #include "../internal_common/all.h"
 #include "../internal_math/all.h"
 #include "../internal_misc/all.h"
@@ -14,7 +14,7 @@ namespace gsx::spatial
 
     // 2D container with contiguous memory and no spatial optimizations (uses std::vector)
     template<typename T>
-    class linear_2d_t : public base_container_2d_t<T>
+    class linear_2d_t : public base_structure_2d_t<T>
     {
     public:
         std::vector<T> vec;
@@ -32,12 +32,6 @@ namespace gsx::spatial
         virtual usize size() const override
         {
             return vec.size();
-        }
-
-        virtual bool insert(const T& element) override
-        {
-            vec.push_back(element);
-            return true;
         }
 
         virtual void query(const math::bounds2& range, std::vector<T*>& out_elements) override
@@ -74,6 +68,12 @@ namespace gsx::spatial
         virtual void query_all(std::vector<T>& out_elements) const override
         {
             misc::vec_append(out_elements, vec);
+        }
+
+        virtual bool insert(const T& element) override
+        {
+            vec.push_back(element);
+            return true;
         }
 
         virtual void clear() override

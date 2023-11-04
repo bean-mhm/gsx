@@ -7,7 +7,7 @@
 #include <cstdint>
 
 // Internal
-#include "base_container.h"
+#include "base_structure.h"
 #include "../internal_common/all.h"
 #include "../internal_math/all.h"
 #include "../internal_misc/all.h"
@@ -18,7 +18,7 @@ namespace gsx::spatial
     // Octree with a given capacity per tile
     template<typename T, u8 capacity>
         requires (capacity <= 255)
-    class octree_t : public base_container_3d_t<T>
+    class octree_t : public base_structure_3d_t<T>
     {
     public:
         octree_t(const math::bounds3& bounds)
@@ -78,37 +78,6 @@ namespace gsx::spatial
                     stack.push(t->front_top_right.get());
                 }
             }
-        }
-
-        virtual bool insert(const T& element) override
-        {
-            std::stack<octree_t*> stack({ this });
-            while (!stack.empty())
-            {
-                octree_t* t = stack.top();
-                stack.pop();
-
-                if (!math::inside(element.pos, t->_bounds))
-                    continue;
-
-                if (t->elements.size() < capacity)
-                {
-                    t->elements.push_back(element);
-                    return true;
-                }
-
-                t->subdivide();
-
-                stack.push(t->back_bottom_left.get());
-                stack.push(t->back_bottom_right.get());
-                stack.push(t->back_top_left.get());
-                stack.push(t->back_top_right.get());
-                stack.push(t->front_bottom_left.get());
-                stack.push(t->front_bottom_right.get());
-                stack.push(t->front_top_left.get());
-                stack.push(t->front_top_right.get());
-            }
-            return false;
         }
 
         virtual void query(const math::bounds3& range, std::vector<T*>& out_elements) override
@@ -231,6 +200,37 @@ namespace gsx::spatial
                     stack.push(t->front_top_right.get());
                 }
             }
+        }
+
+        virtual bool insert(const T& element) override
+        {
+            std::stack<octree_t*> stack({ this });
+            while (!stack.empty())
+            {
+                octree_t* t = stack.top();
+                stack.pop();
+
+                if (!math::inside(element.pos, t->_bounds))
+                    continue;
+
+                if (t->elements.size() < capacity)
+                {
+                    t->elements.push_back(element);
+                    return true;
+                }
+
+                t->subdivide();
+
+                stack.push(t->back_bottom_left.get());
+                stack.push(t->back_bottom_right.get());
+                stack.push(t->back_top_left.get());
+                stack.push(t->back_top_right.get());
+                stack.push(t->front_bottom_left.get());
+                stack.push(t->front_bottom_right.get());
+                stack.push(t->front_top_left.get());
+                stack.push(t->front_top_right.get());
+            }
+            return false;
         }
 
         virtual void clear() override
