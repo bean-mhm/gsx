@@ -13,6 +13,30 @@ namespace gsx::misc
 {
 
     template<typename T>
+    T* add_pointer(T& instance)
+    {
+        return &instance;
+    };
+
+    template<typename T>
+    T* add_pointer(T* instance)
+    {
+        return instance;
+    };
+
+    template<typename T>
+    T& remove_pointer(T& instance)
+    {
+        return instance;
+    };
+
+    template<typename T>
+    T& remove_pointer(T* instance)
+    {
+        return *instance;
+    };
+
+    template<typename T>
     void vec_clear(std::vector<T>& vec)
     {
         vec.clear();
