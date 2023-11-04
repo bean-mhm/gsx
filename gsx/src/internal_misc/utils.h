@@ -13,25 +13,25 @@ namespace gsx::misc
 {
 
     template<typename T>
-    T* add_pointer(T& instance)
+    constexpr T* add_ptr_instance(T& instance)
     {
         return &instance;
     };
 
     template<typename T>
-    T* add_pointer(T* instance)
+    constexpr T* add_ptr_instance(T* instance)
     {
         return instance;
     };
 
     template<typename T>
-    T& remove_pointer(T& instance)
+    constexpr T& remove_ptr_instance(T& instance)
     {
         return instance;
     };
 
     template<typename T>
-    T& remove_pointer(T* instance)
+    constexpr T& remove_ptr_instance(T* instance)
     {
         return *instance;
     };
