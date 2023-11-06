@@ -12,7 +12,7 @@
 namespace gsx::spatial
 {
 
-    // 3D container with contiguous memory and no spatial optimizations (uses std::vector)
+    // 3D structure with contiguous memory and no spatial optimizations (uses std::vector)
     template<typename T>
     class linear_3d_t : public base_structure_3d_t<T>
     {

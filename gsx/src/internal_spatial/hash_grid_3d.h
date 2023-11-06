@@ -15,7 +15,7 @@
 namespace gsx::spatial
 {
 
-    // 3D hash grid container
+    // 3D hash grid structure
     template<typename T>
     class hash_grid_3d_t : public base_structure_3d_t<T>
     {

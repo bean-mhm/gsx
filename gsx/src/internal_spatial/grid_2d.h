@@ -14,7 +14,7 @@
 namespace gsx::spatial
 {
 
-    // 2D grid container
+    // 2D grid structure
     template<typename T>
     class grid_2d_t : public base_structure_2d_t<T>
     {
