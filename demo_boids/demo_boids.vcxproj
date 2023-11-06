@@ -143,7 +143,13 @@
     <ClInclude Include="include\gsx\internal_misc\utils.h" />
     <ClInclude Include="include\gsx\internal_misc\worker.h" />
     <ClInclude Include="include\gsx\internal_spatial\all.h" />
-    <ClInclude Include="include\gsx\internal_spatial\base_container.h" />
+    <ClInclude Include="include\GLFW\glfw3.h" />
+    <ClInclude Include="include\GLFW\glfw3native.h" />
+    <ClInclude Include="include\GL\eglew.h" />
+    <ClInclude Include="include\GL\glew.h" />
+    <ClInclude Include="include\GL\glxew.h" />
+    <ClInclude Include="include\GL\wglew.h" />
+    <ClInclude Include="include\gsx\internal_spatial\base_structure.h" />
     <ClInclude Include="include\gsx\internal_spatial\grid_2d.h" />
     <ClInclude Include="include\gsx\internal_spatial\grid_3d.h" />
     <ClInclude Include="include\gsx\internal_spatial\hash_grid_2d.h" />
@@ -154,12 +160,6 @@
     <ClInclude Include="include\gsx\internal_spatial\quadtree.h" />
     <ClInclude Include="include\gsx\internal_str\all.h" />
     <ClInclude Include="include\gsx\internal_str\utils.h" />
-    <ClInclude Include="include\GLFW\glfw3.h" />
-    <ClInclude Include="include\GLFW\glfw3native.h" />
-    <ClInclude Include="include\GL\eglew.h" />
-    <ClInclude Include="include\GL\glew.h" />
-    <ClInclude Include="include\GL\glxew.h" />
-    <ClInclude Include="include\GL\wglew.h" />
     <ClInclude Include="src\app.h" />
     <ClInclude Include="src\components.h" />
     <ClInclude Include="src\gl_utils.h" />

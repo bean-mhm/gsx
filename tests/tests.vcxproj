@@ -136,7 +136,7 @@
     <ClInclude Include="include\gsx\internal_misc\utils.h" />
     <ClInclude Include="include\gsx\internal_misc\worker.h" />
     <ClInclude Include="include\gsx\internal_spatial\all.h" />
-    <ClInclude Include="include\gsx\internal_spatial\base_container.h" />
+    <ClInclude Include="include\gsx\internal_spatial\base_structure.h" />
     <ClInclude Include="include\gsx\internal_spatial\grid_2d.h" />
     <ClInclude Include="include\gsx\internal_spatial\grid_3d.h" />
     <ClInclude Include="include\gsx\internal_spatial\hash_grid_2d.h" />
