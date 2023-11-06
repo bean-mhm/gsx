@@ -1,5 +1,6 @@
 #pragma once
 
+#include "base_structure.h"
 #include "linear_2d.h"
 #include "linear_3d.h"
 #include "grid_2d.h"
