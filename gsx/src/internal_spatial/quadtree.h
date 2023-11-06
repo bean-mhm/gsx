@@ -26,25 +26,38 @@ namespace gsx::spatial
         {}
 
         quadtree_t(const quadtree_t& other)
-            : _bounds(other._bounds)
         {
-            std::vector<T> elements_vec;
+            _bounds = other._bounds;
+            std::vector<std::remove_pointer_t<T>> elements_vec;
             other.query_all(elements_vec);
             for (auto& element : elements_vec)
             {
-                insert(element);
+                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(element));
             }
         }
 
-        quadtree_t& operator= (const quadtree_t& other)
+        quadtree_t& operator=(const quadtree_t& other)
         {
             clear();
             _bounds = other._bounds;
-            std::vector<T> elements_vec;
+            std::vector<std::remove_pointer_t<T>> elements_vec;
             other.query_all(elements_vec);
             for (auto& element : elements_vec)
             {
-                insert(element);
+                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(element));
+            }
+        }
+
+        quadtree_t& operator=(quadtree_t&& other)
+        {
+            clear();
+            _bounds = other._bounds;
+            std::vector<std::remove_pointer_t<T>> elements_vec;
+            other.query_all(elements_vec);
+            other.clear();
+            for (auto& element : elements_vec)
+            {
+                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(element));
             }
         }
 
@@ -76,7 +89,10 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query(const math::bounds2& range, std::vector<T*>& out_elements) override
+        virtual void query(
+            const math::bounds2& range,
+            std::vector<std::remove_pointer_t<T>*>& out_elements
+        ) override
         {
             std::stack<quadtree_t*> stack({ this });
             while (!stack.empty())
@@ -89,9 +105,9 @@ namespace gsx::spatial
 
                 for (u8 i = 0; i < q->elements.size(); i++)
                 {
-                    if (math::inside(q->elements[i].pos, range))
+                    if (math::inside(misc::remove_ptr(q->elements[i]).pos, range))
                     {
-                        out_elements.push_back(&q->elements[i]);
+                        out_elements.push_back(misc::add_ptr(q->elements[i]));
                     }
                 }
 
@@ -105,7 +121,10 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query(const math::circle_t& range, std::vector<T*>& out_elements) override
+        virtual void query(
+            const math::circle_t& range,
+            std::vector<std::remove_pointer_t<T>*>& out_elements
+        ) override
         {
             std::stack<quadtree_t*> stack({ this });
             while (!stack.empty())
@@ -118,9 +137,9 @@ namespace gsx::spatial
 
                 for (u8 i = 0; i < q->elements.size(); i++)
                 {
-                    if (math::inside(q->elements[i].pos, range))
+                    if (math::inside(misc::remove_ptr(q->elements[i]).pos, range))
                     {
-                        out_elements.push_back(&q->elements[i]);
+                        out_elements.push_back(misc::add_ptr(q->elements[i]));
                     }
                 }
 
@@ -134,7 +153,7 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<T*>& out_elements) override
+        virtual void query_all(std::vector<std::remove_pointer_t<T>*>& out_elements) override
         {
             std::stack<quadtree_t*> stack({ this });
             while (!stack.empty())
@@ -145,7 +164,7 @@ namespace gsx::spatial
                 out_elements.reserve(out_elements.size() + q->elements.size());
                 for (u8 i = 0; i < q->elements.size(); i++)
                 {
-                    out_elements.push_back(&q->elements[i]);
+                    out_elements.push_back(misc::add_ptr(q->elements[i]));
                 }
 
                 if (q->divided)
@@ -158,7 +177,7 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<T>& out_elements) const override
+        virtual void query_all(std::vector<std::remove_pointer_t<T>>& out_elements) const override
         {
             std::stack<const quadtree_t*> stack({ this });
             while (!stack.empty())
@@ -169,7 +188,7 @@ namespace gsx::spatial
                 out_elements.reserve(out_elements.size() + q->elements.size());
                 for (u8 i = 0; i < q->elements.size(); i++)
                 {
-                    out_elements.push_back(q->elements[i]);
+                    out_elements.push_back(misc::remove_ptr(q->elements[i]));
                 }
 
                 if (q->divided)
@@ -190,7 +209,7 @@ namespace gsx::spatial
                 quadtree_t* q = stack.top();
                 stack.pop();
 
-                if (!math::inside(element.pos, q->_bounds))
+                if (!math::inside(misc::remove_ptr(element).pos, q->_bounds))
                     continue;
 
                 if (q->elements.size() < capacity)

@@ -34,40 +34,50 @@ namespace gsx::spatial
             return vec.size();
         }
 
-        virtual void query(const math::bounds3& range, std::vector<T*>& out_elements) override
+        virtual void query(
+            const math::bounds3& range,
+            std::vector<std::remove_pointer_t<T>*>& out_elements
+        ) override
         {
             for (auto& element : vec)
             {
-                if (math::inside(element.pos, range))
+                if (math::inside(misc::remove_ptr(element).pos, range))
                 {
-                    out_elements.push_back(&element);
+                    out_elements.push_back(misc::add_ptr(element));
                 }
             }
         }
 
-        virtual void query(const math::sphere_t& range, std::vector<T*>& out_elements) override
+        virtual void query(
+            const math::sphere_t& range,
+            std::vector<std::remove_pointer_t<T>*>& out_elements
+        ) override
         {
             for (auto& element : vec)
             {
-                if (math::inside(element.pos, range))
+                if (math::inside(misc::remove_ptr(element).pos, range))
                 {
-                    out_elements.push_back(&element);
+                    out_elements.push_back(misc::add_ptr(element));
                 }
             }
         }
 
-        virtual void query_all(std::vector<T*>& out_elements) override
+        virtual void query_all(std::vector<std::remove_pointer_t<T>*>& out_elements) override
         {
             out_elements.reserve(out_elements.size() + vec.size());
             for (auto& element : vec)
             {
-                out_elements.push_back(&element);
+                out_elements.push_back(misc::add_ptr(element));
             }
         }
 
-        virtual void query_all(std::vector<T>& out_elements) const override
+        virtual void query_all(std::vector<std::remove_pointer_t<T>>& out_elements) const override
         {
-            misc::vec_append(out_elements, vec);
+            out_elements.reserve(out_elements.size() + vec.size());
+            for (auto& element : vec)
+            {
+                out_elements.push_back(misc::remove_ptr(element));
+            }
         }
 
         virtual bool insert(const T& element) override
@@ -78,13 +88,12 @@ namespace gsx::spatial
 
         virtual void clear() override
         {
-            vec.clear();
+            misc::vec_clear(vec);
         }
 
         virtual void rebuild() override
         {}
 
-    private:
     };
 
 }

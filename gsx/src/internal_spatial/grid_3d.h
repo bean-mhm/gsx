@@ -52,7 +52,10 @@ namespace gsx::spatial
             return count;
         }
 
-        virtual void query(const math::bounds3& range, std::vector<T*>& out_elements) override
+        virtual void query(
+            const math::bounds3& range,
+            std::vector<std::remove_pointer_t<T>*>& out_elements
+        ) override
         {
             math::ivec3 start_cell(math::floor(cell_ratio * (range.pmin - _bounds.pmin)));
             start_cell.x = math::clamp(start_cell.x, 0, _resolution.x - 1);
@@ -77,9 +80,9 @@ namespace gsx::spatial
 
                         for (auto& element : containers[container_index])
                         {
-                            if (math::inside(element.pos, range))
+                            if (math::inside(misc::remove_ptr(element).pos, range))
                             {
-                                out_elements.push_back(&element);
+                                out_elements.push_back(misc::add_ptr(element));
                             }
                         }
                     }
@@ -87,7 +90,10 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query(const math::sphere_t& range, std::vector<T*>& out_elements) override
+        virtual void query(
+            const math::sphere_t& range,
+            std::vector<std::remove_pointer_t<T>*>& out_elements
+        ) override
         {
             const math::bounds3 range_b = range.bounds();
 
@@ -122,9 +128,9 @@ namespace gsx::spatial
 
                         for (auto& element : containers[container_index])
                         {
-                            if (math::inside(element.pos, range))
+                            if (math::inside(misc::remove_ptr(element).pos, range))
                             {
-                                out_elements.push_back(&element);
+                                out_elements.push_back(misc::add_ptr(element));
                             }
                         }
                     }
@@ -132,29 +138,35 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<T*>& out_elements) override
+        virtual void query_all(std::vector<std::remove_pointer_t<T>*>& out_elements) override
         {
             for (auto& container : containers)
             {
                 out_elements.reserve(out_elements.size() + container.size());
                 for (auto& element : container)
                 {
-                    out_elements.push_back(&element);
+                    out_elements.push_back(misc::add_ptr(element));
                 }
             }
         }
 
-        virtual void query_all(std::vector<T>& out_elements) const override
+        virtual void query_all(std::vector<std::remove_pointer_t<T>>& out_elements) const override
         {
             for (auto& container : containers)
             {
-                misc::vec_append(out_elements, container);
+                out_elements.reserve(out_elements.size() + container.size());
+                for (auto& element : container)
+                {
+                    out_elements.push_back(misc::remove_ptr(element));
+                }
             }
         }
 
         virtual bool insert(const T& element) override
         {
-            math::ivec3 cell(math::floor(cell_ratio * (element.pos - _bounds.pmin)));
+            math::ivec3 cell(math::floor(
+                cell_ratio * (misc::remove_ptr(element).pos - _bounds.pmin)
+            ));
             cell.x = math::clamp(cell.x, 0, _resolution.x - 1);
             cell.y = math::clamp(cell.y, 0, _resolution.y - 1);
             cell.z = math::clamp(cell.z, 0, _resolution.z - 1);
