@@ -12,29 +12,58 @@
 namespace gsx::misc
 {
 
+    // type& -> type*
     template<typename T>
-    constexpr T* add_ptr_instance(T& instance)
+    constexpr T* add_ptr(T& instance)
     {
         return &instance;
     };
 
+    // type* -> type*
     template<typename T>
-    constexpr T* add_ptr_instance(T* instance)
+    constexpr T* add_ptr(T* instance)
     {
         return instance;
     };
 
+    // type& -> type&
     template<typename T>
-    constexpr T& remove_ptr_instance(T& instance)
+    constexpr T& remove_ptr(T& instance)
     {
         return instance;
     };
 
+    // type* -> type&
     template<typename T>
-    constexpr T& remove_ptr_instance(T* instance)
+    constexpr T& remove_ptr(T* instance)
     {
         return *instance;
     };
+
+    // type& -> type&
+    // type* -> type*
+    template<typename T_from, typename T_to>
+    constexpr typename std::enable_if<std::is_same_v<T_from, T_to>, T_to&>::type
+        add_or_remove_ptr(T_from& instance)
+    {
+        return instance;
+    }
+
+    // type& -> type*
+    template<typename T_from, typename T_to>
+    constexpr typename std::enable_if<std::is_same_v<T_to, T_from*>, T_to>::type
+        add_or_remove_ptr(T_from& instance)
+    {
+        return &instance;
+    }
+
+    // type* -> type&
+    template<typename T_from, typename T_to>
+    constexpr typename std::enable_if<std::is_same_v<T_from, T_to*>, T_to&>::type
+        add_or_remove_ptr(T_from& instance)
+    {
+        return *instance;
+    }
 
     template<typename T>
     void vec_clear(std::vector<T>& vec)
