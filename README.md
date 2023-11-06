@@ -13,15 +13,14 @@ ecs::world_t world(
     std::make_shared<ecs::csv_logger_t>("./log.csv") // Logger
 );
 
-// Create containers and components
+// Create components
 ...
 
 world.add_system(
     std::make_shared<s_animals>(
-        "Animals System", // Name
-        0,                // Update order
-        false,            // Force run on the main thread
-        animals           // Container for the animal components
+        "Animals System",            // Name
+        ecs::execution_scheme_t(0),  // Execution scheme
+        animals                      // Animal components
     )
 );
 
@@ -141,8 +140,9 @@ boids.query(
 boids.rebuild();
 ```
 
-If your system stores a reference to a container, you can use the general `base_container_2d_t` / `base_container_3d_t` type that accepts all spatial container types. One sub-class of `base_container_Xd_t` is `linear_Xd_t` which uses a `std::vector` under the hood and has no spatial optimizations. Other sub-classes include:
+If your system stores a reference to a spatial data structure, you can use the generic `base_structure_2d_t` and `base_structure_3d_t` types that accept all spatial data structure types. One sub-class of `base_structure_Xd_t` is `linear_Xd_t` which uses a `std::vector` under the hood and has no spatial optimizations. Other sub-classes include:
 
+- `grid_2d_t`
 - `grid_3d_t`
 - `hash_grid_2d_t`
 - `hash_grid_3d_t`
