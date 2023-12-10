@@ -4,7 +4,7 @@ GSX is a C++20 library providing some of the basic stuff you'd need to build a g
 
 # `gsx::ecs`
 
-![ECS module - Image made with Blender by me](images/0-ecs.png)
+![ECS module - Image made with Blender by me](images/0-ecs.webp)
 
 GSX's data-driven ECS module lets you quickly write systems and create a world that manages those systems with minimal performance overhead. This is perfect for games or simulations where a lot of entities with different properties interact with each other in different ways.
 
@@ -58,7 +58,7 @@ The ECS module lets you write your own custom logger for a world, while also pro
 
 # `gsx::math`
 
-![Math module - Image made with Blender by me](images/1-math.png)
+![Math module - Image made with Blender by me](images/1-math.webp)
 
 GSX provides a GLSL-like math and linear algebra module that's essential for many graphical applications and simulations. Here's what the math module provides:
 
@@ -110,7 +110,7 @@ f32 num2 = prng.next_f32(); // [0, 1]
 
 # `gsx::spatial`
 
-![Spatial data structures - Image made with Blender by me](images/2-spatial.png)
+![Spatial data structures - Image made with Blender by me](images/2-spatial.webp)
 
 You might often need to store a list of particles or objects with spatial position attributes, and later need to find the neighbors of an object that are a certain distance away from it (or closer), or inside a specific bounding box. A naive implementation of this usually results in a time complexity of O(N^2) which is far from ideal. GSX provides data structures in the spatial module specifically designed to solve this problem by optimizing the way they store and query your objects.
 
