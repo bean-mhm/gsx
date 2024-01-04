@@ -10,9 +10,6 @@ namespace gsx::ecs
         : name(name), exec_scheme(exec_scheme)
     {}
 
-    base_system_t::~base_system_t()
-    {}
-
     void base_system_t::on_start(world_t& world)
     {}
 

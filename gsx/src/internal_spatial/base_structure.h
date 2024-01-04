@@ -31,6 +31,7 @@ namespace gsx::spatial
     class base_structure_2d_t
     {
     public:
+        virtual ~base_structure_2d_t() = default;
         virtual usize size() const = 0;
         virtual void query(
             const math::bounds2& range,
@@ -58,6 +59,7 @@ namespace gsx::spatial
     class base_structure_3d_t
     {
     public:
+        virtual ~base_structure_3d_t() = default;
         virtual usize size() const = 0;
         virtual void query(
             const math::bounds3& range,

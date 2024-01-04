@@ -57,7 +57,7 @@ namespace gsx::ecs
         // Create a system with given properties.
         base_system_t(const std::string& name, const execution_scheme_t& exec_scheme);
         no_default_copy_construct_no_assignment(base_system_t);
-        virtual ~base_system_t();
+        virtual ~base_system_t() = default;
 
         // Called when the world starts running, in the order in which the systems were added.
         // Note: Avoid starting separate threads that keep running after returning from this

@@ -15,9 +15,6 @@ namespace gsx::ecs
         : log_level(log_level), world_name(world_name), thread_id(thread_id), message(message)
     {}
 
-    base_logger_t::~base_logger_t()
-    {}
-
     ostream_logger_t::ostream_logger_t(std::ostream& stream)
         : stream(stream)
     {

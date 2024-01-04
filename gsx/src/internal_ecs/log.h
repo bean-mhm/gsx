@@ -49,7 +49,7 @@ namespace gsx::ecs
     class base_logger_t
     {
     public:
-        virtual ~base_logger_t();
+        virtual ~base_logger_t() = default;
         virtual void log(const log_entry_t& entry) = 0;
 
     };
