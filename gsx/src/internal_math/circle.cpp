@@ -23,14 +23,14 @@ namespace gsx::math
         return os;
     }
 
-    vec2 circle_t::unit_at(f32 angle)
-    {
-        return vec2(math::cos(angle), math::sin(angle));
-    }
-
     vec2 circle_t::at(f32 angle) const
     {
         return center + radius * unit_at(angle);
+    }
+
+    vec2 circle_t::unit_at(f32 angle)
+    {
+        return vec2(math::cos(angle), math::sin(angle));
     }
 
 }

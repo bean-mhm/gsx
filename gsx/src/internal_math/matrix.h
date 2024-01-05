@@ -303,19 +303,19 @@ namespace gsx::math
         }
 
         // Number of rows
-        constexpr i32 n_rows()
+        static constexpr i32 n_rows()
         {
             return n_row;
         }
 
         // Number of columns
-        constexpr i32 n_cols()
+        static constexpr i32 n_cols()
         {
             return n_col;
         }
 
-        // Number of elements (n_row * n_col)
-        constexpr i32 n_elements() const
+        // Number of elements
+        static constexpr i32 n_elements()
         {
             return n_row * n_col;
         }

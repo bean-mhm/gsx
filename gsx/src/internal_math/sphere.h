@@ -47,17 +47,17 @@ namespace gsx::math
             return center != s.center || radius != s.radius;
         }
 
-        // A point on the unit sphere at given theta and phi angles
-        static vec3 unit_at(f32 theta, f32 phi);
-
-        // A point on the sphere at given theta and phi angles
-        vec3 at(f32 theta, f32 phi) const;
-
         // Bounding box of the sphere
         constexpr bounds3 bounds() const
         {
             return bounds3(center - radius, center + radius);
         }
+
+        // A point on the sphere at given theta and phi angles
+        vec3 at(f32 theta, f32 phi) const;
+
+        // A point on the unit sphere at given theta and phi angles
+        static vec3 unit_at(f32 theta, f32 phi);
 
     };
 

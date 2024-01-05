@@ -23,6 +23,11 @@ namespace gsx::math
         return os;
     }
 
+    vec3 sphere_t::at(f32 theta, f32 phi) const
+    {
+        return center + radius * unit_at(theta, phi);
+    }
+
     vec3 sphere_t::unit_at(f32 theta, f32 phi)
     {
         const f32 sin_theta = math::sin(theta);
@@ -31,11 +36,6 @@ namespace gsx::math
             sin_theta * math::sin(phi),
             math::cos(theta)
         );
-    }
-
-    vec3 sphere_t::at(f32 theta, f32 phi) const
-    {
-        return center + radius * unit_at(theta, phi);
     }
 
 }

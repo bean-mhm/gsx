@@ -47,17 +47,17 @@ namespace gsx::math
             return center != c.center || radius != c.radius;
         }
 
-        // A point on the unit circle at a given angle
-        static vec2 unit_at(f32 angle);
-
-        // A point on the circle at a given angle
-        vec2 at(f32 angle) const;
-
         // Bounding box of the circle
         constexpr bounds2 bounds() const
         {
             return bounds2(center - radius, center + radius);
         }
+
+        // A point on the circle at a given angle
+        vec2 at(f32 angle) const;
+
+        // A point on the unit circle at a given angle
+        static vec2 unit_at(f32 angle);
 
     };
 
