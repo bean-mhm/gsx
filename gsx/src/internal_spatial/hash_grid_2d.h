@@ -32,8 +32,6 @@ namespace gsx::spatial
             containers.resize(n_containers);
         }
 
-        no_default_construct(hash_grid_2d_t);
-
         math::vec2 cell_size() const
         {
             return _cell_size;

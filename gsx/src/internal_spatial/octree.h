@@ -61,8 +61,6 @@ namespace gsx::spatial
             }
         }
 
-        no_default_construct(octree_t);
-
         math::bounds3 bounds() const
         {
             return _bounds;

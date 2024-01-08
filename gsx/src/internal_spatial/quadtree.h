@@ -61,8 +61,6 @@ namespace gsx::spatial
             }
         }
 
-        no_default_construct(quadtree_t);
-
         math::bounds2 bounds() const
         {
             return _bounds;

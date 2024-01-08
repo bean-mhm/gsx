@@ -23,7 +23,7 @@ namespace gsx::misc
         const u64 id;
 
         worker_t(u64 id);
-        no_default_copy_construct_no_assignment(worker_t);
+        no_copy_construct_no_assignment(worker_t);
         ~worker_t();
 
         // Enqueue a new job to be processed by the worker thread.

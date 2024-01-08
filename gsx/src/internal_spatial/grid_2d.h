@@ -30,8 +30,6 @@ namespace gsx::spatial
             containers.resize((usize)resolution.x * (usize)resolution.y);
         }
 
-        no_default_construct(grid_2d_t);
-
         math::bounds2 bounds() const
         {
             return _bounds;

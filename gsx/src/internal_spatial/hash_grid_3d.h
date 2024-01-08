@@ -32,8 +32,6 @@ namespace gsx::spatial
             containers.resize(n_containers);
         }
 
-        no_default_construct(hash_grid_3d_t);
-
         math::vec3 cell_size() const
         {
             return _cell_size;

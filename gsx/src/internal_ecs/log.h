@@ -61,7 +61,7 @@ namespace gsx::ecs
         std::ostream& stream;
 
         ostream_logger_t(std::ostream& stream);
-        no_default_copy_construct_no_assignment(ostream_logger_t);
+        no_copy_construct_no_assignment(ostream_logger_t);
         virtual ~ostream_logger_t();
 
         virtual void log(const log_entry_t& entry) override;
@@ -76,7 +76,7 @@ namespace gsx::ecs
     {
     public:
         csv_logger_t(const std::string& filename);
-        no_default_copy_construct_no_assignment(csv_logger_t);
+        no_copy_construct_no_assignment(csv_logger_t);
         virtual ~csv_logger_t();
 
         virtual void log(const log_entry_t& entry) override;
