@@ -28,6 +28,7 @@ namespace gsx::str
     std::string rpad(const std::string& s, u64 length, bool add_space = true);
 
     bool contains(const std::string& s, const std::string& substring);
+    bool contains(const std::string& s, char ch);
     void replace_inplace(std::string& s, const std::string& from, const std::string& to);
     std::string replace(std::string s, const std::string& from, const std::string& to);
 

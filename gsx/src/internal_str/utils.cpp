@@ -105,6 +105,11 @@ namespace gsx::str
         return (s.find(substring) != std::string::npos);
     }
 
+    bool contains(const std::string& s, char ch)
+    {
+        return (s.find(ch) != std::string::npos);
+    }
+
     // https://stackoverflow.com/a/3418285/18049911
     void replace_inplace(std::string& s, const std::string& from, const std::string& to)
     {
@@ -185,7 +190,7 @@ namespace gsx::str
         s << f.rdbuf();
 
         f.close();
-        
+
         return s.str();
     }
 
