@@ -1,15 +1,11 @@
 #pragma once
 
-// STD
 #include <vector>
 
-// GSX
 #include "gsx/gsx.h"
 
-// Internal
 #include "components.h"
 
-// Movement system
 class movement_system_t : public ecs::base_system_t
 {
 public:
@@ -22,11 +18,13 @@ public:
     );
     virtual ~movement_system_t() = default;
 
-    virtual void on_update(ecs::world_t& world, const ecs::iteration_t& iter) override;
+    virtual void on_update(
+        ecs::world_t& world,
+        const ecs::iteration_t& iter
+    ) override;
 
 };
 
-// Circle render system (ASCII output to the console)
 class render_system_t : public ecs::base_system_t
 {
 public:
@@ -41,6 +39,9 @@ public:
     );
     virtual ~render_system_t() = default;
 
-    virtual void on_update(ecs::world_t& world, const ecs::iteration_t& iter) override;
+    virtual void on_update(
+        ecs::world_t& world,
+        const ecs::iteration_t& iter
+    ) override;
 
 };

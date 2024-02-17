@@ -1,6 +1,5 @@
 #pragma once
 
-// Internal
 #include "gl_utils.h"
 
 class app_t

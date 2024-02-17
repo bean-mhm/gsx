@@ -549,7 +549,7 @@ namespace gsx::math
         const base_vec2<T>& nref
     )
     {
-        if (dot(nref, I) < 0)
+        if (dot(nref, i) < 0)
             return n;
         return -n;
     }

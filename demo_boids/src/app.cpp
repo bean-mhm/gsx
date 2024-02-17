@@ -1,54 +1,53 @@
 #include "app.h"
 
-// STD
 #include <iostream>
 #include <memory>
 #include <stdexcept>
 
-// GSX
 #include "gsx/gsx.h"
 
-// Internal
 #include "constants.h"
 #include "components.h"
 #include "systems.h"
 
 static void glfw_error_callback(int error, const char* description);
-static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+static void glfw_key_callback(
+    GLFWwindow* window,
+    int key,
+    int scancode,
+    int action,
+    int mods
+);
 
 void app_t::run()
 {
-    // Initialize a window with an OpenGL context
     init_context();
 
-    // Create a world
     ecs::world_t world(
         "Boids",
         ecs::log_level_t::info,
         std::make_shared<ecs::ostream_logger_t>(std::cout)
     );
 
-    // Create a PRNG
     math::prng_t prng;
 
-    // Add boid attractors
     std::vector<attractor_t> attractors;
     {
-        // The first attractor will be rotating around the origin by the attractors system
+        // the first attractor will be rotating around the origin by the
+        // attractors system
         attractor_t attractor;
         attractor.pos = math::vec2(0);
         attractor.strength = 1.5;
         attractors.push_back(attractor);
     }
     {
-        // This one will move the boids away from the bottom
+        // this one will move the boids away from the bottom
         attractor_t attractor;
         attractor.pos = math::vec2(0, boid_min_pos.y);
         attractor.strength = -.8;
         attractors.push_back(attractor);
     }
 
-    // Add boids
     spatial::grid_2d_t<boid_t> boids(
         math::bounds2(boid_min_pos, boid_max_pos),
         math::ivec2(6)
@@ -68,68 +67,72 @@ void app_t::run()
         boids.insert(boid);
     }
 
-    // Add systems
-    {
-        world.add_system(std::make_shared<attractor_system_t>(
-            "Attractor", ecs::execution_scheme_t(0), attractors
-        ));
 
-        world.add_system(std::make_shared<boid_system_t>(
-            "Boid", ecs::execution_scheme_t(1), boids, attractors
-        ));
+    world.add_system(std::make_shared<attractor_system_t>(
+        "attractor", ecs::execution_scheme_t(0), attractors
+    ));
 
-        world.add_system(std::make_shared<render_system_t>(
-            "Render", ecs::execution_scheme_t(2, true), window, boids
-        ));
-    }
+    world.add_system(std::make_shared<boid_system_t>(
+        "boid", ecs::execution_scheme_t(1), boids, attractors
+    ));
 
-    // Run
+    world.add_system(std::make_shared<render_system_t>(
+        "render", ecs::execution_scheme_t(2, true), window, boids
+    ));
+
     world.run();
 
-    // Clean up the OpenGL context
     cleanup_context();
 }
 
 void app_t::init_context()
 {
-    // Initialize GLFW
+    // initialize GLFW
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
     {
-        throw std::runtime_error("Failed to initialize GLFW.");
+        throw std::runtime_error("failed to initialize GLFW");
     }
 
-    // Window hints
+    // window hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-    // Create window with graphics context
-    window = glfwCreateWindow(initial_width, initial_height, initial_title, nullptr, nullptr);
+    // create window with graphics context
+    window = glfwCreateWindow(
+        initial_width,
+        initial_height,
+        initial_title,
+        nullptr,
+        nullptr
+    );
     if (!window)
     {
         glfwTerminate();
-        throw std::runtime_error("Failed to create a window.");
+        throw std::runtime_error("failed to create a window");
     }
 
-    // Make the window's context current
+    // make the window's context current
     glfwMakeContextCurrent(window);
 
-    // Enable VSync
+    // enable VSync
     glfwSwapInterval(1);
 
-    // Key callback
+    // key callback
     glfwSetKeyCallback(window, glfw_key_callback);
 
-    // Initialize GLEW for loading OpenGL extensions
+    // initialize GLEW for loading OpenGL extensions
     glewExperimental = GL_TRUE;
     GLenum glew_result = glewInit();
     if (glew_result != GLEW_OK)
     {
         cleanup_context();
-        throw std::runtime_error("Failed to initialize GLEW: " + std::to_string(glew_result));
+        throw std::runtime_error(
+            "failed to initialize GLEW: " + std::to_string(glew_result)
+        );
     }
 }
 
@@ -144,7 +147,13 @@ static void glfw_error_callback(int error, const char* description)
     std::cerr << "GLFW error " << error << ": " << description << '\n';
 }
 
-static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+static void glfw_key_callback(
+    GLFWwindow* window,
+    int key,
+    int scancode,
+    int action,
+    int mods
+)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     {

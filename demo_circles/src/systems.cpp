@@ -1,12 +1,8 @@
 #include "systems.h"
 
-// STD
 #include <iostream>
 
-// Internal
 #include "utils.h"
-
-// s_movement
 
 movement_system_t::movement_system_t(
     const std::string& name,
@@ -17,7 +13,10 @@ movement_system_t::movement_system_t(
     transforms(transforms)
 {}
 
-void movement_system_t::on_update(ecs::world_t& world, const ecs::iteration_t& iter)
+void movement_system_t::on_update(
+    ecs::world_t& world,
+    const ecs::iteration_t& iter
+)
 {
     for (usize i = 0; i < transforms.size(); i++)
     {
@@ -26,8 +25,6 @@ void movement_system_t::on_update(ecs::world_t& world, const ecs::iteration_t& i
         transform.pos = 3.f * math::vec2(math::cos(theta), sin(theta));
     }
 }
-
-// s_circle_renderer
 
 render_system_t::render_system_t(
     const std::string& name,
@@ -39,26 +36,27 @@ render_system_t::render_system_t(
     transforms(transforms), circles(circles)
 {}
 
-void render_system_t::on_update(ecs::world_t& world, const ecs::iteration_t& iter)
+void render_system_t::on_update(
+    ecs::world_t& world,
+    const ecs::iteration_t& iter
+)
 {
-    // Clear the console
     clear_console();
 
-    // Render (per-pixel shader)
+    // render (per-pixel shader)
     constexpr math::uvec2 res(30, 20);
     f32 px2uv = get_px2uv_ratio(res);
     for (i32 y = 0; y < res.y; y++)
     {
         for (i32 x = 0; x < res.x; x++)
         {
-            // UV
             math::vec2 uv = screen_to_uv(math::uvec2(x, y), res);
 
-            // Find the distance from the closest circle
+            // distance from the closest circle
             f32 dist = 1e9f;
             for (auto& circle : circles)
             {
-                // See if there's a transform component with the same owner
+                // see if there's a transform component with the same owner
                 transform_t* transform = nullptr;
                 for (auto& t : transforms)
                 {
@@ -71,17 +69,22 @@ void render_system_t::on_update(ecs::world_t& world, const ecs::iteration_t& ite
 
                 if (transform)
                 {
-                    // Use transform.pos as the center
-                    dist = math::min(dist, sd_circle(uv, transform->pos, circle.radius));
+                    // use transform.pos as the center
+                    dist = math::min(
+                        dist,
+                        sd_circle(uv, transform->pos, circle.radius)
+                    );
                 }
                 else
                 {
-                    // Use the origin as the center
-                    dist = math::min(dist, sd_circle(uv, math::vec2(0), circle.radius));
+                    // use the origin as the center
+                    dist = math::min(
+                        dist,
+                        sd_circle(uv, math::vec2(0), circle.radius)
+                    );
                 }
             }
 
-            // Print
             std::cout << (dist < px2uv ? 'o' : ' ') << " ";
         }
         std::cout << '\n';

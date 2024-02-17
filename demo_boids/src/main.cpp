@@ -1,7 +1,5 @@
-// STD
 #include <iostream>
 
-// App
 #include "app.h"
 
 int main()

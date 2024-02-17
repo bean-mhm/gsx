@@ -1,6 +1,5 @@
 #pragma once
 
-// GSX
 #include "gsx/gsx.h"
 
 math::vec2 screen_to_uv(math::uvec2 coord, math::uvec2 res);

@@ -1,9 +1,13 @@
 #include "gl_utils.h"
 
-// STD
 #include <iostream>
 
-void make_shader(GLuint& shader, const std::string& name, GLenum type, const char* source)
+void make_shader(
+    GLuint& shader,
+    const std::string& name,
+    GLenum type,
+    const char* source
+)
 {
     shader = glCreateShader(type);
     glShaderSource(shader, 1, &source, nullptr);
@@ -19,7 +23,7 @@ void make_shader(GLuint& shader, const std::string& name, GLenum type, const cha
     std::string message =
         (status == GL_TRUE)
         ? "\"" + name + "\" was compiled successfully"
-        : "Failed to compile \"" + name + "\"";
+        : "failed to compile \"" + name + "\"";
 
     if (info_log.empty())
     {

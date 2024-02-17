@@ -1,12 +1,10 @@
 #pragma once
 
-// GSX
 #include "gsx/gsx.h"
 
-// Internal
 #include "gl_utils.h"
 
-// Plane
+// plane
 
 static const char* plane_src_vert = R"glsl(
     #version 330 core
@@ -85,23 +83,24 @@ static const char* plane_src_frag = R"glsl(
 
 static const f32 plane_vertices[]{
     // vec2 pos
-    -1.f, 1.f,  // Top-left
-    1.f, 1.f,   // Top-right
-    1.f, -1.f,  // Bottom-right
-    -1.f, -1.f  // Bottom-left
+    -1.f, 1.f,  // top-left
+    1.f, 1.f,   // top-right
+    1.f, -1.f,  // bottom-right
+    -1.f, -1.f  // bottom-left
 };
 
 static const GLuint plane_elements[] = {
     0, 1, 2, 2, 3, 0
 };
 
-// Boids
+// boids
 
 static constexpr math::vec2 boid_min_pos(-.9f, -.9f);
 static constexpr math::vec2 boid_max_pos(.9f, .9f);
 static constexpr f32 boid_speed = .5f;
 static constexpr f32 boid_attention_radius = .2f;
-static constexpr f32 boid_attention_radius_sqr = boid_attention_radius * boid_attention_radius;
+static constexpr f32 boid_attention_radius_sqr =
+boid_attention_radius * boid_attention_radius;
 static constexpr f32 boid_size = .03f;
 
 static const char* boid_src_vert = R"glsl(
@@ -236,7 +235,11 @@ static const char* boid_src_frag = R"glsl(
             else
             {
                 // Distance from the line
-                m = min(m, abs(slope * p.x - p.y + intercept) / sqrt(slope * slope + 1.));
+                m = min(
+                    m,
+                    abs(slope * p.x - p.y + intercept)
+                    / sqrt(slope * slope + 1.)
+                );
             }
 
             // Intersect AB with half line from p to (+inf, p.y)

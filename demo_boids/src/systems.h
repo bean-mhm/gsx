@@ -1,16 +1,12 @@
 #pragma once
 
-// STD
 #include <vector>
 
-// GSX
 #include "gsx/gsx.h"
 
-// Internal
 #include "components.h"
 #include "gl_utils.h"
 
-// Boid attractor system
 class attractor_system_t : public ecs::base_system_t
 {
 public:
@@ -21,14 +17,16 @@ public:
     );
     virtual ~attractor_system_t() = default;
 
-    virtual void on_update(ecs::world_t& world, const ecs::iteration_t& iter) override;
+    virtual void on_update(
+        ecs::world_t& world,
+        const ecs::iteration_t& iter
+    ) override;
 
 private:
     std::vector<attractor_t>& attractors;
 
 };
 
-// Boid simulation system
 class boid_system_t : public ecs::base_system_t
 {
 public:
@@ -40,7 +38,10 @@ public:
     );
     virtual ~boid_system_t() = default;
 
-    virtual void on_update(ecs::world_t& world, const ecs::iteration_t& iter) override;
+    virtual void on_update(
+        ecs::world_t& world,
+        const ecs::iteration_t& iter
+    ) override;
 
 private:
     spatial::base_structure_2d_t<boid_t>& boids;
@@ -48,7 +49,6 @@ private:
 
 };
 
-// OpenGL render system
 class render_system_t : public ecs::base_system_t
 {
 public:
@@ -61,8 +61,14 @@ public:
     virtual ~render_system_t() = default;
 
     virtual void on_start(ecs::world_t& world) override;
-    virtual void on_update(ecs::world_t& world, const ecs::iteration_t& iter) override;
-    virtual void on_stop(ecs::world_t& world, const ecs::iteration_t& iter) override;
+    virtual void on_update(
+        ecs::world_t& world,
+        const ecs::iteration_t& iter
+    ) override;
+    virtual void on_stop(
+        ecs::world_t& world,
+        const ecs::iteration_t& iter
+    ) override;
 
 private:
     spatial::base_structure_2d_t<boid_t>& boids;

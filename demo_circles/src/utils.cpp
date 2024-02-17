@@ -1,6 +1,5 @@
 #include "utils.h"
 
-// STD
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
