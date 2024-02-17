@@ -266,17 +266,17 @@ namespace gsx::math::transform
 
         mat3 r;
 
-        // Compute rotation of first basis vector
+        // compute rotation of first basis vector
         r(0, 0) = a.x * a.x + (1 - a.x * a.x) * c;
         r(0, 1) = a.x * a.y * (1 - c) - a.z * s;
         r(0, 2) = a.x * a.z * (1 - c) + a.y * s;
 
-        // Second basis vector
+        // second basis vector
         r(1, 0) = a.x * a.y * (1 - c) + a.z * s;
         r(1, 1) = a.y * a.y + (1 - a.y * a.y) * c;
         r(1, 2) = a.y * a.z * (1 - c) - a.x * s;
 
-        // Third basis vector
+        // third basis vector
         r(2, 0) = a.x * a.z * (1 - c) - a.y * s;
         r(2, 1) = a.y * a.z * (1 - c) + a.x * s;
         r(2, 2) = a.z * a.z + (1 - a.z * a.z) * c;
@@ -295,19 +295,19 @@ namespace gsx::math::transform
 
         mat4 r;
 
-        // Compute rotation of first basis vector
+        // compute rotation of first basis vector
         r(0, 0) = a.x * a.x + (1 - a.x * a.x) * c;
         r(0, 1) = a.x * a.y * (1 - c) - a.z * s;
         r(0, 2) = a.x * a.z * (1 - c) + a.y * s;
         r(0, 3) = 0;
 
-        // Second basis vector
+        // second basis vector
         r(1, 0) = a.x * a.y * (1 - c) + a.z * s;
         r(1, 1) = a.y * a.y + (1 - a.y * a.y) * c;
         r(1, 2) = a.y * a.z * (1 - c) - a.x * s;
         r(1, 3) = 0;
 
-        // Third basis vector
+        // third basis vector
         r(2, 0) = a.x * a.z * (1 - c) - a.y * s;
         r(2, 1) = a.y * a.z * (1 - c) + a.x * s;
         r(2, 2) = a.z * a.z + (1 - a.z * a.z) * c;
@@ -319,17 +319,22 @@ namespace gsx::math::transform
         return r;
     }
 
-    mat4 lookat_3d_h(const vec3& pos, const vec3& look, const vec3& up, mat4* out_minv)
+    mat4 lookat_3d_h(
+        const vec3& pos,
+        const vec3& look,
+        const vec3& up,
+        mat4* out_minv
+    )
     {
         mat4 cam_to_world;
 
-        // Initialize fourth column of viewing matrix
+        // initialize fourth column of viewing matrix
         cam_to_world(0, 3) = pos.x;
         cam_to_world(1, 3) = pos.y;
         cam_to_world(2, 3) = pos.z;
         cam_to_world(3, 3) = 1;
 
-        // Initialize first three columns of viewing matrix
+        // initialize first three columns of viewing matrix
         vec3 dir = normalize(look - pos);
         vec3 right = normalize(cross(normalize(up), dir));
         vec3 new_up = cross(dir, right);

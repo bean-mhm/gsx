@@ -8,7 +8,7 @@ namespace gsx::math
         f32 mtrace = m(0, 0) + m(1, 1) + m(2, 2);
         if (mtrace > 0.f)
         {
-            // Compute w from matrix trace, then xyz
+            // compute w from matrix trace, then xyz
             // 4w^2 = m(0, 0) + m(1, 1) + m(2, 2) + m(3, 3) (but m(3, 3) == 1)
             f32 s = sqrt(mtrace + 1.f);
             v.w = s / 2.f;
@@ -19,7 +19,7 @@ namespace gsx::math
         }
         else
         {
-            // Compute largest of $x$, $y$, or $z$, then remaining components
+            // compute largest of $x$, $y$, or $z$, then remaining components
             const i32 nxt[3] = { 1, 2, 0 };
             f32 q[3];
             i32 i = 0;

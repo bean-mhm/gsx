@@ -1,6 +1,5 @@
 #pragma once
 
-// STD
 #include <string>
 #include <deque>
 #include <vector>
@@ -9,7 +8,6 @@
 #include <mutex>
 #include <cstdint>
 
-// Internal
 #include "log.h"
 #include "event.h"
 #include "../internal_common/all.h"
@@ -18,34 +16,29 @@
 namespace gsx::ecs
 {
 
-    // Forward decleration
     class base_system_t;
 
-    // Information about the current iteration of the world. This will be passed to systems when
-    // the world is running.
+    // information about the current iteration of the world. this will be passed
+    // to systems when the world is running.
     struct iteration_t
     {
-        // Iteration number starting from 0
+        // iteration number starting from 0
         u64 i = 0;
 
-        // Seconds elapsed since the start
+        // seconds elapsed since the start
         f32 time = 0;
 
-        // Seconds elapsed since the last iteration
+        // seconds elapsed since the last iteration
         f32 dt = 0;
     };
 
-    // A world for holding and managing a collection of components and systems
+    // a world for holding and managing a collection of systems
     class world_t
     {
     public:
-        // A name for the world
         const std::string name;
-
-        // Maximum log level to use
         const log_level_t max_log_level;
 
-        // Create a world with a given name and a logger.
         world_t(
             const std::string& name,
             log_level_t max_log_level,
@@ -54,83 +47,77 @@ namespace gsx::ecs
         no_copy_construct_no_assignment(world_t);
         ~world_t();
 
-        // Add a custom log message.
         void log(log_level_t log_level, const std::string& message);
-
-        // Enqueue a given event.
         void enqueue_event(const event_t& event);
 
-        // Get the first system in the list with a given name. If no such system exists, nullptr
-        // will be returned.
-        std::shared_ptr<base_system_t> get_system_named(const std::string& name);
+        // get the first system in the list with a given name. if no such
+        // system exists, nullptr will be returned.
+        std::shared_ptr<base_system_t> get_system_named(
+            const std::string& name
+        );
 
-        // Get a list of all the systems
-        const std::vector<std::shared_ptr<base_system_t>>& get_systems();
+        constexpr const std::vector<std::shared_ptr<base_system_t>>&
+            get_systems() const
+        {
+            return systems;
+        }
 
-        // Add a system to the world.
+        constexpr std::vector<std::shared_ptr<base_system_t>>& get_systems()
+        {
+            return systems;
+        }
+
         void add_system(const std::shared_ptr<base_system_t>& system);
+        void remove_first_system_named(const std::string& name);
+        void remove_all_systems_named(const std::string& name);
+        void remove_all_systems();
 
-        // Remove the first system in the list with a given name.
-        void remove_system_named(const std::string& name);
-
-        // Remove all systems with a given name.
-        void remove_systems_named(const std::string& name);
-
-        // Remove all systems in the world.
-        void remove_systems();
-
-        // Start the main loop with a given maximum update rate. This will call the abstract
-        // functions of the systems present in the world.
-        // Note: Avoid adding or removing systems while the world is running, as it will not
-        // affect the current run.
-        // Note: Only a single thread can be running the world at a time.
-        // Note: Use a max_update_rate of 0 for uncapped update rate.
-        // Note: Use a max_run_time of 0 for uncapped run time.
+        // start the main loop with a given maximum update rate. this will call
+        // the abstract functions of the systems present in the world.
+        // * avoid adding or removing systems while the world is running, as it
+        // will not affect the current run.
+        // * only a single thread can be running the world at a time.
+        // * use a max_update_rate of 0 for uncapped update rate.
+        // * use a max_run_time of 0 for uncapped run time.
         void run(const f32 max_update_rate = 0, const f32 max_run_time = 0);
 
-        // Signal the runner thread to stop, and optionally wait for it if calling from a separate
-        // thread. If this is called from the same thread that called run(), wait must be false.
+        // signal the runner thread to stop, and optionally wait for it if
+        // calling from a separate thread. if this is called from the same
+        // thread that called run(), wait must be false.
         void stop(bool wait);
 
     private:
-        // A group of systems with identical update order values, all to be updated in parallel
-        // (with some exceptions).
-        // If you're confused, here's how the systems could be updated in a hypothetical world:
-        // 1. Update the movement system, the jump system, and the physics system all in parallel.
-        // 2. After step 1 is finished, update the collision system.
-        // 3. Then, update the audio system and the render system in parallel.
-        // Think of each step as a system group. Notice how the system groups are run in serial,
-        // but the systems inside each group are updated together in parallel.
+        // a group of systems with identical update order values, all to be
+        // updated in parallel (except ones with run_on_world_thread=true).
+        // here's how the systems could be updated in a hypothetical world:
+        // 1. update the movement system, the jump system, and the physics
+        //    system, all in parallel.
+        // 2. after step 1 is finished, update the collision system.
+        // 3. update the audio system and the render system in parallel.
+        // think of each step as a system group. notice how the system groups
+        // are run in serial, but the systems inside each group are updated
+        // together in parallel.
         struct system_group_t
         {
             i32 update_order;
             std::vector<std::shared_ptr<base_system_t>> systems;
         };
 
-        // Mapping from a system pointer to a worker thread used to invoke the abtract functions
-        // of that system (start, update, trigger, stop). If the worker is nullptr, then the
-        // system must run on the same thread that is running the world.
-        using worker_map_t = std::unordered_map<base_system_t*, std::shared_ptr<misc::worker_t>>;
+        // mapping from a system pointer to a worker thread used to invoke the
+        // abtract functions of that system (start, update, trigger, stop). if
+        // the worker is nullptr, then the system must run on the same thread
+        // that is running the world.
+        using worker_map_t =
+            std::unordered_map<base_system_t*, std::shared_ptr<misc::worker_t>>;
 
-        // Logger
         std::shared_ptr<base_logger_t> logger;
-
-        // Internal mutex for running the world
         std::mutex mutex_run;
-
-        // Internal mutex for the event queue
         std::mutex mutex_events;
-
-        // Event queue
         std::deque<event_t> events;
-
-        // Systems
         std::vector<std::shared_ptr<base_system_t>> systems;
-
-        // Should the world stop running?
         bool should_stop = false;
 
-        // Note: This function is called internally by run().
+        // * this function is called internally by run().
         void prepare_system_groups_and_workers(
             std::vector<std::shared_ptr<base_system_t>>& systems_copy,
             std::vector<system_group_t>& out_system_groups,

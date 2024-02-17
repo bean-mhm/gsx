@@ -1,6 +1,5 @@
 #include "utils.h"
 
-// STD
 #include <fstream>
 #include <sstream>
 #include <algorithm>
@@ -111,7 +110,11 @@ namespace gsx::str
     }
 
     // https://stackoverflow.com/a/3418285/18049911
-    void replace_inplace(std::string& s, const std::string& from, const std::string& to)
+    void replace_inplace(
+        std::string& s,
+        const std::string& from,
+        const std::string& to
+    )
     {
         if (from.empty())
             return;
@@ -121,18 +124,26 @@ namespace gsx::str
         {
             s.replace(start_pos, from.length(), to);
 
-            // In case 'to' contains 'from', like replacing 'x' with 'yx'
+            // in case 'to' contains 'from', like replacing 'x' with 'yx'
             start_pos += to.length();
         }
     }
 
-    std::string replace(std::string s, const std::string& from, const std::string& to)
+    std::string replace(
+        std::string s,
+        const std::string& from,
+        const std::string& to
+    )
     {
         replace_inplace(s, from, to);
         return s;
     }
 
-    std::string wordwrap(const std::string& s, u64 line_length, u64 left_padding)
+    std::string wordwrap(
+        const std::string& s,
+        u64 line_length,
+        u64 left_padding
+    )
     {
         std::istringstream i(s);
         std::ostringstream o("");
@@ -181,7 +192,7 @@ namespace gsx::str
         if (!f)
         {
             throw std::runtime_error(std::format(
-                "Couldn't open file \"{}\".",
+                "couldn't open file \"{}\"",
                 path
             ).c_str());
         }
@@ -194,7 +205,10 @@ namespace gsx::str
         return s.str();
     }
 
-    std::string from_list(const std::vector<std::string>& list, const std::string& delimiter)
+    std::string from_list(
+        const std::vector<std::string>& list,
+        const std::string& delimiter
+    )
     {
         std::string result = "";
         for (u64 i = 0; i < list.size(); i++)
@@ -205,7 +219,11 @@ namespace gsx::str
         return result;
     }
 
-    void to_list(const std::string& s, char delimiter, std::vector<std::string>& out_elements)
+    void to_list(
+        const std::string& s,
+        char delimiter,
+        std::vector<std::string>& out_elements
+    )
     {
         out_elements.clear();
 
@@ -229,10 +247,10 @@ namespace gsx::str
         static f64 powers[]
         {
             std::pow(1024., 0.), // 1 byte
-            std::pow(1024., 1.), // 1 KB
-            std::pow(1024., 2.), // 1 MB
-            std::pow(1024., 3.), // 1 GB
-            std::pow(1024., 4.)  // 1 TB
+            std::pow(1024., 1.), // 1 KiB
+            std::pow(1024., 2.), // 1 MiB
+            std::pow(1024., 3.), // 1 GiB
+            std::pow(1024., 4.)  // 1 TiB
         };
 
         u64 mag = std::clamp(
@@ -244,7 +262,11 @@ namespace gsx::str
         if (mag == 0)
             return std::format("{} {}", bytes, suffixes[mag]);
         else
-            return std::format("{:.1f} {}", (f64)bytes / powers[mag], suffixes[mag]);
+            return std::format(
+                "{:.1f} {}",
+                (f64)bytes / powers[mag],
+                suffixes[mag]
+            );
     }
 
     std::string from_large_number(u64 n)
@@ -329,7 +351,7 @@ namespace gsx::str
         catch (const std::exception& e)
         {
             throw std::runtime_error(std::format(
-                "Couldn't parse a 64-bit signed integer from \"{}\".",
+                "couldn't parse a 64-bit signed integer from \"{}\"",
                 s
             ).c_str());
         }
@@ -344,7 +366,7 @@ namespace gsx::str
         catch (const std::exception& e)
         {
             throw std::runtime_error(std::format(
-                "Couldn't parse a 64-bit unsigned integer from \"{}\".",
+                "couldn't parse a 64-bit unsigned integer from \"{}\"",
                 s
             ).c_str());
         }
@@ -359,7 +381,7 @@ namespace gsx::str
         catch (const std::exception& e)
         {
             throw std::runtime_error(std::format(
-                "Couldn't parse a 32-bit floating point number from \"{}\".",
+                "couldn't parse a 32-bit floating point number from \"{}\"",
                 s
             ).c_str());
         }
@@ -374,7 +396,7 @@ namespace gsx::str
         catch (const std::exception& e)
         {
             throw std::runtime_error(std::format(
-                "Couldn't parse a 64-bit floating point number from \"{}\".",
+                "couldn't parse a 64-bit floating point number from \"{}\"",
                 s
             ).c_str());
         }

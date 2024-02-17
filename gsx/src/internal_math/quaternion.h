@@ -1,6 +1,5 @@
 #pragma once
 
-// Internal
 #include "vec4.h"
 #include "matrix.h"
 #include "transform.h"
@@ -16,8 +15,6 @@ namespace gsx::math
     public:
         vec4 v;
 
-        // Constructors
-
         constexpr quaternion_t()
             : v(0, 0, 0, 1)
         {}
@@ -29,71 +26,64 @@ namespace gsx::math
         quaternion_t(const mat3& m);
         quaternion_t(const mat4& m);
 
-        // String
         std::string to_string() const;
 
-        // Print
-        friend std::ostream& operator<<(std::ostream& os, const quaternion_t& q);
+        friend std::ostream& operator<<(
+            std::ostream& os,
+            const quaternion_t& q
+            );
 
-        // this + quaternion
         constexpr quaternion_t operator+(const quaternion_t& q) const
         {
             return quaternion_t(v + q.v);
         }
 
-        // this += quaternion
         constexpr quaternion_t& operator+=(const quaternion_t& q)
         {
             v += q.v;
             return *this;
         }
 
-        // this - quaternion
         constexpr quaternion_t operator-(const quaternion_t& q) const
         {
             return quaternion_t(v - q.v);
         }
 
-        // this -= quaternion
         constexpr quaternion_t& operator-=(const quaternion_t& q)
         {
             v -= q.v;
             return *this;
         }
 
-        // this * scalar
         constexpr quaternion_t operator*(f32 s) const
         {
             return quaternion_t(v * s);
         }
 
-        // this *= scalar
         constexpr quaternion_t& operator*=(f32 s)
         {
             v *= s;
             return *this;
         }
 
-        // this / scalar
         constexpr quaternion_t operator/(f32 s) const
         {
             return quaternion_t(v / s);
         }
 
-        // this /= scalar
         constexpr quaternion_t& operator/=(f32 s)
         {
             v /= s;
             return *this;
         }
 
-        // (-1) * this
         constexpr quaternion_t operator-() const
         {
             return quaternion_t(-v);
         }
 
-        // Generate a 3D homogeneous transformation matrix based on this quaternion (left-handed)
+        // generate a 3D homogeneous transformation matrix based on this
+        // quaternion (left-handed)
         constexpr mat4 to_transform() const
         {
             f32 xx = v.x * v.x, yy = v.y * v.y, zz = v.z * v.z;
@@ -111,17 +101,15 @@ namespace gsx::math
             r(2, 1) = 2 * (yz - wx);
             r(2, 2) = 1 - 2 * (xx + yy);
 
-            // Transpose since we are left-handed
+            // transpose since we are left-handed
             return transpose(r);
         }
 
-        // this == quaternion
         constexpr bool operator==(const quaternion_t& q) const
         {
             return v == q.v;
         }
 
-        // this != quaternion
         constexpr bool operator!=(const quaternion_t& q) const
         {
             return v != q.v;
@@ -129,26 +117,27 @@ namespace gsx::math
 
     };
 
-    // scalar * quaternion
     constexpr quaternion_t operator*(f32 s, const quaternion_t& q)
     {
         return q * s;
     }
 
-    // Dot product of two quaternions
     constexpr f32 dot(const quaternion_t& q1, const quaternion_t& q2)
     {
         return dot(q1.v, q2.v);
     }
 
-    // Normalized copy of a quaternion
     constexpr quaternion_t normalize(const quaternion_t& q)
     {
         return quaternion_t(normalize(q.v));
     }
 
-    // Interpolatee between two quaternions using spherical linear interpolation
-    constexpr quaternion_t slerp(const quaternion_t& q1, const quaternion_t& q2, f32 t)
+    // interpolate between two quaternions using spherical linear interpolation
+    constexpr quaternion_t slerp(
+        const quaternion_t& q1,
+        const quaternion_t& q2,
+        f32 t
+    )
     {
         f32 cos_theta = dot(q1, q2);
         if (cos_theta > .9995f)
@@ -157,8 +146,8 @@ namespace gsx::math
         }
         else
         {
-            f32  theta = std::acos(std::clamp(cos_theta, -1.f, 1.f));
-            f32  thetap = theta * t;
+            f32 theta = std::acos(std::clamp(cos_theta, -1.f, 1.f));
+            f32 thetap = theta * t;
             quaternion_t qperp = normalize(q2 - q1 * cos_theta);
             return q1 * std::cos(thetap) + qperp * std::sin(thetap);
         }

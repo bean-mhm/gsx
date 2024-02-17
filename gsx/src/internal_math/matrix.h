@@ -1,10 +1,8 @@
 #pragma once
 
-// STD
 #include <array>
 #include <cstdint>
 
-// Internal
 #include "utils.h"
 #include "../internal_common/all.h"
 #include "../internal_str/all.h"
@@ -12,13 +10,11 @@
 namespace gsx::math
 {
 
-    // Row-major matrix
+    // row-major matrix
     template<i32 n_row, i32 n_col>
     class base_mat
     {
     public:
-        // Constructors
-
         constexpr base_mat()
         {
             for (i32 row = 0; row < n_row; row++)
@@ -45,7 +41,6 @@ namespace gsx::math
             std::copy(mat.data(), mat.data() + (n_row * n_col), &m[0][0]);
         }
 
-        // String
         std::string to_string() const
         {
             std::string s("[");
@@ -63,14 +58,12 @@ namespace gsx::math
             return s;
         }
 
-        // Print
         friend std::ostream& operator<<(std::ostream& os, const base_mat& m)
         {
             os << m.to_string();
             return os;
         }
 
-        // this * scalar
         constexpr base_mat operator*(f32 s) const
         {
             base_mat r;
@@ -84,7 +77,6 @@ namespace gsx::math
             return r;
         }
 
-        // this *= scalar
         constexpr base_mat& operator*=(f32 s)
         {
             for (i32 row = 0; row < n_row; row++)
@@ -97,7 +89,6 @@ namespace gsx::math
             return *this;
         }
 
-        // this / scalar
         constexpr base_mat operator/(f32 s) const
         {
             base_mat r;
@@ -111,7 +102,6 @@ namespace gsx::math
             return r;
         }
 
-        // this /= scalar
         constexpr base_mat& operator/=(f32 s)
         {
             for (i32 row = 0; row < n_row; row++)
@@ -124,7 +114,6 @@ namespace gsx::math
             return *this;
         }
 
-        // this + matrix
         constexpr base_mat operator+(const base_mat& m) const
         {
             base_mat r;
@@ -138,7 +127,6 @@ namespace gsx::math
             return r;
         }
 
-        // this += matrix
         constexpr base_mat& operator+=(const base_mat& m)
         {
             for (i32 row = 0; row < n_row; row++)
@@ -151,7 +139,6 @@ namespace gsx::math
             return *this;
         }
 
-        // this - matrix
         constexpr base_mat operator-(const base_mat& m) const
         {
             base_mat r;
@@ -165,7 +152,6 @@ namespace gsx::math
             return r;
         }
 
-        // this -= matrix
         constexpr base_mat& operator-=(const base_mat& m)
         {
             for (i32 row = 0; row < n_row; row++)
@@ -178,9 +164,10 @@ namespace gsx::math
             return *this;
         }
 
-        // this * matrix
         template<i32 n2>
-        constexpr base_mat<n_row, n2> operator*(const base_mat<n_col, n2>& m) const
+        constexpr base_mat<n_row, n2> operator*(
+            const base_mat<n_col, n2>& m
+            ) const
         {
             base_mat<n_row, n2> r;
             for (i32 row = 0; row < n_row; row++)
@@ -198,7 +185,6 @@ namespace gsx::math
             return r;
         }
 
-        // this == other matrix
         constexpr bool operator==(const base_mat& m2) const
         {
             for (i32 row = 0; row < n_row; row++)
@@ -212,7 +198,6 @@ namespace gsx::math
             return true;
         }
 
-        // this != other matrix
         constexpr bool operator!=(const base_mat& m2) const
         {
             for (i32 row = 0; row < n_row; row++)
@@ -226,38 +211,35 @@ namespace gsx::math
             return false;
         }
 
-        // Access by 1D index (copy)
         constexpr f32 operator()(i32 index) const
         {
             return (&m[0][0])[index];
         }
 
-        // Access by 1D index (reference)
         constexpr f32& operator()(i32 index)
         {
             return (&m[0][0])[index];
         }
 
-        // Access by indices (copy)
         constexpr f32 operator()(i32 row, i32 col) const
         {
             return m[row][col];
         }
 
-        // Access by indices (reference)
         constexpr f32& operator()(i32 row, i32 col)
         {
             return m[row][col];
         }
 
-        // Sub-matrix
-        // Note: The indices are inclusive. For example, if the start row and column indices are
-        // both 0, and the end row and column indices are both 2, this function will return the
-        // upper-left 3x3 portion.
-        // Note: The value of end_row must not be smaller than the value of start_row, and the
-        // same goes for start_col and end_col.
+        // sub-matrix
+        // * the indices are inclusive. for example, if the start row and column
+        //   indices are both 0, and the end row and column indices are both 2,
+        //   this function will return the upper-left 3x3 portion.
+        // * the value of end_row must not be smaller than the value of
+        //   start_row, and the same goes for start_col and end_col.
         template<i32 start_row, i32 start_col, i32 end_row, i32 end_col>
-        constexpr base_mat<end_row - start_row + 1, end_col - start_col + 1> sub() const
+        constexpr base_mat<end_row - start_row + 1, end_col - start_col + 1>
+            sub() const
         {
             base_mat<end_row - start_row + 1, end_col - start_col + 1> r;
             for (i32 row = start_row; row <= end_row; row++)
@@ -269,9 +251,9 @@ namespace gsx::math
             }
         }
 
-        // Upper-left n x m sub-matrix
-        // Note: n must be smaller than or equal to n_row.
-        // Note: m must be smaller than or equal to n_col.
+        // upper-left n x m sub-matrix
+        // * n must be smaller than or equal to n_row.
+        // * m must be smaller than or equal to n_col.
         template<i32 n, i32 m>
         constexpr base_mat<n, m> sub() const
         {
@@ -286,8 +268,8 @@ namespace gsx::math
             return r;
         }
 
-        // Upper-left n x n sub-matrix
-        // Note: n must be smaller than n_row and n_col.
+        // upper-left n x n sub-matrix
+        // * n must be smaller than n_row and n_col.
         template<i32 n>
         constexpr base_mat<n, n> sub() const
         {
@@ -302,19 +284,16 @@ namespace gsx::math
             return r;
         }
 
-        // Number of rows
         static constexpr i32 n_rows()
         {
             return n_row;
         }
 
-        // Number of columns
         static constexpr i32 n_cols()
         {
             return n_col;
         }
 
-        // Number of elements
         static constexpr i32 n_elements()
         {
             return n_row * n_col;
@@ -325,9 +304,10 @@ namespace gsx::math
 
     };
 
-    // Scalar * matrix
     template<i32 n_row, i32 n_col>
-    constexpr base_mat<n_row, n_col> operator*(f32 s, const base_mat<n_row, n_col>& m)
+    constexpr base_mat<n_row, n_col> operator*(
+        f32 s, const base_mat<n_row, n_col>& m
+        )
     {
         return m * s;
     }
@@ -347,10 +327,14 @@ namespace gsx::math
         return true;
     }
 
-    // Cofactor of m[p][q]
+    // cofactor of m[p][q]
     // https://www.geeksforgeeks.org/adjoint-inverse-matrix/
     template<i32 n>
-    constexpr base_mat<n - 1, n - 1> cofactor(const base_mat<n, n>& m, i32 p, i32 q)
+    constexpr base_mat<n - 1, n - 1> cofactor(
+        const base_mat<n, n>& m,
+        i32 p,
+        i32 q
+    )
     {
         i32 i = 0, j = 0;
         base_mat<n - 1, n - 1> r;
@@ -358,13 +342,14 @@ namespace gsx::math
         {
             for (i32 col = 0; col < n; col++)
             {
-                // Copy into the result matrix only those elements which are not in the current
-                // row and column
+                // Copy into the result matrix only those elements which are not
+                // in the current row and column
                 if (row != p && col != q)
                 {
                     r(i, j++) = m(row, col);
 
-                    // Row is filled, so increase the row index and reset the col index
+                    // Row is filled, so increase the row index and reset the
+                    // col index
                     if (j == n - 1)
                     {
                         j = 0;
@@ -376,7 +361,7 @@ namespace gsx::math
         return r;
     }
 
-    // Determinant of a square matrix
+    // determinant of a square matrix
     // https://www.geeksforgeeks.org/determinant-of-a-matrix/
     template<i32 n>
     constexpr f32 determinant(base_mat<n, n> m)
@@ -387,15 +372,15 @@ namespace gsx::math
         f32 det = 1;
         f32 total = 1;
 
-        // Temporary array for storing row
+        // temporary array for storing row
         f32 temp[n + 1]{};
 
-        // Traverse the diagonal elements
+        // traverse the diagonal elements
         for (i32 i = 0; i < n; i++)
         {
             i32 index = i;
 
-            // Find the index which has non zero value
+            // find the index which has non zero value
             while (index < n && m(index, i) == 0)
             {
                 index++;
@@ -408,35 +393,36 @@ namespace gsx::math
 
             if (index != i)
             {
-                // Swap the diagonal element row and index row
+                // swap the diagonal element row and index row
                 for (i32 j = 0; j < n; j++)
                 {
                     std::swap(m(index, j), m(i, j));
                 }
 
-                // The determinant sign changes when we shift rows
+                // the determinant sign changes when we shift rows
                 det *= (index - i) % 2 == 0 ? 1.f : -1.f;
             }
 
-            // Store the diagonal row elements
+            // store the diagonal row elements
             for (i32 j = 0; j < n; j++)
             {
                 temp[j] = m(i, j);
             }
 
-            // Traverse every row below the diagonal element
+            // traverse every row below the diagonal element
             for (i32 j = i + 1; j < n; j++)
             {
-                // Value of diagonal element
+                // value of diagonal element
                 f32 num1 = temp[i];
 
-                // Value of next row element
+                // value of next row element
                 f32 num2 = m(j, i);
 
-                // Traverse every column of row and multiply to every row
+                // traverse every column of row and multiply to every row
                 for (i32 k = 0; k < n; k++)
                 {
-                    // Multiply to make the diagonal element and next row element equal
+                    // multiply to make the diagonal element and next row
+                    // element equal
                     m(j, k) = (num1 * m(j, k)) - (num2 * temp[k]);
                 }
 
@@ -445,7 +431,7 @@ namespace gsx::math
             }
         }
 
-        // Multiply the diagonal elements to get the determinant
+        // multiply the diagonal elements to get the determinant
         for (i32 i = 0; i < n; i++)
         {
             det *= m(i, i);
@@ -455,7 +441,7 @@ namespace gsx::math
         return (det / total);
     }
 
-    // Adjoint of a square matrix
+    // adjoint of a square matrix
     // https://www.geeksforgeeks.org/adjoint-inverse-matrix/
     template<i32 n>
     constexpr base_mat<n, n> adjoint(const base_mat<n, n>& m)
@@ -468,24 +454,29 @@ namespace gsx::math
         {
             for (i32 j = 0; j < n; j++)
             {
-                // Get cofactor of m[i][j]
+                // get cofactor of m[i][j]
                 base_mat<n - 1, n - 1> cf = cofactor(m, i, j);
 
-                // Sign of adj[j][i] positive if the sum of the row and column indices is even.
+                // sign of adj[j][i] positive if the sum of the row and column
+                // indices is even.
                 f32 sign = ((i + j) % 2 == 0) ? 1.f : -1.f;
 
-                // Interchanging rows and columns to get the transpose of the cofactor matrix
+                // interchanging rows and columns to get the transpose of the
+                // cofactor matrix
                 r(j, i) = sign * determinant(cf);
             }
         }
         return r;
     }
 
-    // Inverted copy of a square matrix
+    // inverted copy of a square matrix
     template<i32 n>
-    constexpr base_mat<n, n> inverse(const base_mat<n, n>& m, bool* out_invertible = nullptr)
+    constexpr base_mat<n, n> inverse(
+        const base_mat<n, n>& m,
+        bool* out_invertible = nullptr
+    )
     {
-        // Determinant
+        // determinant
         f32 det = determinant(m);
         if (det == 0)
         {
@@ -494,7 +485,7 @@ namespace gsx::math
             return base_mat<n, n>();
         }
 
-        // Adjoint
+        // adjoint
         base_mat<n, n> adj = adjoint(m);
 
         // inverse(A) = adj(A)/det(A)
@@ -503,7 +494,7 @@ namespace gsx::math
         return adj / det;
     }
 
-    // Transposed copy of a matrix
+    // transposed copy of a matrix
     template<i32 n_row, i32 n_col>
     constexpr base_mat<n_col, n_row> transpose(const base_mat<n_row, n_col>& m)
     {
@@ -517,8 +508,6 @@ namespace gsx::math
         }
         return r;
     }
-
-    // Type definitions
 
     using mat1x2 = base_mat<1, 2>;
     using mat2x1 = base_mat<2, 1>;

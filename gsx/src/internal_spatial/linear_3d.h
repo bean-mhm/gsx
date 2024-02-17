@@ -1,9 +1,7 @@
 #pragma once
 
-// STD
 #include <utility>
 
-// Internal
 #include "base_structure.h"
 #include "../internal_common/all.h"
 #include "../internal_math/all.h"
@@ -12,7 +10,8 @@
 namespace gsx::spatial
 {
 
-    // 3D structure with contiguous memory and no spatial optimizations (uses std::vector)
+    // 3D structure with contiguous memory and no spatial optimizations
+    // (uses std::vector)
     template<typename T>
     class linear_3d_t : public base_structure_3d_t<T>
     {
@@ -62,7 +61,9 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<std::remove_pointer_t<T>*>& out_elements) override
+        virtual void query_all(
+            std::vector<std::remove_pointer_t<T>*>& out_elements
+        ) override
         {
             out_elements.reserve(out_elements.size() + vec.size());
             for (auto& element : vec)
@@ -71,7 +72,9 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<std::remove_pointer_t<T>>& out_elements) const override
+        virtual void query_all(
+            std::vector<std::remove_pointer_t<T>>& out_elements
+        ) const override
         {
             out_elements.reserve(out_elements.size() + vec.size());
             for (auto& element : vec)

@@ -1,9 +1,7 @@
 #pragma once
 
-// STD
 #include <cstdint>
 
-// Internal
 #include "vec2.h"
 #include "vec3.h"
 #include "../internal_common/all.h"
@@ -11,11 +9,10 @@
 namespace gsx::math
 {
 
-    // Pseudo-Random Number Generator
+    // pseudo-random number generator
     class prng_t
     {
     public:
-        // Constructors
         prng_t();
         prng_t(uvec2 seed);
         prng_t(vec2 seed);
@@ -52,8 +49,8 @@ namespace gsx::math
         // 3D point on the unit sphere, distanced 1 unit away from the origin
         vec3 next_on_sphere();
 
-        // Normally distributed 2D point centered around the origin (using the Box-Muller
-        // Transform)
+        // normally distributed 2D point centered around the origin (using the
+        // Box-Muller Transform)
         // https://www.baeldung.com/cs/uniform-to-normal-distribution
         vec2 next_gauss();
 

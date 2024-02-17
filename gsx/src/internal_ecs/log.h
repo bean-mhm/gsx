@@ -1,24 +1,24 @@
 #pragma once
 
-// STD
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <thread>
 #include <mutex>
 
-// Internal
 #include "../internal_common/all.h"
 #include "../internal_str/all.h"
 
-// Note: For internal use only. Do not use this, use world_t::log() instead.
-#define gsx_log(world_ptr, log_level, message) if (log_level <= world_ptr->max_log_level) \
-logger->log(log_entry_t(log_level, world_ptr->name, std::this_thread::get_id(), message))
+// for internal use only. use world_t::log() instead.
+#define gsx_log(world_ptr, log_level, message) \
+if (log_level <= world_ptr->max_log_level) \
+logger->log(log_entry_t(\
+    log_level, world_ptr->name, std::this_thread::get_id(), message\
+))
 
 namespace gsx::ecs
 {
 
-    // Log level
     enum class log_level_t
     {
         error = 0,
@@ -27,9 +27,9 @@ namespace gsx::ecs
         verbose
     };
 
-    // Log entry
-    struct log_entry_t
+    class log_entry_t
     {
+    public:
         log_level_t log_level;
         std::string world_name;
         std::thread::id thread_id;
@@ -41,11 +41,11 @@ namespace gsx::ecs
             std::thread::id thread_id,
             const std::string& message
         );
+
     };
 
-    // Abstract class for logging
-    // Note: The abstract function log() may be called from several threads simultaneously, so any
-    // derived class must manually implement synchronization.
+    // * log() may be called from several threads simultaneously, so derived
+    //   classes must manually implement synchronization.
     class base_logger_t
     {
     public:
@@ -54,7 +54,6 @@ namespace gsx::ecs
 
     };
 
-    // std::ostream logger
     class ostream_logger_t : public base_logger_t
     {
     public:
@@ -71,7 +70,6 @@ namespace gsx::ecs
 
     };
 
-    // CSV logger
     class csv_logger_t : public base_logger_t
     {
     public:

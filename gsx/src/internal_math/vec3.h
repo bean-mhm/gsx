@@ -1,6 +1,5 @@
 #pragma once
 
-// Internal
 #include "vec2.h"
 #include "utils.h"
 #include "../internal_common/all.h"
@@ -14,8 +13,6 @@ namespace gsx::math
     {
     public:
         T x = 0, y = 0, z = 0;
-
-        // Constructors
 
         constexpr base_vec3() = default;
 
@@ -35,13 +32,10 @@ namespace gsx::math
             : x(x), y(yz.x), z(yz.y)
         {}
 
-        // Explicit type conversion
         template<typename U>
         explicit constexpr base_vec3(const base_vec3<U>& v)
             : x((T)v.x), y((T)v.y), z((T)v.z)
         {}
-
-        // Construct from matrix
 
         explicit constexpr base_vec3(const mat1x3& m)
             : x((T)m(0)), y((T)m(1)), z((T)m(2))
@@ -50,8 +44,6 @@ namespace gsx::math
         explicit constexpr base_vec3(const mat3x1& m)
             : x((T)m(0)), y((T)m(1)), z((T)m(2))
         {}
-
-        // Cast to matrix
 
         explicit constexpr operator mat1x3() const
         {
@@ -63,7 +55,6 @@ namespace gsx::math
             return mat3x1({ (f32)x, (f32)y, (f32)z });
         }
 
-        // String
         std::string to_string() const
         {
             return std::format(
@@ -74,20 +65,17 @@ namespace gsx::math
             );
         }
 
-        // Print
         friend std::ostream& operator<<(std::ostream& os, const base_vec3<T>& v)
         {
             os << v.to_string();
             return os;
         }
 
-        // this + vector (may be implicitly converted from a scalar)
         constexpr base_vec3<T> operator+(const base_vec3<T>& v) const
         {
             return base_vec3<T>(x + v.x, y + v.y, z + v.z);
         }
 
-        // this += vector (may be implicitly converted from a scalar)
         constexpr base_vec3<T>& operator+=(const base_vec3<T>& v)
         {
             x += v.x;
@@ -96,13 +84,11 @@ namespace gsx::math
             return *this;
         }
 
-        // this - vector (may be implicitly converted from a scalar)
         constexpr base_vec3<T> operator-(const base_vec3<T>& v) const
         {
             return base_vec3<T>(x - v.x, y - v.y, z - v.z);
         }
 
-        // this -= vector (may be implicitly converted from a scalar)
         constexpr base_vec3<T>& operator-=(const base_vec3<T>& v)
         {
             x -= v.x;
@@ -111,13 +97,11 @@ namespace gsx::math
             return *this;
         }
 
-        // this * scalar
         constexpr base_vec3<T> operator*(T s) const
         {
             return base_vec3<T>(s * x, s * y, s * z);
         }
 
-        // this *= scalar
         constexpr base_vec3<T>& operator*=(T s)
         {
             x *= s;
@@ -126,13 +110,11 @@ namespace gsx::math
             return *this;
         }
 
-        // this * vector (component-wise multiplication)
         constexpr base_vec3<T> operator*(base_vec3<T> v) const
         {
             return base_vec3<T>(x * v.x, y * v.y, z * v.z);
         }
 
-        // this *= vector (component-wise multiplication)
         constexpr base_vec3<T>& operator*=(base_vec3<T> v)
         {
             x *= v.x;
@@ -141,14 +123,12 @@ namespace gsx::math
             return *this;
         }
 
-        // this / scalar
         constexpr base_vec3<T> operator/(T s) const
         {
             f32 inv = 1.f / (f32)s;
             return base_vec3<T>(x * inv, y * inv, z * inv);
         }
 
-        // this /= scalar
         constexpr base_vec3<T>& operator/=(T s)
         {
             f32 inv = 1.f / (f32)s;
@@ -158,13 +138,11 @@ namespace gsx::math
             return *this;
         }
 
-        // this / vector (component-wise division)
         constexpr base_vec3<T> operator/(base_vec3<T> v) const
         {
             return base_vec3<T>(x / v.x, y / v.y, z / v.z);
         }
 
-        // this /= vector (component-wise division)
         constexpr base_vec3<T>& operator/=(base_vec3<T> v)
         {
             x /= v.x;
@@ -173,25 +151,21 @@ namespace gsx::math
             return *this;
         }
 
-        // this == vector
         constexpr bool operator==(const base_vec3<T>& v) const
         {
             return x == v.x && y == v.y && z == v.z;
         }
 
-        // this != vector
         constexpr bool operator!=(const base_vec3<T>& v) const
         {
             return x != v.x || y != v.y || z != v.z;
         }
 
-        // (-1) * this
         constexpr base_vec3<T> operator-() const
         {
             return base_vec3<T>(-x, -y, -z);
         }
 
-        // Access by index (copy)
         constexpr T operator[](i32 i) const
         {
             if (i == 0) return x;
@@ -199,15 +173,12 @@ namespace gsx::math
             return z;
         }
 
-        // Access by index (reference)
         constexpr T& operator[](i32 i)
         {
             if (i == 0) return x;
             if (i == 1) return y;
             return z;
         }
-
-        // Permute by indices
 
         constexpr base_vec2<T> permute(i32 x, i32 y) const
         {
@@ -219,7 +190,6 @@ namespace gsx::math
             return base_vec3<T>((*this)[x], (*this)[y], (*this)[z]);
         }
 
-        // Number of components
         constexpr i32 n_components() const
         {
             return 3;
@@ -227,28 +197,24 @@ namespace gsx::math
 
     };
 
-    // Scalar + vector
     template<typename T>
     constexpr base_vec3<T> operator+(T s, const base_vec3<T>& v)
     {
         return v + s;
     }
 
-    // Scalar - vector
     template<typename T>
     constexpr base_vec3<T> operator-(T s, const base_vec3<T>& v)
     {
         return (-v) + s;
     }
 
-    // Scalar * vector
     template<typename T>
     constexpr base_vec3<T> operator*(T s, const base_vec3<T>& v)
     {
         return v * s;
     }
 
-    // Scalar / vector
     template<typename T>
     constexpr base_vec3<T> operator/(T s, const base_vec3<T>& v)
     {
@@ -384,7 +350,9 @@ namespace gsx::math
     template<typename T>
     inline base_vec3<T> inversesqrt(const base_vec3<T>& v)
     {
-        return base_vec3<T>(inversesqrt(v.x), inversesqrt(v.y), inversesqrt(v.z));
+        return base_vec3<T>(
+            inversesqrt(v.x), inversesqrt(v.y), inversesqrt(v.z)
+        );
     }
 
     template<typename T>
@@ -470,7 +438,9 @@ namespace gsx::math
     template<typename T>
     constexpr base_vec3<T> clamp(const base_vec3<T>& v, T min, T max)
     {
-        return base_vec3<T>(clamp(v.x, min, max), clamp(v.y, min, max), clamp(v.z, min, max));
+        return base_vec3<T>(
+            clamp(v.x, min, max), clamp(v.y, min, max), clamp(v.z, min, max)
+        );
     }
 
     template<typename T>
@@ -494,7 +464,11 @@ namespace gsx::math
     }
 
     template<typename T>
-    constexpr base_vec3<T> mix(const base_vec3<T>& v1, const base_vec3<T>& v2, f32 a)
+    constexpr base_vec3<T> mix(
+        const base_vec3<T>& v1,
+        const base_vec3<T>& v2,
+        f32 a
+    )
     {
         return v1 + a * (v2 - v1);
     }
@@ -508,7 +482,8 @@ namespace gsx::math
         f32 b_end
     )
     {
-        return b_start + ((b_end - b_start) / (a_end - a_start)) * (v - a_start);
+        return
+            b_start + ((b_end - b_start) / (a_end - a_start)) * (v - a_start);
     }
 
     template<typename T>
@@ -525,7 +500,11 @@ namespace gsx::math
     }
 
     template<typename T>
-    constexpr base_vec3<T> remap01(const base_vec3<T>& v, f32 a_start, f32 a_end)
+    constexpr base_vec3<T> remap01(
+        const base_vec3<T>& v,
+        f32 a_start,
+        f32 a_end
+    )
     {
         return clamp01((v - a_start) / (a_end - a_start));
     }
@@ -537,7 +516,11 @@ namespace gsx::math
     }
 
     template<typename T>
-    constexpr base_vec3<T> smoothstep(f32 edge0, f32 edge1, const base_vec3<T>& v)
+    constexpr base_vec3<T> smoothstep(
+        f32 edge0,
+        f32 edge1,
+        const base_vec3<T>& v
+    )
     {
         return base_vec3<T>(
             smoothstep(edge0, edge1, v.x),
@@ -559,7 +542,10 @@ namespace gsx::math
     }
 
     template<typename T>
-    constexpr f32 distance_squared(const base_vec3<T>& v1, const base_vec3<T>& v2)
+    constexpr f32 distance_squared(
+        const base_vec3<T>& v1,
+        const base_vec3<T>& v2
+    )
     {
         return length_squared(v1 - v2);
     }
@@ -594,32 +580,36 @@ namespace gsx::math
 
     template<typename T>
     constexpr base_vec3<T> faceforward(
-        const base_vec3<T>& N,
-        const base_vec3<T>& I,
-        const base_vec3<T>& Nref
+        const base_vec3<T>& n,
+        const base_vec3<T>& i,
+        const base_vec3<T>& nref
     )
     {
-        if (dot(Nref, I) < 0)
-            return N;
-        return -N;
+        if (dot(nref, i) < 0)
+            return n;
+        return -n;
     }
 
     template<typename T>
-    constexpr base_vec3<T> reflect(const base_vec3<T>& I, const base_vec3<T>& N)
+    constexpr base_vec3<T> reflect(const base_vec3<T>& i, const base_vec3<T>& n)
     {
-        return I - 2 * dot(N, I) * N;
+        return i - 2 * dot(n, i) * n;
     }
 
     template<typename T>
-    inline base_vec3<T> refract(const base_vec3<T>& I, const base_vec3<T>& N, f32 eta)
+    inline base_vec3<T> refract(
+        const base_vec3<T>& i,
+        const base_vec3<T>& n,
+        f32 eta
+    )
     {
-        f32 dp = dot(N, I);
+        f32 dp = dot(n, i);
         f32 k = 1 - eta * eta * (1 - dp * dp);
 
         if (k < 0)
             return 0;
 
-        return eta * I - (eta * dp + sqrt(k)) * N;
+        return eta * i - (eta * dp + sqrt(k)) * n;
     }
 
     template<typename T>
@@ -651,7 +641,11 @@ namespace gsx::math
     }
 
     template<typename T>
-    inline void coordinate_system(const base_vec3<T>& v1, base_vec3<T>& v2, base_vec3<T>& v3)
+    inline void coordinate_system(
+        const base_vec3<T>& v1,
+        base_vec3<T>& v2,
+        base_vec3<T>& v3
+    )
     {
         if (abs(v1.x) > abs(v1.y))
         {
@@ -664,7 +658,6 @@ namespace gsx::math
         v3 = cross(v1, v2);
     }
 
-    // Type definitions
     using vec3 = base_vec3<f32>;
     using ivec3 = base_vec3<i32>;
     using uvec3 = base_vec3<u32>;

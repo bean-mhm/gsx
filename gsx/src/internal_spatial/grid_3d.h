@@ -1,11 +1,9 @@
 #pragma once
 
-// STD
 #include <vector>
 #include <stdexcept>
 #include <cstdint>
 
-// Internal
 #include "base_structure.h"
 #include "../internal_common/all.h"
 #include "../internal_math/all.h"
@@ -14,7 +12,6 @@
 namespace gsx::spatial
 {
 
-    // 3D grid structure
     template<typename T>
     class grid_3d_t : public base_structure_3d_t<T>
     {
@@ -25,7 +22,9 @@ namespace gsx::spatial
             cell_ratio(math::vec3(resolution) / bounds.diagonal())
         {
             if (math::min_component(resolution) < 1)
-                throw std::runtime_error("Grid resolution must be at least 1 in each dimension.");
+                throw std::runtime_error(
+                    "grid resolution must be at least 1 in each dimension"
+                );
 
             containers.resize((usize)resolution.x * (usize)resolution.y);
         }
@@ -55,12 +54,16 @@ namespace gsx::spatial
             std::vector<std::remove_pointer_t<T>*>& out_elements
         ) override
         {
-            math::ivec3 start_cell(math::floor(cell_ratio * (range.pmin - _bounds.pmin)));
+            math::ivec3 start_cell(
+                math::floor(cell_ratio * (range.pmin - _bounds.pmin))
+            );
             start_cell.x = math::clamp(start_cell.x, 0, _resolution.x - 1);
             start_cell.y = math::clamp(start_cell.y, 0, _resolution.y - 1);
             start_cell.z = math::clamp(start_cell.z, 0, _resolution.z - 1);
 
-            math::ivec3 end_cell(math::floor(cell_ratio * (range.pmax - _bounds.pmin)));
+            math::ivec3 end_cell(
+                math::floor(cell_ratio * (range.pmax - _bounds.pmin))
+            );
             end_cell.x = math::clamp(end_cell.x, 0, _resolution.x - 1);
             end_cell.y = math::clamp(end_cell.y, 0, _resolution.y - 1);
             end_cell.z = math::clamp(end_cell.z, 0, _resolution.z - 1);
@@ -78,7 +81,9 @@ namespace gsx::spatial
 
                         for (auto& element : containers[container_index])
                         {
-                            if (math::inside(misc::remove_ptr(element).pos, range))
+                            if (math::inside(
+                                misc::remove_ptr(element).pos, range
+                            ))
                             {
                                 out_elements.push_back(misc::add_ptr(element));
                             }
@@ -95,12 +100,16 @@ namespace gsx::spatial
         {
             const math::bounds3 range_b = range.bounds();
 
-            math::ivec3 start_cell(math::floor(cell_ratio * (range_b.pmin - _bounds.pmin)));
+            math::ivec3 start_cell(
+                math::floor(cell_ratio * (range_b.pmin - _bounds.pmin))
+            );
             start_cell.x = math::clamp(start_cell.x, 0, _resolution.x - 1);
             start_cell.y = math::clamp(start_cell.y, 0, _resolution.y - 1);
             start_cell.z = math::clamp(start_cell.z, 0, _resolution.z - 1);
 
-            math::ivec3 end_cell(math::floor(cell_ratio * (range_b.pmax - _bounds.pmin)));
+            math::ivec3 end_cell(
+                math::floor(cell_ratio * (range_b.pmax - _bounds.pmin))
+            );
             end_cell.x = math::clamp(end_cell.x, 0, _resolution.x - 1);
             end_cell.y = math::clamp(end_cell.y, 0, _resolution.y - 1);
             end_cell.z = math::clamp(end_cell.z, 0, _resolution.z - 1);
@@ -113,7 +122,9 @@ namespace gsx::spatial
                     {
                         math::bounds3 cell_bounds(
                             _bounds.pmin + math::vec3(x, y, z) / cell_ratio,
-                            _bounds.pmin + math::vec3(x + 1, y + 1, z + 1) / cell_ratio
+                            _bounds.pmin + math::vec3(
+                                x + 1, y + 1, z + 1
+                            ) / cell_ratio
                         );
 
                         if (!math::overlaps(cell_bounds, range))
@@ -126,7 +137,9 @@ namespace gsx::spatial
 
                         for (auto& element : containers[container_index])
                         {
-                            if (math::inside(misc::remove_ptr(element).pos, range))
+                            if (math::inside(
+                                misc::remove_ptr(element).pos, range
+                            ))
                             {
                                 out_elements.push_back(misc::add_ptr(element));
                             }
@@ -136,7 +149,9 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<std::remove_pointer_t<T>*>& out_elements) override
+        virtual void query_all(
+            std::vector<std::remove_pointer_t<T>*>& out_elements
+        ) override
         {
             for (auto& container : containers)
             {
@@ -148,7 +163,9 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<std::remove_pointer_t<T>>& out_elements) const override
+        virtual void query_all(
+            std::vector<std::remove_pointer_t<T>>& out_elements
+        ) const override
         {
             for (auto& container : containers)
             {

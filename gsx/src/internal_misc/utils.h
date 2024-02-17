@@ -1,12 +1,10 @@
 #pragma once
 
-// STD
 #include <vector>
 #include <chrono>
 #include <thread>
 #include <cstdint>
 
-// Internal
 #include "../internal_common/all.h"
 
 namespace gsx::misc
@@ -40,15 +38,6 @@ namespace gsx::misc
         return *instance;
     };
 
-    // type& -> type&
-    // type* -> type*
-    template<typename T_from, typename T_to>
-    constexpr typename std::enable_if<std::is_same_v<T_from, T_to>, T_to&>::type
-        add_or_remove_ptr(T_from& instance)
-    {
-        return instance;
-    }
-
     // type& -> type*
     template<typename T_from, typename T_to>
     constexpr typename std::enable_if<std::is_same_v<T_to, T_from*>, T_to>::type
@@ -59,10 +48,20 @@ namespace gsx::misc
 
     // type* -> type&
     template<typename T_from, typename T_to>
-    constexpr typename std::enable_if<std::is_same_v<T_from, T_to*>, T_to&>::type
+    constexpr typename
+        std::enable_if<std::is_same_v<T_from, T_to*>, T_to&>::type
         add_or_remove_ptr(T_from& instance)
     {
         return *instance;
+    }
+
+    // type& -> type&
+    // type* -> type*
+    template<typename T_from, typename T_to>
+    constexpr typename std::enable_if<std::is_same_v<T_from, T_to>, T_to&>::type
+        add_or_remove_ptr(T_from& instance)
+    {
+        return instance;
     }
 
     template<typename T>
@@ -104,7 +103,7 @@ namespace gsx::misc
         return vec_find_index(vec, value) > -1;
     }
 
-    // Sleep using std::this_thread::sleep_for().
+    // sleep using std::this_thread::sleep_for().
     inline void sleep(f32 seconds)
     {
         std::this_thread::sleep_for(

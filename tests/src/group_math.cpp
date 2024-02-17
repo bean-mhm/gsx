@@ -1,12 +1,9 @@
 #include "group_math.h"
 
-// STD
 #include <array>
 
-// GSX
 #include "gsx/gsx.h"
 
-// Internal
 #include "test.h"
 
 using namespace math;
@@ -42,7 +39,10 @@ inline bool eq_spherical(const spherical_t& a, const spherical_t& b)
 }
 
 template<i32 n_row, i32 n_col>
-inline bool eq_mat(const base_mat<n_row, n_col>& m1, const base_mat<n_row, n_col>& m2)
+inline bool eq_mat(
+    const base_mat<n_row, n_col>& m1,
+    const base_mat<n_row, n_col>& m2
+)
 {
     for (i32 row = 0; row < n_row; row++)
     {
@@ -59,8 +59,14 @@ static void test_vec2()
 {
     vec2 v(1.37f, 2.1f);
     test::assert(uvec2(v) == uvec2(1, 2), "type conversion");
-    test::assert(eq_vec(vec2(mat1x2({ 7, 3 })), vec2(7, 3)), "mat1x2 constructor");
-    test::assert(eq_vec(vec2(mat2x1({ 7, 3 })), vec2(7, 3)), "mat2x1 constructor");
+    test::assert(
+        eq_vec(vec2(mat1x2({ 7, 3 })), vec2(7, 3)),
+        "mat1x2 constructor"
+    );
+    test::assert(
+        eq_vec(vec2(mat2x1({ 7, 3 })), vec2(7, 3)),
+        "mat2x1 constructor"
+    );
     test::assert(mat1x2(vec2(0, 2)) == mat1x2({ 0, 2 }), "mat1x2 cast");
     test::assert(mat2x1(vec2(0, 2)) == mat2x1({ 0, 2 }), "mat2x1 cast");
     test::assert(ivec2(3, 2).to_string() == "[3, 2]", "to_string()");
@@ -88,29 +94,62 @@ static void test_vec2()
     test::assert(eq_vec(2.f + v, vec2(3.37f, 4.1f)), "scalar + vec2");
     test::assert(eq_vec(10.f - v, vec2(8.63f, 7.9f)), "scalar - vec2");
     test::assert(eq_vec(2.f * v, vec2(2.74f, 4.2f)), "scalar * vec2");
-    test::assert(eq_vec(10.f / v, vec2(7.2992700f, 4.7619047f)), "scalar / vec2");
+    test::assert(
+        eq_vec(10.f / v, vec2(7.2992700f, 4.7619047f)),
+        "scalar / vec2"
+    );
     test::assert(eq_vec(sin(v), vec2(.9799081f, .8632094f)), "sin(vec2)");
     test::assert(eq_vec(pow(v, vec2(2.f)), v * v), "pow(vec2, 2)");
-    test::assert(eq_vec(inversesqrt(v), vec2(.8543577f, .6900656f)), "inversesqrt(vec2)");
+    test::assert(
+        eq_vec(inversesqrt(v), vec2(.8543577f, .6900656f)),
+        "inversesqrt(vec2)"
+    );
     test::assert(eq_vec(sign(ivec2(-80, 50)), ivec2(-1, 1)), "sign(ivec2)");
-    test::assert(eq_vec(clamp01(vec2(.2f, 2.f)), vec2(.2f, 1.f)), "clamp01(vec2)");
-    test::assert(eq_f32(distance(vec2(-1, 0), vec2(1, 3)), 3.6055513f), "distance(vec2, vec2)");
-    test::assert(eq_vec(
-        reflect(normalize(vec2(1, -1)), vec2(0, 1)),
-        vec2(.7071068f)
-    ), "reflect(vec2, vec2)");
-    test::assert(min_component_index(vec2(2, 5)) == 0, "min_component_index(vec2)");
-    test::assert(min_component_index(vec2(5, 2)) == 1, "min_component_index(vec2)");
-    test::assert(max_component_index(vec2(2, 5)) == 1, "max_component_index(vec2)");
-    test::assert(max_component_index(vec2(5, 2)) == 0, "max_component_index(vec2)");
+    test::assert(
+        eq_vec(clamp01(vec2(.2f, 2.f)), vec2(.2f, 1.f)),
+        "clamp01(vec2)"
+    );
+    test::assert(
+        eq_f32(distance(vec2(-1, 0), vec2(1, 3)), 3.6055513f),
+        "distance(vec2, vec2)"
+    );
+    test::assert(
+        eq_vec(
+            reflect(normalize(vec2(1, -1)), vec2(0, 1)),
+            vec2(.7071068f)
+        ),
+        "reflect(vec2, vec2)"
+    );
+    test::assert(
+        min_component_index(vec2(2, 5)) == 0,
+        "min_component_index(vec2)"
+    );
+    test::assert(
+        min_component_index(vec2(5, 2)) == 1,
+        "min_component_index(vec2)"
+    );
+    test::assert(
+        max_component_index(vec2(2, 5)) == 1,
+        "max_component_index(vec2)"
+    );
+    test::assert(
+        max_component_index(vec2(5, 2)) == 0,
+        "max_component_index(vec2)"
+    );
 }
 
 static void test_vec3()
 {
     vec3 v(1.37f, 2.1f, 9.f);
     test::assert(uvec3(v) == uvec3(1, 2, 9), "type conversion");
-    test::assert(eq_vec(vec3(mat1x3({ 7, 3, 12 })), vec3(7, 3, 12)), "mat1x3 constructor");
-    test::assert(eq_vec(vec3(mat3x1({ 7, 3, 12 })), vec3(7, 3, 12)), "mat3x1 constructor");
+    test::assert(
+        eq_vec(vec3(mat1x3({ 7, 3, 12 })), vec3(7, 3, 12)),
+        "mat1x3 constructor"
+    );
+    test::assert(
+        eq_vec(vec3(mat3x1({ 7, 3, 12 })), vec3(7, 3, 12)),
+        "mat3x1 constructor"
+    );
     test::assert(mat1x3(vec3(0, 2, 4)) == mat1x3({ 0, 2, 4 }), "mat1x3 cast");
     test::assert(mat3x1(vec3(0, 2, 4)) == mat3x1({ 0, 2, 4 }), "mat3x1 cast");
     test::assert(ivec3(3, 2, 1).to_string() == "[3, 2, 1]", "to_string()");
@@ -121,9 +160,15 @@ static void test_vec3()
     v -= vec3(5.f, 6.5f, 1.f);
     test::assert(eq_vec(v, vec3(1.37f, 2.1f, 9.f)), "vec3 -= vec3");
     test::assert(eq_vec(v * 2.f, vec3(2.74f, 4.2f, 18.f)), "vec3 * scalar");
-    test::assert(eq_vec(v * vec3(2.f, 1.f, 3.f), vec3(2.74f, 2.1f, 27.f)), "vec3 * vec3");
+    test::assert(
+        eq_vec(v * vec3(2.f, 1.f, 3.f), vec3(2.74f, 2.1f, 27.f)),
+        "vec3 * vec3"
+    );
     test::assert(eq_vec(v / .5f, vec3(2.74f, 4.2f, 18.f)), "vec3 / scalar");
-    test::assert(eq_vec(v / vec3(.5f, 1.f, 1.f), vec3(2.74f, 2.1f, 9.f)), "vec3 / vec3");
+    test::assert(
+        eq_vec(v / vec3(.5f, 1.f, 1.f), vec3(2.74f, 2.1f, 9.f)),
+        "vec3 / vec3"
+    );
     v *= 2.f;
     test::assert(eq_vec(v, vec3(2.74f, 4.2f, 18.f)), "vec3 *= scalar");
     v /= 2.f;
@@ -138,46 +183,109 @@ static void test_vec3()
     test::assert(eq_vec(2.f + v, vec3(3.37f, 4.1f, 11.f)), "scalar + vec3");
     test::assert(eq_vec(10.f - v, vec3(8.63f, 7.9f, 1.f)), "scalar - vec3");
     test::assert(eq_vec(2.f * v, vec3(2.74f, 4.2f, 18.f)), "scalar * vec3");
-    test::assert(eq_vec(10.f / v, vec3(7.2992700f, 4.7619047f, 1.1111111f)), "scalar / vec3");
-    test::assert(eq_vec(sin(v), vec3(.9799081f, .8632094f, 0.4121185f)), "sin(vec3)");
+    test::assert(
+        eq_vec(10.f / v, vec3(7.2992700f, 4.7619047f, 1.1111111f)),
+        "scalar / vec3"
+    );
+    test::assert(
+        eq_vec(sin(v), vec3(.9799081f, .8632094f, 0.4121185f)),
+        "sin(vec3)"
+    );
     test::assert(eq_vec(pow(v, vec3(.5f)), sqrt(v)), "pow(vec3, .5)");
     test::assert(eq_vec(
         inversesqrt(v),
         vec3(.8543577f, .6900656f, .3333333f)
     ), "inversesqrt(vec3)");
-    test::assert(eq_vec(sign(ivec3(-80, 50, 60)), ivec3(-1, 1, 1)), "sign(ivec3)");
-    test::assert(eq_vec(clamp01(vec3(.2f, 2.f, -10.f)), vec3(.2f, 1.f, 0.f)), "clamp01(vec3)");
+    test::assert(
+        eq_vec(sign(ivec3(-80, 50, 60)), ivec3(-1, 1, 1)),
+        "sign(ivec3)"
+    );
+    test::assert(
+        eq_vec(clamp01(vec3(.2f, 2.f, -10.f)), vec3(.2f, 1.f, 0.f)),
+        "clamp01(vec3)"
+    );
     test::assert(eq_f32(
         distance(vec3(-1, 0, 0), vec3(1, 3, 0))
         , 3.6055513f
     ), "distance(vec3, vec3)");
-    test::assert(min_component_index(vec3(2, 5, 7)) == 0, "min_component_index(vec3)");
-    test::assert(min_component_index(vec3(5, 2, 7)) == 1, "min_component_index(vec3)");
-    test::assert(min_component_index(vec3(7, 5, 2)) == 2, "min_component_index(vec3)");
-    test::assert(max_component_index(vec3(6, 2, 4)) == 0, "max_component_index(vec3)");
-    test::assert(max_component_index(vec3(2, 6, 4)) == 1, "max_component_index(vec3)");
-    test::assert(max_component_index(vec3(2, 4, 6)) == 2, "max_component_index(vec3)");
+    test::assert(
+        min_component_index(vec3(2, 5, 7)) == 0,
+        "min_component_index(vec3)"
+    );
+    test::assert(
+        min_component_index(vec3(5, 2, 7)) == 1,
+        "min_component_index(vec3)"
+    );
+    test::assert(
+        min_component_index(vec3(7, 5, 2)) == 2,
+        "min_component_index(vec3)"
+    );
+    test::assert(
+        max_component_index(vec3(6, 2, 4)) == 0,
+        "max_component_index(vec3)"
+    );
+    test::assert(
+        max_component_index(vec3(2, 6, 4)) == 1,
+        "max_component_index(vec3)"
+    );
+    test::assert(
+        max_component_index(vec3(2, 4, 6)) == 2,
+        "max_component_index(vec3)"
+    );
 }
 
 static void test_vec4()
 {
     vec4 v(1.37f, 2.1f, 9.f, 1.f);
     test::assert(uvec4(v) == uvec4(1, 2, 9, 1), "type conversion");
-    test::assert(eq_vec(vec4(mat1x4({ 7, 3, 2, -1 })), vec4(7, 3, 2, -1)), "mat1x4 constructor");
-    test::assert(eq_vec(vec4(mat4x1({ 7, 3, 2, -1 })), vec4(7, 3, 2, -1)), "mat4x1 constructor");
-    test::assert(mat1x4(vec4(0, 2, 4, 6)) == mat1x4({ 0, 2, 4, 6 }), "mat1x4 cast");
-    test::assert(mat4x1(vec4(0, 2, 4, 6)) == mat4x1({ 0, 2, 4, 6 }), "mat4x1 cast");
-    test::assert(ivec4(3, 2, 1, -5).to_string() == "[3, 2, 1, -5]", "to_string()");
-    test::assert(eq_vec(v + vec4(5), vec4(6.37f, 7.1f, 14.f, 6.f)), "vec4 + vec4");
-    test::assert(eq_vec(v - vec4(.5f), vec4(.87f, 1.6f, 8.5f, .5f)), "vec4 - vec4");
+    test::assert(
+        eq_vec(vec4(mat1x4({ 7, 3, 2, -1 })), vec4(7, 3, 2, -1)),
+        "mat1x4 constructor"
+    );
+    test::assert(
+        eq_vec(vec4(mat4x1({ 7, 3, 2, -1 })), vec4(7, 3, 2, -1)),
+        "mat4x1 constructor"
+    );
+    test::assert(
+        mat1x4(vec4(0, 2, 4, 6)) == mat1x4({ 0, 2, 4, 6 }),
+        "mat1x4 cast"
+    );
+    test::assert(
+        mat4x1(vec4(0, 2, 4, 6)) == mat4x1({ 0, 2, 4, 6 }),
+        "mat4x1 cast"
+    );
+    test::assert(
+        ivec4(3, 2, 1, -5).to_string() == "[3, 2, 1, -5]",
+        "to_string()"
+    );
+    test::assert(
+        eq_vec(v + vec4(5), vec4(6.37f, 7.1f, 14.f, 6.f)),
+        "vec4 + vec4"
+    );
+    test::assert(
+        eq_vec(v - vec4(.5f), vec4(.87f, 1.6f, 8.5f, .5f)),
+        "vec4 - vec4"
+    );
     v += vec4(5.f, 6.5f, 1.f, 1.f);
     test::assert(eq_vec(v, vec4(6.37f, 8.6f, 10.f, 2.f)), "vec4 += vec4");
     v -= vec4(5.f, 6.5f, 1.f, 1.f);
     test::assert(eq_vec(v, vec4(1.37f, 2.1f, 9.f, 1.f)), "vec4 -= vec4");
-    test::assert(eq_vec(v * 2.f, vec4(2.74f, 4.2f, 18.f, 2.f)), "vec4 * scalar");
-    test::assert(eq_vec(v * vec4(2.f, 1.f, 3.f, 0), vec4(2.74f, 2.1f, 27.f, 0)), "vec4 * vec4");
-    test::assert(eq_vec(v / .5f, vec4(2.74f, 4.2f, 18.f, 2.f)), "vec4 / scalar");
-    test::assert(eq_vec(v / vec4(.5f, 1.f, 1.f, 1), vec4(2.74f, 2.1f, 9.f, 1)), "vec4 / vec4");
+    test::assert(
+        eq_vec(v * 2.f, vec4(2.74f, 4.2f, 18.f, 2.f)),
+        "vec4 * scalar"
+    );
+    test::assert(
+        eq_vec(v * vec4(2.f, 1.f, 3.f, 0), vec4(2.74f, 2.1f, 27.f, 0)),
+        "vec4 * vec4"
+    );
+    test::assert(
+        eq_vec(v / .5f, vec4(2.74f, 4.2f, 18.f, 2.f)),
+        "vec4 / scalar"
+    );
+    test::assert(
+        eq_vec(v / vec4(.5f, 1.f, 1.f, 1), vec4(2.74f, 2.1f, 9.f, 1)),
+        "vec4 / vec4"
+    );
     v *= 2.f;
     test::assert(eq_vec(v, vec4(2.74f, 4.2f, 18.f, 2.f)), "vec4 *= scalar");
     v /= 2.f;
@@ -190,36 +298,82 @@ static void test_vec4()
     test::assert(vec4(4, 3, 5, 0) == vec4(4, 3, 5, 0), "vec4 == vec4");
     test::assert(vec4(4, 3, 5, 0) != vec4(4, 2, 5, 0), "vec4 != vec4");
     test::assert(-vec4(4, 3, 0, -4) == vec4(-4, -3, 0, 4), "-vec4");
-    test::assert(eq_vec(2.f + v, vec4(3.37f, 4.1f, 11.f, 3.f)), "scalar + vec4");
-    test::assert(eq_vec(10.f - v, vec4(8.63f, 7.9f, 1.f, 9.f)), "scalar - vec4");
-    test::assert(eq_vec(2.f * v, vec4(2.74f, 4.2f, 18.f, 2.f)), "scalar * vec4");
-    test::assert(eq_vec(10.f / v, vec4(7.2992700f, 4.7619047f, 1.1111111f, 10)), "scalar / vec4");
-    test::assert(eq_vec(sin(v), vec4(.9799081f, .8632094f, 0.4121185f, 0.841471f)), "sin(vec4)");
+    test::assert(
+        eq_vec(2.f + v, vec4(3.37f, 4.1f, 11.f, 3.f)),
+        "scalar + vec4"
+    );
+    test::assert(
+        eq_vec(10.f - v, vec4(8.63f, 7.9f, 1.f, 9.f)),
+        "scalar - vec4"
+    );
+    test::assert(
+        eq_vec(2.f * v, vec4(2.74f, 4.2f, 18.f, 2.f)),
+        "scalar * vec4"
+    );
+    test::assert(
+        eq_vec(10.f / v, vec4(7.2992700f, 4.7619047f, 1.1111111f, 10)),
+        "scalar / vec4"
+    );
+    test::assert(
+        eq_vec(sin(v), vec4(.9799081f, .8632094f, 0.4121185f, 0.841471f)),
+        "sin(vec4)"
+    );
     test::assert(eq_vec(pow(v, vec4(.5f)), sqrt(v)), "pow(vec4, .5)");
     test::assert(eq_vec(
         inversesqrt(v),
         vec4(.8543577f, .6900656f, .3333333f, 1.f)
     ), "inversesqrt(vec4)");
-    test::assert(eq_vec(sign(ivec4(-80, 50, 60, 0)), ivec4(-1, 1, 1, 0)), "sign(ivec4)");
-    test::assert(eq_vec(clamp01(vec4(.2f, 2.f, -10.f, 0)), vec4(.2f, 1, 0, 0)), "clamp01(vec4)");
+    test::assert(
+        eq_vec(sign(ivec4(-80, 50, 60, 0)), ivec4(-1, 1, 1, 0)),
+        "sign(ivec4)"
+    );
+    test::assert(
+        eq_vec(clamp01(vec4(.2f, 2.f, -10.f, 0)), vec4(.2f, 1, 0, 0)),
+        "clamp01(vec4)"
+    );
     test::assert(eq_f32(
         distance(vec4(-1, 0, 0, 8), vec4(1, 3, 0, -18))
         , 26.2488095f
     ), "distance(vec4, vec4)");
-    test::assert(min_component_index(vec4(2, 4, 6, 8)) == 0, "min_component_index(vec4)");
-    test::assert(min_component_index(vec4(4, 2, 6, 8)) == 1, "min_component_index(vec4)");
-    test::assert(min_component_index(vec4(4, 4, 2, 8)) == 2, "min_component_index(vec4)");
-    test::assert(min_component_index(vec4(8, 4, 6, 2)) == 3, "min_component_index(vec4)");
-    test::assert(max_component_index(vec4(8, -2, 4, 0)) == 0, "max_component_index(vec4)");
-    test::assert(max_component_index(vec4(2, 17, 4, 0)) == 1, "max_component_index(vec4)");
-    test::assert(max_component_index(vec4(8, -2, 40, 0)) == 2, "max_component_index(vec4)");
-    test::assert(max_component_index(vec4(2, -2, 4, 30)) == 3, "max_component_index(vec4)");
+    test::assert(
+        min_component_index(vec4(2, 4, 6, 8)) == 0,
+        "min_component_index(vec4)"
+    );
+    test::assert(
+        min_component_index(vec4(4, 2, 6, 8)) == 1,
+        "min_component_index(vec4)"
+    );
+    test::assert(
+        min_component_index(vec4(4, 4, 2, 8)) == 2,
+        "min_component_index(vec4)"
+    );
+    test::assert(
+        min_component_index(vec4(8, 4, 6, 2)) == 3,
+        "min_component_index(vec4)"
+    );
+    test::assert(
+        max_component_index(vec4(8, -2, 4, 0)) == 0,
+        "max_component_index(vec4)"
+    );
+    test::assert(
+        max_component_index(vec4(2, 17, 4, 0)) == 1,
+        "max_component_index(vec4)"
+    );
+    test::assert(
+        max_component_index(vec4(8, -2, 40, 0)) == 2,
+        "max_component_index(vec4)"
+    );
+    test::assert(
+        max_component_index(vec4(2, -2, 4, 30)) == 3,
+        "max_component_index(vec4)"
+    );
 }
 
 static void test_bounds2()
 {
     test::assert(
-        ibounds2(ivec2(-1), ivec2(1)).to_string() == "[pmin=[-1, -1], pmax=[1, 1]]",
+        ibounds2(ivec2(-1), ivec2(1)).to_string()
+        == "[pmin=[-1, -1], pmax=[1, 1]]",
         "to_string()"
     );
     bounds2 b(vec2(-1), vec2(1));
@@ -227,7 +381,10 @@ static void test_bounds2()
     test::assert(eq_vec(b.lerp(.5), vec2(0)), "lerp()");
     test::assert(eq_vec(b.offset_of(vec2(0)), vec2(.5)), "offset_of()");
     test::assert(
-        union_(ibounds2(ivec2(-2), ivec2(0)), ivec2(3)) == ibounds2(ivec2(3), ivec2(-2)),
+        union_(
+            ibounds2(ivec2(-2), ivec2(0)),
+            ivec2(3)
+        ) == ibounds2(ivec2(3), ivec2(-2)),
         "union_(bounds, point)"
     );
     test::assert(
@@ -257,7 +414,8 @@ static void test_bounds2()
 static void test_bounds3()
 {
     test::assert(
-        ibounds3(ivec3(-1), ivec3(1)).to_string() == "[pmin=[-1, -1, -1], pmax=[1, 1, 1]]",
+        ibounds3(ivec3(-1), ivec3(1)).to_string()
+        == "[pmin=[-1, -1, -1], pmax=[1, 1, 1]]",
         "to_string()"
     );
     bounds3 b(vec3(-1), vec3(1));
@@ -265,7 +423,10 @@ static void test_bounds3()
     test::assert(eq_vec(b.lerp(.5), vec3(0)), "lerp()");
     test::assert(eq_vec(b.offset_of(vec3(0)), vec3(.5)), "offset_of()");
     test::assert(
-        union_(ibounds3(ivec3(-2), ivec3(0)), ivec3(3)) == ibounds3(ivec3(3), ivec3(-2)),
+        union_(
+            ibounds3(ivec3(-2), ivec3(0)),
+            ivec3(3)
+        ) == ibounds3(ivec3(3), ivec3(-2)),
         "union_(bounds, point)"
     );
     test::assert(
@@ -320,13 +481,16 @@ static void test_matrix()
 {
     test::assert(is_identity(mat4()), "is_identity(mat4)");
     test::assert(eq_mat(
-        mat3({ 2, 2, 4, 4, 3, -1, 8, -1, 0 }) * mat3({ 10, 3, 2, -5, 5, -5, -1, -20, 1 }),
+        mat3({ 2, 2, 4, 4, 3, -1, 8, -1, 0 })
+        * mat3({ 10, 3, 2, -5, 5, -5, -1, -20, 1 }),
         mat3({ 6, -64, -2, 26, 47, -8, 85, 19, 21 })
     ), "mat3 * mat3");
     test::assert(eq_mat(
         base_mat<5, 2>({ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
         * base_mat<2, 3>({ 6, 5, 4, 3, 2, 1 }),
-        base_mat<5, 3>({ 12, 9, 6, 30, 23, 16, 48, 37, 26, 66, 51, 36, 84, 65, 46 })
+        base_mat<5, 3>(
+            { 12, 9, 6, 30, 23, 16, 48, 37, 26, 66, 51, 36, 84, 65, 46 }
+        )
     ), "mat5x2 * mat2x3");
     test::assert(eq_mat(
         5 * mat2({ 1, 2, 3, 4 }),
@@ -376,7 +540,8 @@ static void test_transform()
     ), "scale3D(), apply_vector3D()");
     test::assert(eq_vec(
         transform::apply_point_2d_h(
-            transform::translate_2d_h(vec2(100)) * transform::rotate_2d_h(-pi / 6.f),
+            transform::translate_2d_h(vec2(100))
+            * transform::rotate_2d_h(-pi / 6.f),
             vec2(10, 20)
         ),
         vec2(118.6602554f, 112.3205109f)
@@ -390,10 +555,14 @@ static void test_prng()
     for (usize i = 0; i < 100; i++)
     {
         i32 a = prng.next_i32(-100, 100);
-        test::assert(a >= -100 && a <= 100, std::format("next_i32(-100, 100) = {}", a));
+        test::assert(
+            a >= -100 && a <= 100, std::format("next_i32(-100, 100) = {}", a)
+        );
 
         u32 b = prng.next_u32(10, 50);
-        test::assert(b >= 10 && b <= 50, std::format("next_u32(10, 50) = {}", b));
+        test::assert(
+            b >= 10 && b <= 50, std::format("next_u32(10, 50) = {}", b)
+        );
     }
 
     std::array<u32, 100> hist;

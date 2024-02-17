@@ -1,11 +1,9 @@
 #pragma once
 
-// STD
 #include <vector>
 #include <stdexcept>
 #include <cstdint>
 
-// Internal
 #include "base_structure.h"
 #include "../internal_common/all.h"
 #include "../internal_math/all.h"
@@ -14,7 +12,6 @@
 namespace gsx::spatial
 {
 
-    // 2D grid structure
     template<typename T>
     class grid_2d_t : public base_structure_2d_t<T>
     {
@@ -25,7 +22,9 @@ namespace gsx::spatial
             cell_ratio(math::vec2(resolution) / bounds.diagonal())
         {
             if (math::min_component(resolution) < 1)
-                throw std::runtime_error("Grid resolution must be at least 1 in each dimension.");
+                throw std::runtime_error(
+                    "grid resolution must be at least 1 in each dimension"
+                );
 
             containers.resize((usize)resolution.x * (usize)resolution.y);
         }
@@ -55,11 +54,15 @@ namespace gsx::spatial
             std::vector<std::remove_pointer_t<T>*>& out_elements
         ) override
         {
-            math::ivec2 start_cell(math::floor(cell_ratio * (range.pmin - _bounds.pmin)));
+            math::ivec2 start_cell(
+                math::floor(cell_ratio * (range.pmin - _bounds.pmin))
+            );
             start_cell.x = math::clamp(start_cell.x, 0, _resolution.x - 1);
             start_cell.y = math::clamp(start_cell.y, 0, _resolution.y - 1);
 
-            math::ivec2 end_cell(math::floor(cell_ratio * (range.pmax - _bounds.pmin)));
+            math::ivec2 end_cell(
+                math::floor(cell_ratio * (range.pmax - _bounds.pmin))
+            );
             end_cell.x = math::clamp(end_cell.x, 0, _resolution.x - 1);
             end_cell.y = math::clamp(end_cell.y, 0, _resolution.y - 1);
 
@@ -86,11 +89,15 @@ namespace gsx::spatial
         {
             const math::bounds2 range_b = range.bounds();
 
-            math::ivec2 start_cell(math::floor(cell_ratio * (range_b.pmin - _bounds.pmin)));
+            math::ivec2 start_cell(
+                math::floor(cell_ratio * (range_b.pmin - _bounds.pmin))
+            );
             start_cell.x = math::clamp(start_cell.x, 0, _resolution.x - 1);
             start_cell.y = math::clamp(start_cell.y, 0, _resolution.y - 1);
 
-            math::ivec2 end_cell(math::floor(cell_ratio * (range_b.pmax - _bounds.pmin)));
+            math::ivec2 end_cell(
+                math::floor(cell_ratio * (range_b.pmax - _bounds.pmin))
+            );
             end_cell.x = math::clamp(end_cell.x, 0, _resolution.x - 1);
             end_cell.y = math::clamp(end_cell.y, 0, _resolution.y - 1);
 
@@ -118,7 +125,9 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<std::remove_pointer_t<T>*>& out_elements) override
+        virtual void query_all(
+            std::vector<std::remove_pointer_t<T>*>& out_elements
+        ) override
         {
             for (auto& container : containers)
             {
@@ -130,7 +139,9 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<std::remove_pointer_t<T>>& out_elements) const override
+        virtual void query_all(
+            std::vector<std::remove_pointer_t<T>>& out_elements
+        ) const override
         {
             for (auto& container : containers)
             {

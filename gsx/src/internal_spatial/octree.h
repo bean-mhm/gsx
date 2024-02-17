@@ -1,12 +1,10 @@
 #pragma once
 
-// STD
 #include <vector>
 #include <stack>
 #include <memory>
 #include <cstdint>
 
-// Internal
 #include "base_structure.h"
 #include "../internal_common/all.h"
 #include "../internal_math/all.h"
@@ -15,7 +13,7 @@
 namespace gsx::spatial
 {
 
-    // Octree with a given capacity per tile
+    // octree with a given capacity per tile
     template<typename T, u8 capacity>
         requires (capacity <= 255)
     class octree_t : public base_structure_3d_t<T>
@@ -23,7 +21,12 @@ namespace gsx::spatial
     public:
         octree_t(const math::bounds3& bounds)
             : _bounds(bounds)
-        {}
+        {
+            if (capacity < 1)
+                throw std::runtime_error(
+                    "capacity must be at least 1"
+                );
+        }
 
         octree_t(const octree_t& other)
         {
@@ -32,7 +35,9 @@ namespace gsx::spatial
             other.query_all(elements_vec);
             for (auto& element : elements_vec)
             {
-                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(element));
+                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(
+                    element
+                ));
             }
         }
 
@@ -44,7 +49,9 @@ namespace gsx::spatial
             other.query_all(elements_vec);
             for (auto& element : elements_vec)
             {
-                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(element));
+                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(
+                    element
+                ));
             }
         }
 
@@ -57,7 +64,9 @@ namespace gsx::spatial
             other.clear();
             for (auto& element : elements_vec)
             {
-                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(element));
+                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(
+                    element
+                ));
             }
         }
 
@@ -107,7 +116,9 @@ namespace gsx::spatial
 
                 for (u8 i = 0; i < t->elements.size(); i++)
                 {
-                    if (math::inside(misc::remove_ptr(t->elements[i]).pos, range))
+                    if (math::inside(
+                        misc::remove_ptr(t->elements[i]).pos, range
+                    ))
                     {
                         out_elements.push_back(misc::add_ptr(t->elements[i]));
                     }
@@ -143,7 +154,9 @@ namespace gsx::spatial
 
                 for (u8 i = 0; i < t->elements.size(); i++)
                 {
-                    if (math::inside(misc::remove_ptr(t->elements[i]).pos, range))
+                    if (math::inside(
+                        misc::remove_ptr(t->elements[i]).pos, range
+                    ))
                     {
                         out_elements.push_back(misc::add_ptr(t->elements[i]));
                     }
@@ -163,7 +176,9 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<std::remove_pointer_t<T>*>& out_elements) override
+        virtual void query_all(
+            std::vector<std::remove_pointer_t<T>*>& out_elements
+        ) override
         {
             std::stack<octree_t*> stack({ this });
             while (!stack.empty())
@@ -191,7 +206,9 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<std::remove_pointer_t<T>>& out_elements) const override
+        virtual void query_all(
+            std::vector<std::remove_pointer_t<T>>& out_elements
+        ) const override
         {
             std::stack<const octree_t*> stack({ this });
             while (!stack.empty())
@@ -305,22 +322,40 @@ namespace gsx::spatial
                 math::bounds3(center, _bounds.pmin)
             );
             back_bottom_right = std::make_unique<octree_t>(
-                math::bounds3(center, math::vec3(_bounds.pmax.x, _bounds.pmin.y, _bounds.pmin.z))
+                math::bounds3(
+                    center,
+                    math::vec3(_bounds.pmax.x, _bounds.pmin.y, _bounds.pmin.z)
+                )
             );
             back_top_left = std::make_unique<octree_t>(
-                math::bounds3(center, math::vec3(_bounds.pmin.x, _bounds.pmax.y, _bounds.pmin.z))
+                math::bounds3(
+                    center,
+                    math::vec3(_bounds.pmin.x, _bounds.pmax.y, _bounds.pmin.z)
+                )
             );
             back_top_right = std::make_unique<octree_t>(
-                math::bounds3(center, math::vec3(_bounds.pmax.x, _bounds.pmax.y, _bounds.pmin.z))
+                math::bounds3(
+                    center,
+                    math::vec3(_bounds.pmax.x, _bounds.pmax.y, _bounds.pmin.z)
+                )
             );
             front_bottom_left = std::make_unique<octree_t>(
-                math::bounds3(center, math::vec3(_bounds.pmin.x, _bounds.pmin.y, _bounds.pmax.z))
+                math::bounds3(
+                    center,
+                    math::vec3(_bounds.pmin.x, _bounds.pmin.y, _bounds.pmax.z)
+                )
             );
             front_bottom_right = std::make_unique<octree_t>(
-                math::bounds3(center, math::vec3(_bounds.pmax.x, _bounds.pmin.y, _bounds.pmax.z))
+                math::bounds3(
+                    center,
+                    math::vec3(_bounds.pmax.x, _bounds.pmin.y, _bounds.pmax.z)
+                )
             );
             front_top_left = std::make_unique<octree_t>(
-                math::bounds3(center, math::vec3(_bounds.pmin.x, _bounds.pmax.y, _bounds.pmax.z))
+                math::bounds3(
+                    center,
+                    math::vec3(_bounds.pmin.x, _bounds.pmax.y, _bounds.pmax.z)
+                )
             );
             front_top_right = std::make_unique<octree_t>(
                 math::bounds3(center, _bounds.pmax)

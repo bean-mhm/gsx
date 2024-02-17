@@ -1,12 +1,10 @@
 #pragma once
 
-// STD
 #include <vector>
 #include <stack>
 #include <memory>
 #include <cstdint>
 
-// Internal
 #include "base_structure.h"
 #include "../internal_common/all.h"
 #include "../internal_math/all.h"
@@ -15,7 +13,7 @@
 namespace gsx::spatial
 {
 
-    // Quadtree with a given capacity per tile
+    // quadtree with a given capacity per tile
     template<typename T, u8 capacity>
         requires (capacity <= 255)
     class quadtree_t : public base_structure_2d_t<T>
@@ -23,7 +21,12 @@ namespace gsx::spatial
     public:
         quadtree_t(const math::bounds2& bounds)
             : _bounds(bounds)
-        {}
+        {
+            if (capacity < 1)
+                throw std::runtime_error(
+                    "capacity must be at least 1"
+                );
+        }
 
         quadtree_t(const quadtree_t& other)
         {
@@ -32,7 +35,9 @@ namespace gsx::spatial
             other.query_all(elements_vec);
             for (auto& element : elements_vec)
             {
-                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(element));
+                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(
+                    element
+                ));
             }
         }
 
@@ -44,7 +49,9 @@ namespace gsx::spatial
             other.query_all(elements_vec);
             for (auto& element : elements_vec)
             {
-                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(element));
+                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(
+                    element
+                ));
             }
         }
 
@@ -57,7 +64,9 @@ namespace gsx::spatial
             other.clear();
             for (auto& element : elements_vec)
             {
-                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(element));
+                insert(misc::add_or_remove_ptr<std::remove_pointer_t<T>, T>(
+                    element
+                ));
             }
         }
 
@@ -103,7 +112,9 @@ namespace gsx::spatial
 
                 for (u8 i = 0; i < q->elements.size(); i++)
                 {
-                    if (math::inside(misc::remove_ptr(q->elements[i]).pos, range))
+                    if (math::inside(
+                        misc::remove_ptr(q->elements[i]).pos, range
+                    ))
                     {
                         out_elements.push_back(misc::add_ptr(q->elements[i]));
                     }
@@ -135,7 +146,9 @@ namespace gsx::spatial
 
                 for (u8 i = 0; i < q->elements.size(); i++)
                 {
-                    if (math::inside(misc::remove_ptr(q->elements[i]).pos, range))
+                    if (math::inside(
+                        misc::remove_ptr(q->elements[i]).pos, range
+                    ))
                     {
                         out_elements.push_back(misc::add_ptr(q->elements[i]));
                     }
@@ -151,7 +164,9 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<std::remove_pointer_t<T>*>& out_elements) override
+        virtual void query_all(
+            std::vector<std::remove_pointer_t<T>*>& out_elements
+        ) override
         {
             std::stack<quadtree_t*> stack({ this });
             while (!stack.empty())
@@ -175,7 +190,9 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<std::remove_pointer_t<T>>& out_elements) const override
+        virtual void query_all(
+            std::vector<std::remove_pointer_t<T>>& out_elements
+        ) const override
         {
             std::stack<const quadtree_t*> stack({ this });
             while (!stack.empty())
@@ -273,10 +290,16 @@ namespace gsx::spatial
                 math::bounds2(center, _bounds.pmin)
             );
             bottom_right = std::make_unique<quadtree_t>(
-                math::bounds2(center, math::vec2(_bounds.pmax.x, _bounds.pmin.y))
+                math::bounds2(
+                    center,
+                    math::vec2(_bounds.pmax.x, _bounds.pmin.y)
+                )
             );
             top_left = std::make_unique<quadtree_t>(
-                math::bounds2(center, math::vec2(_bounds.pmin.x, _bounds.pmax.y))
+                math::bounds2(
+                    center,
+                    math::vec2(_bounds.pmin.x, _bounds.pmax.y)
+                )
             );
             top_right = std::make_unique<quadtree_t>(
                 math::bounds2(center, _bounds.pmax)

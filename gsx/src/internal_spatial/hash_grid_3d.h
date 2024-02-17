@@ -1,12 +1,10 @@
 #pragma once
 
-// STD
 #include <vector>
 #include <unordered_set>
 #include <stdexcept>
 #include <cstdint>
 
-// Internal
 #include "base_structure.h"
 #include "../internal_common/all.h"
 #include "../internal_math/all.h"
@@ -15,7 +13,6 @@
 namespace gsx::spatial
 {
 
-    // 3D hash grid structure
     template<typename T>
     class hash_grid_3d_t : public base_structure_3d_t<T>
     {
@@ -24,10 +21,12 @@ namespace gsx::spatial
             : _cell_size(cell_size)
         {
             if (math::min_component(cell_size) <= 0.0f)
-                throw std::runtime_error("Grid cell size must be positive.");
+                throw std::runtime_error("grid cell size must be positive");
 
             if (n_containers < 1)
-                throw std::runtime_error("Number of containers must be at least 1.");
+                throw std::runtime_error(
+                    "number of containers must be at least 1"
+                );
 
             containers.resize(n_containers);
         }
@@ -63,7 +62,9 @@ namespace gsx::spatial
                 {
                     for (i32 x = start_cell.x; x <= end_cell.x; x++)
                     {
-                        usize container_index = get_container_index(math::ivec3(x, y, z));
+                        usize container_index = get_container_index(
+                            math::ivec3(x, y, z)
+                        );
                         indices.insert(container_index);
                     }
                 }
@@ -106,7 +107,9 @@ namespace gsx::spatial
                         if (!math::overlaps(cell_bounds, range))
                             continue;
 
-                        usize container_index = get_container_index(math::ivec3(x, y, z));
+                        usize container_index = get_container_index(
+                            math::ivec3(x, y, z)
+                        );
                         indices.insert(container_index);
                     }
                 }
@@ -124,7 +127,9 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<std::remove_pointer_t<T>*>& out_elements) override
+        virtual void query_all(
+            std::vector<std::remove_pointer_t<T>*>& out_elements
+        ) override
         {
             for (auto& container : containers)
             {
@@ -136,7 +141,9 @@ namespace gsx::spatial
             }
         }
 
-        virtual void query_all(std::vector<std::remove_pointer_t<T>>& out_elements) const override
+        virtual void query_all(
+            std::vector<std::remove_pointer_t<T>>& out_elements
+        ) const override
         {
             for (auto& container : containers)
             {

@@ -1,6 +1,5 @@
 #pragma once
 
-// STD
 #include <deque>
 #include <functional>
 #include <thread>
@@ -8,15 +7,14 @@
 #include <condition_variable>
 #include <cstdint>
 
-// Internal
 #include "../internal_common/all.h"
 
 namespace gsx::misc
 {
 
-    // Spawns a worker thread upon construction and keeps waiting for new jobs to process (using a
-    // FIFO queue). Upon deconstruction, the worker thread will automatically stop after the queue
-    // is empty.
+    // spawns a worker thread upon construction and keeps waiting for new jobs
+    // to process (using a FIFO queue). upon deconstruction, the worker thread
+    // will automatically stop after the queue is empty.
     class worker_t
     {
     public:
@@ -26,10 +24,11 @@ namespace gsx::misc
         no_copy_construct_no_assignment(worker_t);
         ~worker_t();
 
-        // Enqueue a new job to be processed by the worker thread.
+        // enqueue a new job to be processed by the worker thread
         void enqueue(const std::function<void()>& job);
 
-        // Wait for the worker thread to process all jobs until the queue is empty.
+        // wait for the worker thread to process all jobs until the queue is
+        // empty
         void wait();
 
     private:

@@ -1,6 +1,5 @@
 #include "log.h"
 
-// STD
 #include <stdexcept>
 
 namespace gsx::ecs
@@ -12,7 +11,10 @@ namespace gsx::ecs
         std::thread::id thread_id,
         const std::string& message
     )
-        : log_level(log_level), world_name(world_name), thread_id(thread_id), message(message)
+        : log_level(log_level),
+        world_name(world_name),
+        thread_id(thread_id),
+        message(message)
     {}
 
     ostream_logger_t::ostream_logger_t(std::ostream& stream)
@@ -20,7 +22,9 @@ namespace gsx::ecs
     {
         if (!stream)
         {
-            throw std::runtime_error("The log output stream is in failure state.");
+            throw std::runtime_error(
+                "the log output stream is in failure state"
+            );
         }
     }
 
@@ -35,13 +39,13 @@ namespace gsx::ecs
 
         if (!stream)
         {
-            throw std::runtime_error("The log output stream is in failure state.");
+            throw std::runtime_error(
+                "the log output stream is in failure state"
+            );
         }
 
-        // time
         stream << std::format("{} | ", str::from_time());
 
-        // log_level
         switch (entry.log_level)
         {
         case log_level_t::error:
@@ -60,12 +64,10 @@ namespace gsx::ecs
             break;
         }
 
-        // world_name, thread_id, message
         stream << std::format("{} | ", entry.world_name);
         stream << entry.thread_id << " | ";
         stream << entry.message << '\n';
 
-        // Flush
         stream.flush();
     }
 
@@ -76,7 +78,7 @@ namespace gsx::ecs
         if (!log_file.is_open())
         {
             throw std::runtime_error(std::format(
-                "Log file \"{}\" could not be created/opened.",
+                "log file \"{}\" couldn't be created/opened",
                 filename
             ));
         }
@@ -99,19 +101,25 @@ namespace gsx::ecs
         if (!log_file)
         {
             throw std::runtime_error(std::format(
-                "The log file stream \"{}\" is in failure state.",
+                "the log file stream \"{}\" is in failure state",
                 filename
             ));
         }
 
-        // Replace " with "" because CSV
-        std::string world_name_copy = str::replace(entry.world_name, "\"", "\"\"");
-        std::string message_copy = str::replace(entry.message, "\"", "\"\"");
+        // replace " with "" because CSV
+        std::string world_name_copy = str::replace(
+            entry.world_name,
+            "\"",
+            "\"\""
+        );
+        std::string message_copy = str::replace(
+            entry.message,
+            "\"",
+            "\"\""
+        );
 
-        // time
         log_file << '"' << str::from_time() << "\",";
 
-        // log_level
         switch (entry.log_level)
         {
         case log_level_t::error:
@@ -130,12 +138,10 @@ namespace gsx::ecs
             break;
         }
 
-        // world_name, thread_id, message
         log_file << '"' << world_name_copy << "\",";
         log_file << entry.thread_id << ',';
         log_file << '"' << message_copy << "\"\n";
 
-        // Flush
         log_file.flush();
     }
 

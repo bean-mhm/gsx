@@ -1,12 +1,10 @@
 #pragma once
 
-// STD
 #include <utility>
 #include <stdexcept>
 #include <cstddef>
 #include <cstdint>
 
-// Internal
 #include "../internal_common/all.h"
 
 namespace gsx::misc
@@ -110,7 +108,9 @@ namespace gsx::misc
         {
             if (_size >= _capacity)
                 throw std::out_of_range("capacity full");
-            return *new(reinterpret_cast<T*>(storage) + _size++) T(std::forward<Args>(args)...);
+            return *new(reinterpret_cast<T*>(storage) + _size++) T(
+                std::forward<Args>(args)...
+            );
         }
 
     };

@@ -1,6 +1,5 @@
 #pragma once
 
-// STD
 #include <cstdint>
 
 namespace gsx::common

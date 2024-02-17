@@ -1,9 +1,7 @@
 #include "prng.h"
 
-// STD
 #include <random>
 
-// Internal
 #include "utils.h"
 
 namespace gsx::math

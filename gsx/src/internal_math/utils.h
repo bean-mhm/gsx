@@ -1,12 +1,10 @@
 #pragma once
 
-// STD
 #include <limits>
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
 
-// Internal
 #include "../internal_common/all.h"
 
 namespace gsx::math
@@ -224,10 +222,17 @@ namespace gsx::math
 
     constexpr f32 remap(f32 x, f32 a_start, f32 a_end, f32 b_start, f32 b_end)
     {
-        return b_start + ((b_end - b_start) / (a_end - a_start)) * (x - a_start);
+        return
+            b_start + ((b_end - b_start) / (a_end - a_start)) * (x - a_start);
     }
 
-    constexpr f32 remap_clamp(f32 x, f32 a_start, f32 a_end, f32 b_start, f32 b_end)
+    constexpr f32 remap_clamp(
+        f32 x,
+        f32 a_start,
+        f32 a_end,
+        f32 b_start,
+        f32 b_end
+    )
     {
         f32 t = clamp01((x - a_start) / (a_end - a_start));
         return b_start + t * (b_end - b_start);
@@ -299,7 +304,12 @@ namespace gsx::math
         return true;
     }
 
-    inline bool solve_linear_2x2(const f32 a[2][2], const f32 b[2], f32& x0, f32& x1)
+    inline bool solve_linear_2x2(
+        const f32 a[2][2],
+        const f32 b[2],
+        f32& x0,
+        f32& x1
+    )
     {
         f32 det = a[0][0] * a[1][1] - a[0][1] * a[1][0];
         if (abs(det) < 1e-10f)
