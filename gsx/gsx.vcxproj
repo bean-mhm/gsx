@@ -141,14 +141,7 @@
     <ClCompile Include="src\internal_ecs\log.cpp" />
     <ClCompile Include="src\internal_ecs\system.cpp" />
     <ClCompile Include="src\internal_ecs\world.cpp" />
-    <ClCompile Include="src\internal_math\circle.cpp" />
-    <ClCompile Include="src\internal_math\polar.cpp" />
     <ClCompile Include="src\internal_math\prng.cpp" />
-    <ClCompile Include="src\internal_math\quaternion.cpp" />
-    <ClCompile Include="src\internal_math\ray.cpp" />
-    <ClCompile Include="src\internal_math\sphere.cpp" />
-    <ClCompile Include="src\internal_math\spherical.cpp" />
-    <ClCompile Include="src\internal_math\transform.cpp" />
     <ClCompile Include="src\internal_misc\utils.cpp" />
     <ClCompile Include="src\internal_misc\worker.cpp" />
     <ClCompile Include="src\internal_str\utils.cpp" />
