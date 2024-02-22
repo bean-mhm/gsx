@@ -64,7 +64,7 @@ void boid_system_t::on_update(
     const ecs::iteration_t& iter
 )
 {
-    const f32 dt = min(iter.dt, 0.02f);
+    const f32 dt = min(iter.dt, 0.02);
 
     std::vector<boid_t*> boids_vec;
     boids.query_all(boids_vec);

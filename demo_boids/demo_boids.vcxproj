@@ -100,7 +100,6 @@
     <ClCompile Include="include\gsx\internal_ecs\system.cpp" />
     <ClCompile Include="include\gsx\internal_ecs\world.cpp" />
     <ClCompile Include="include\gsx\internal_math\prng.cpp" />
-    <ClCompile Include="include\gsx\internal_misc\utils.cpp" />
     <ClCompile Include="include\gsx\internal_misc\worker.cpp" />
     <ClCompile Include="include\gsx\internal_str\utils.cpp" />
     <ClCompile Include="src\app.cpp" />

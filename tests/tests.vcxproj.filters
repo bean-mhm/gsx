@@ -39,9 +39,6 @@
     <ClCompile Include="include\gsx\internal_math\prng.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\gsx\internal_misc\utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="include\gsx\internal_misc\worker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
