@@ -293,42 +293,6 @@ namespace gsx::str
             return std::format("{:.1f}{}", (f64)n / powers[mag], suffixes[mag]);
     }
 
-    std::string from_duration(f32 seconds)
-    {
-        if (seconds < 1.f)
-        {
-            return std::format("{:.3f} s", seconds);
-        }
-        else if (seconds < 60.f)
-        {
-            return std::format("{:.1f} s", seconds);
-        }
-        else
-        {
-            u64 isec = (u64)std::floor(seconds);
-            u64 ihr = isec / 3600;
-            u64 imin = (isec / 60) % 60;
-            isec %= 60;
-            if (ihr > 0)
-            {
-                return std::format("{}h {}m {}s", ihr, imin, isec);
-            }
-            else
-            {
-                return std::format("{}m {}s", imin, isec);
-            }
-        }
-    }
-
-    std::string from_elapsed(f32 seconds)
-    {
-        u64 isec = (u64)std::floor(seconds);
-        u64 ihr = isec / 3600;
-        u64 imin = (isec / 60) % 60;
-        isec %= 60;
-        return std::format("{:02}:{:02}:{:02}", ihr, imin, isec);
-    }
-
     std::string from_time()
     {
         time_t rawtime;

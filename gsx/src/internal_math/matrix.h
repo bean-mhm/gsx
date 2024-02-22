@@ -11,7 +11,7 @@ namespace gsx::math
 {
 
     // row-major matrix
-    template<std::floating_point T, i32 n_row, i32 n_col>
+    template<typename T, i32 n_row, i32 n_col>
     class base_mat
     {
     public:
@@ -21,7 +21,7 @@ namespace gsx::math
             {
                 for (i32 col = 0; col < n_col; col++)
                 {
-                    m[row][col] = (row == col) ? (T)1. : (T)0.;
+                    m[row][col] = (row == col) ? (T)1 : (T)0;
                 }
             }
         }
@@ -174,7 +174,7 @@ namespace gsx::math
             {
                 for (i32 col = 0; col < n2; col++)
                 {
-                    T dot = (T)0.;
+                    T dot = 0;
                     for (i32 i = 0; i < n_col; i++)
                     {
                         dot += (*this)(row, i) * m(i, col);
@@ -268,22 +268,6 @@ namespace gsx::math
             return r;
         }
 
-        // upper-left n x n sub-matrix
-        // * n must be smaller than n_row and n_col.
-        template<i32 n>
-        constexpr base_mat<T, n, n> sub() const
-        {
-            base_mat<T, n, n> r;
-            for (i32 row = 0; row < n; row++)
-            {
-                for (i32 col = 0; col < n; col++)
-                {
-                    r(row, col) = (*this)(row, col);
-                }
-            }
-            return r;
-        }
-
         static constexpr i32 n_rows()
         {
             return n_row;
@@ -304,7 +288,7 @@ namespace gsx::math
 
     };
 
-    template<std::floating_point T, i32 n_row, i32 n_col>
+    template<typename T, i32 n_row, i32 n_col>
     constexpr base_mat<T, n_row, n_col> operator*(
         T s,
         const base_mat<T, n_row, n_col>& m
@@ -313,14 +297,14 @@ namespace gsx::math
         return m * s;
     }
 
-    template<std::floating_point T, i32 n>
+    template<typename T, i32 n>
     constexpr bool is_identity(const base_mat<T, n, n>& m)
     {
         for (i32 row = 0; row < n; row++)
         {
             for (i32 col = 0; col < n; col++)
             {
-                T expected = (row == col) ? (T)1. : (T)0.;
+                T expected = (row == col) ? (T)1 : (T)0;
                 if (m(row, col) != expected)
                     return false;
             }
@@ -330,7 +314,7 @@ namespace gsx::math
 
     // cofactor of m[p][q]
     // https://www.geeksforgeeks.org/adjoint-inverse-matrix/
-    template<std::floating_point T, i32 n>
+    template<typename T, i32 n>
     constexpr base_mat<T, n - 1, n - 1> cofactor(
         const base_mat<T, n, n>& m,
         i32 p,
@@ -343,13 +327,13 @@ namespace gsx::math
         {
             for (i32 col = 0; col < n; col++)
             {
-                // Copy into the result matrix only those elements which are not
+                // copy into the result matrix only those elements which are not
                 // in the current row and column
                 if (row != p && col != q)
                 {
                     r(i, j++) = m(row, col);
 
-                    // Row is filled, so increase the row index and reset the
+                    // row is filled, so increase the row index and reset the
                     // col index
                     if (j == n - 1)
                     {
@@ -401,7 +385,7 @@ namespace gsx::math
                 }
 
                 // the determinant sign changes when we shift rows
-                det *= (index - i) % 2 == 0 ? (T)1. : (T)(-1.);
+                det *= (index - i) % 2 == 0 ? (T)1 : (T)(-1);
             }
 
             // store the diagonal row elements
@@ -460,7 +444,7 @@ namespace gsx::math
 
                 // sign of adj[j][i] positive if the sum of the row and column
                 // indices is even.
-                T sign = ((i + j) % 2 == 0) ? (T)1. : (T)(-1.);
+                T sign = ((i + j) % 2 == 0) ? (T)1 : (T)(-1);
 
                 // interchanging rows and columns to get the transpose of the
                 // cofactor matrix
@@ -496,7 +480,7 @@ namespace gsx::math
     }
 
     // transposed copy of a matrix
-    template<std::floating_point T, i32 n_row, i32 n_col>
+    template<typename T, i32 n_row, i32 n_col>
     constexpr base_mat<T, n_col, n_row> transpose(
         const base_mat<T, n_row, n_col>& m
     )
@@ -513,57 +497,93 @@ namespace gsx::math
     }
 
     using mat1x2 = base_mat<f32, 1, 2>;
+    using dmat1x2 = base_mat<f64, 1, 2>;
+    using imat1x2 = base_mat<i32, 1, 2>;
+    using umat1x2 = base_mat<u32, 1, 2>;
+
     using mat2x1 = base_mat<f32, 2, 1>;
+    using dmat2x1 = base_mat<f64, 2, 1>;
+    using imat2x1 = base_mat<i32, 2, 1>;
+    using umat2x1 = base_mat<u32, 2, 1>;
 
     using mat1x3 = base_mat<f32, 1, 3>;
+    using dmat1x3 = base_mat<f64, 1, 3>;
+    using imat1x3 = base_mat<i32, 1, 3>;
+    using umat1x3 = base_mat<u32, 1, 3>;
+
     using mat3x1 = base_mat<f32, 3, 1>;
+    using dmat3x1 = base_mat<f64, 3, 1>;
+    using imat3x1 = base_mat<i32, 3, 1>;
+    using umat3x1 = base_mat<u32, 3, 1>;
 
     using mat1x4 = base_mat<f32, 1, 4>;
+    using dmat1x4 = base_mat<f64, 1, 4>;
+    using imat1x4 = base_mat<i32, 1, 4>;
+    using umat1x4 = base_mat<u32, 1, 4>;
+
     using mat4x1 = base_mat<f32, 4, 1>;
+    using dmat4x1 = base_mat<f64, 4, 1>;
+    using imat4x1 = base_mat<i32, 4, 1>;
+    using umat4x1 = base_mat<u32, 4, 1>;
 
     using mat2 = base_mat<f32, 2, 2>;
+    using dmat2 = base_mat<f64, 2, 2>;
+    using imat2 = base_mat<i32, 2, 2>;
+    using umat2 = base_mat<u32, 2, 2>;
+
     using mat2x2 = base_mat<f32, 2, 2>;
+    using dmat2x2 = base_mat<f64, 2, 2>;
+    using imat2x2 = base_mat<i32, 2, 2>;
+    using umat2x2 = base_mat<u32, 2, 2>;
 
     using mat2x3 = base_mat<f32, 2, 3>;
+    using dmat2x3 = base_mat<f64, 2, 3>;
+    using imat2x3 = base_mat<i32, 2, 3>;
+    using umat2x3 = base_mat<u32, 2, 3>;
+
     using mat3x2 = base_mat<f32, 3, 2>;
+    using dmat3x2 = base_mat<f64, 3, 2>;
+    using imat3x2 = base_mat<i32, 3, 2>;
+    using umat3x2 = base_mat<u32, 3, 2>;
 
     using mat2x4 = base_mat<f32, 2, 4>;
+    using dmat2x4 = base_mat<f64, 2, 4>;
+    using imat2x4 = base_mat<i32, 2, 4>;
+    using umat2x4 = base_mat<u32, 2, 4>;
+
     using mat4x2 = base_mat<f32, 4, 2>;
+    using dmat4x2 = base_mat<f64, 4, 2>;
+    using imat4x2 = base_mat<i32, 4, 2>;
+    using umat4x2 = base_mat<u32, 4, 2>;
 
     using mat3 = base_mat<f32, 3, 3>;
+    using dmat3 = base_mat<f64, 3, 3>;
+    using imat3 = base_mat<i32, 3, 3>;
+    using umat3 = base_mat<u32, 3, 3>;
+
     using mat3x3 = base_mat<f32, 3, 3>;
+    using dmat3x3 = base_mat<f64, 3, 3>;
+    using imat3x3 = base_mat<i32, 3, 3>;
+    using umat3x3 = base_mat<u32, 3, 3>;
 
     using mat3x4 = base_mat<f32, 3, 4>;
+    using dmat3x4 = base_mat<f64, 3, 4>;
+    using imat3x4 = base_mat<i32, 3, 4>;
+    using umat3x4 = base_mat<u32, 3, 4>;
+
     using mat4x3 = base_mat<f32, 4, 3>;
+    using dmat4x3 = base_mat<f64, 4, 3>;
+    using imat4x3 = base_mat<i32, 4, 3>;
+    using umat4x3 = base_mat<u32, 4, 3>;
 
     using mat4 = base_mat<f32, 4, 4>;
-    using mat4x4 = base_mat<f32, 4, 4>;
-
-    using dmat1x2 = base_mat<f64, 1, 2>;
-    using dmat2x1 = base_mat<f64, 2, 1>;
-
-    using dmat1x3 = base_mat<f64, 1, 3>;
-    using dmat3x1 = base_mat<f64, 3, 1>;
-
-    using dmat1x4 = base_mat<f64, 1, 4>;
-    using dmat4x1 = base_mat<f64, 4, 1>;
-
-    using dmat2 = base_mat<f64, 2, 2>;
-    using dmat2x2 = base_mat<f64, 2, 2>;
-
-    using dmat2x3 = base_mat<f64, 2, 3>;
-    using dmat3x2 = base_mat<f64, 3, 2>;
-
-    using dmat2x4 = base_mat<f64, 2, 4>;
-    using dmat4x2 = base_mat<f64, 4, 2>;
-
-    using dmat3 = base_mat<f64, 3, 3>;
-    using dmat3x3 = base_mat<f64, 3, 3>;
-
-    using dmat3x4 = base_mat<f64, 3, 4>;
-    using dmat4x3 = base_mat<f64, 4, 3>;
-
     using dmat4 = base_mat<f64, 4, 4>;
+    using imat4 = base_mat<i32, 4, 4>;
+    using umat4 = base_mat<u32, 4, 4>;
+
+    using mat4x4 = base_mat<f32, 4, 4>;
     using dmat4x4 = base_mat<f64, 4, 4>;
+    using imat4x4 = base_mat<i32, 4, 4>;
+    using umat4x4 = base_mat<u32, 4, 4>;
 
 }

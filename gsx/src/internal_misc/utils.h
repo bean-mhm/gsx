@@ -104,18 +104,31 @@ namespace gsx::misc
     }
 
     // sleep using std::this_thread::sleep_for().
-    inline void sleep(f32 seconds)
+    template<std::floating_point T>
+    inline void sleep(T seconds)
     {
         std::this_thread::sleep_for(
-            std::chrono::nanoseconds((u64)(seconds * 1e9f))
+            std::chrono::nanoseconds((u64)(seconds * (T)1e9))
         );
     }
 
-    f32 elapsed_sec(std::chrono::steady_clock::time_point t_start);
+    template<std::floating_point T>
+    T elapsed_sec(std::chrono::steady_clock::time_point t_start)
+    {
+        return (T)1e-9 * std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::high_resolution_clock::now() - t_start
+        ).count();
+    }
 
-    f32 elapsed_sec(
+    template<std::floating_point T>
+    T elapsed_sec(
         std::chrono::steady_clock::time_point t_start,
         std::chrono::steady_clock::time_point t_end
-    );
+    )
+    {
+        return (T)1e-9 * std::chrono::duration_cast<std::chrono::nanoseconds>(
+            t_end - t_start
+        ).count();
+    }
 
 }

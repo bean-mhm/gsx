@@ -130,10 +130,10 @@ namespace gsx::math
             for (i32 i = 0; i < 100; i++)
             {
                 v = base_vec2<T>(
-                    (T)2. * next<T>() - (T)1.,
-                    (T)2. * next<T>() - (T)1.
+                    (T)2 * next<T>() - (T)1,
+                    (T)2 * next<T>() - (T)1
                 );
-                if (length_squared(v) <= (T)1.) return v;
+                if (length_squared(v) <= (T)1) return v;
             }
             return v;
         }
@@ -146,11 +146,11 @@ namespace gsx::math
             for (i32 i = 0; i < 100; i++)
             {
                 v = base_vec3<T>(
-                    (T)2. * next<T>() - (T)1.,
-                    (T)2. * next<T>() - (T)1.,
-                    (T)2. * next<T>() - (T)1.
+                    (T)2 * next<T>() - (T)1,
+                    (T)2 * next<T>() - (T)1,
+                    (T)2 * next<T>() - (T)1
                 );
-                if (length_squared(v) <= (T)1.) return v;
+                if (length_squared(v) <= (T)1) return v;
             }
             return v;
         }
@@ -160,15 +160,15 @@ namespace gsx::math
         base_vec2<T> next_on_circle()
         {
             vec2 v;
-            f32 lensqr;
+            T lensqr;
             for (i32 i = 0; i < 100; i++)
             {
                 v = vec2(
-                    (T)2. * next<T>() - (T)1.,
-                    (T)2. * next<T>() - (T)1.
+                    (T)2 * next<T>() - (T)1,
+                    (T)2 * next<T>() - (T)1
                 );
                 lensqr = length_squared(v);
-                if (lensqr <= (T)1. && lensqr != (T)0.) break;
+                if (lensqr <= (T)1 && lensqr != (T)0) break;
             }
             return v / sqrt(lensqr);
         }
@@ -178,16 +178,16 @@ namespace gsx::math
         base_vec3<T> next_on_sphere()
         {
             vec3 v;
-            f32 lensqr;
+            T lensqr;
             for (i32 i = 0; i < 100; i++)
             {
                 v = vec3(
-                    (T)2. * next<T>() - (T)1.,
-                    (T)2. * next<T>() - (T)1.,
-                    (T)2. * next<T>() - (T)1.
+                    (T)2 * next<T>() - (T)1,
+                    (T)2 * next<T>() - (T)1,
+                    (T)2 * next<T>() - (T)1
                 );
                 lensqr = length_squared(v);
-                if (lensqr <= (T)1. && lensqr != (T)0.) break;
+                if (lensqr <= (T)1 && lensqr != (T)0) break;
             }
             return v / sqrt(lensqr);
         }
@@ -200,7 +200,7 @@ namespace gsx::math
         {
             T u1 = next<T>();
             T u2 = next<T>();
-            T temp = sqrt((T)(-2.) * log(u1));
+            T temp = sqrt((T)(-2) * log(u1));
             return base_vec2<T>(
                 temp * cos(tau<T> *u2),
                 temp * sin(tau<T> *u2)

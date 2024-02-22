@@ -38,7 +38,7 @@ namespace gsx::math
                 // compute w from matrix trace, then xyz
                 // 4w^2 = m(0, 0) + m(1, 1) + m(2, 2) + m(3, 3)
                 // (but m(3, 3) == 1)
-                T s = sqrt(mtrace + (T)1.);
+                T s = sqrt(mtrace + (T)1);
                 v.w = s * (T).5;
                 s = (T).5 / s;
                 v.x = (m(2, 1) - m(1, 2)) * s;
@@ -62,9 +62,9 @@ namespace gsx::math
                 }
                 i32 j = nxt[i];
                 i32 k = nxt[j];
-                T s = sqrt((m(i, i) - (m(j, j) + m(k, k))) + (T)1.);
+                T s = sqrt((m(i, i) - (m(j, j) + m(k, k))) + (T)1);
                 q[i] = s * (T).5;
-                if (s != (T)0.)
+                if (s != (T)0)
                 {
                     s = (T).5 / s;
                 }
@@ -215,7 +215,7 @@ namespace gsx::math
         }
         else
         {
-            T theta = std::acos(std::clamp(cos_theta, (T)(-1.), (T)1.));
+            T theta = std::acos(std::clamp(cos_theta, (T)(-1), (T)1));
             T thetap = theta * t;
             base_quaternion_t qperp = normalize(q2 - q1 * cos_theta);
             return q1 * std::cos(thetap) + qperp * std::sin(thetap);

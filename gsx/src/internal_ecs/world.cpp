@@ -108,7 +108,7 @@ namespace gsx::ecs
         misc::vec_clear(systems);
     }
 
-    void world_t::run(const f32 max_update_rate, const f32 max_run_time)
+    void world_t::run(const f64 max_update_rate, const f64 max_run_time)
     {
         gsx_log(this, log_level_t::info, "preparing to run");
 
@@ -146,10 +146,10 @@ namespace gsx::ecs
         iteration_t iter;
         auto time_start = std::chrono::high_resolution_clock::now();
         auto time_last_iter = time_start;
-        const f32 min_dt =
+        const f64 min_dt =
             (max_update_rate == 0)
             ? 0
-            : 1.f / max_update_rate;
+            : 1. / max_update_rate;
 
         if (did_start_all)
         {
@@ -184,7 +184,7 @@ namespace gsx::ecs
                 }
 
                 // don't go faster than the maximum update rate
-                f32 time_left = min_dt - misc::elapsed_sec(time_last_iter);
+                f64 time_left = min_dt - misc::elapsed_sec<f64>(time_last_iter);
                 if (time_left > 0)
                 {
                     misc::sleep(time_left);
@@ -192,8 +192,8 @@ namespace gsx::ecs
 
                 // update iter
                 iter.i++;
-                iter.time = misc::elapsed_sec(time_start);
-                iter.dt = misc::elapsed_sec(time_last_iter);
+                iter.time = misc::elapsed_sec<f64>(time_start);
+                iter.dt = misc::elapsed_sec<f64>(time_last_iter);
                 time_last_iter = std::chrono::high_resolution_clock::now();
 
                 // stop running if one or more system failed to update or get

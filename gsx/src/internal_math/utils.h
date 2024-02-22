@@ -167,7 +167,7 @@ namespace gsx::math
     template<std::floating_point T>
     inline T inversesqrt(T x)
     {
-        return (T)1. / std::sqrt(x);
+        return (T)1 / std::sqrt(x);
     }
 
     template<typename T>
@@ -253,7 +253,7 @@ namespace gsx::math
     template<std::floating_point T>
     constexpr T clamp01(T x)
     {
-        return std::clamp(x, (T)0., (T)1.);
+        return std::clamp(x, (T)0, (T)1);
     }
 
     template<std::floating_point T>
@@ -299,7 +299,7 @@ namespace gsx::math
     constexpr T smoothstep(T edge0, T edge1, T x)
     {
         T t = clamp01((x - edge0) / (edge1 - edge0));
-        return t * t * ((T)3. - (T)2. * t);
+        return t * t * ((T)3 - (T)2 * t);
     }
 
     template<std::floating_point T>

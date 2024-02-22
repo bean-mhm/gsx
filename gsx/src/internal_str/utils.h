@@ -60,10 +60,44 @@ namespace gsx::str
     std::string from_large_number(u64 n);
 
     // examples: "7h 9m 32s", "10.7s"
-    std::string from_duration(f32 seconds);
+    template<std::floating_point T>
+    std::string from_duration(T seconds)
+    {
+        if (seconds < 1)
+        {
+            return std::format("{:.3f} s", seconds);
+        }
+        else if (seconds < 60)
+        {
+            return std::format("{:.1f} s", seconds);
+        }
+        else
+        {
+            u64 isec = (u64)std::floor(seconds);
+            u64 ihr = isec / 3600;
+            u64 imin = (isec / 60) % 60;
+            isec %= 60;
+            if (ihr > 0)
+            {
+                return std::format("{}h {}m {}s", ihr, imin, isec);
+            }
+            else
+            {
+                return std::format("{}m {}s", imin, isec);
+            }
+        }
+    }
 
     // examples: "07:09:32", "00:00:10"
-    std::string from_elapsed(f32 seconds);
+    template<std::floating_point T>
+    std::string from_elapsed(T seconds)
+    {
+        u64 isec = (u64)std::floor(seconds);
+        u64 ihr = isec / 3600;
+        u64 imin = (isec / 60) % 60;
+        isec %= 60;
+        return std::format("{:02}:{:02}:{:02}", ihr, imin, isec);
+    }
 
     // example: "2023-07-30 15:38:09"
     std::string from_time();
@@ -71,7 +105,7 @@ namespace gsx::str
     template<typename T>
     std::string from_number(T v)
     {
-        if constexpr (std::is_same_v<T, f32> || std::is_same_v<T, f64>)
+        if constexpr (std::is_floating_point_v<T>)
         {
             return std::format("{:.3f}", v);
         }

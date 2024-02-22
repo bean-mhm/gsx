@@ -26,10 +26,10 @@ namespace gsx::ecs
         u64 i = 0;
 
         // seconds elapsed since the start
-        f32 time = 0;
+        f64 time = 0;
 
         // seconds elapsed since the last iteration
-        f32 dt = 0;
+        f64 dt = 0;
     };
 
     // a world for holding and managing a collection of systems
@@ -79,7 +79,7 @@ namespace gsx::ecs
         // * only a single thread can be running the world at a time.
         // * use a max_update_rate of 0 for uncapped update rate.
         // * use a max_run_time of 0 for uncapped run time.
-        void run(const f32 max_update_rate = 0, const f32 max_run_time = 0);
+        void run(const f64 max_update_rate = 0, const f64 max_run_time = 0);
 
         // signal the runner thread to stop, and optionally wait for it if
         // calling from a separate thread. if this is called from the same
