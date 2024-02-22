@@ -35,7 +35,7 @@ void app_t::run()
         // add a circle component
         circle_t circle;
         circle.owner = i;
-        circle.radius = prng.next_f32(.05f, .2f);
+        circle.radius = prng.next<f32>(.05f, .2f);
         circles.push_back(circle);
     }
 

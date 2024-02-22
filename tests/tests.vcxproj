@@ -90,14 +90,7 @@
     <ClCompile Include="include\gsx\internal_ecs\log.cpp" />
     <ClCompile Include="include\gsx\internal_ecs\system.cpp" />
     <ClCompile Include="include\gsx\internal_ecs\world.cpp" />
-    <ClCompile Include="include\gsx\internal_math\circle.cpp" />
-    <ClCompile Include="include\gsx\internal_math\polar.cpp" />
     <ClCompile Include="include\gsx\internal_math\prng.cpp" />
-    <ClCompile Include="include\gsx\internal_math\quaternion.cpp" />
-    <ClCompile Include="include\gsx\internal_math\ray.cpp" />
-    <ClCompile Include="include\gsx\internal_math\sphere.cpp" />
-    <ClCompile Include="include\gsx\internal_math\spherical.cpp" />
-    <ClCompile Include="include\gsx\internal_math\transform.cpp" />
     <ClCompile Include="include\gsx\internal_misc\utils.cpp" />
     <ClCompile Include="include\gsx\internal_misc\worker.cpp" />
     <ClCompile Include="include\gsx\internal_str\utils.cpp" />

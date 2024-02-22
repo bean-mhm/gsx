@@ -10,13 +10,13 @@ using namespace math;
 
 inline bool eq_f32(f32 a, f32 b)
 {
-    return math::abs(a - b) < epsilon;
+    return math::abs(a - b) < epsilon<f32>;
 }
 
 template<typename T>
 inline bool eq_vec(const T& a, const T& b)
 {
-    return (f32)max_component(math::abs(a - b)) < epsilon;
+    return (f32)max_component(math::abs(a - b)) < epsilon<f32>;
 }
 
 inline bool eq_polar(const polar_t& a, const polar_t& b)
@@ -24,7 +24,7 @@ inline bool eq_polar(const polar_t& a, const polar_t& b)
     return min(
         math::abs(a.r - b.r),
         math::abs(a.theta - b.theta)
-    ) < epsilon;
+    ) < epsilon<f32>;
 }
 
 inline bool eq_spherical(const spherical_t& a, const spherical_t& b)
@@ -35,20 +35,20 @@ inline bool eq_spherical(const spherical_t& a, const spherical_t& b)
             math::abs(a.theta - b.theta)
         ),
         math::abs(a.phi - b.phi)
-    ) < epsilon;
+    ) < epsilon<f32>;
 }
 
 template<i32 n_row, i32 n_col>
 inline bool eq_mat(
-    const base_mat<n_row, n_col>& m1,
-    const base_mat<n_row, n_col>& m2
+    const base_mat<f32, n_row, n_col>& m1,
+    const base_mat<f32, n_row, n_col>& m2
 )
 {
     for (i32 row = 0; row < n_row; row++)
     {
         for (i32 col = 0; col < n_col; col++)
         {
-            if (math::abs(m1(row, col) - m2(row, col)) >= epsilon)
+            if (math::abs(m1(row, col) - m2(row, col)) >= epsilon<f32>)
                 return false;
         }
     }
@@ -456,12 +456,12 @@ static void test_bounds3()
 static void test_polar()
 {
     test::assert(eq_vec(
-        polar_t(2.f, -pi / 6.f).cartesian(),
+        polar_t(2.f, -pi<f32> / 6.f).cartesian(),
         vec2(1.7320508f, -1)
     ), "cartesian()");
     test::assert(eq_polar(
         polar_t(vec2(1.7320508f, -1)),
-        polar_t(2.f, -pi / 6.f)
+        polar_t(2.f, -pi<f32> / 6.f)
     ), "polar_t(vec2 cartesian)");
 }
 
@@ -486,14 +486,14 @@ static void test_matrix()
         mat3({ 6, -64, -2, 26, 47, -8, 85, 19, 21 })
     ), "mat3 * mat3");
     test::assert(eq_mat(
-        base_mat<5, 2>({ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
-        * base_mat<2, 3>({ 6, 5, 4, 3, 2, 1 }),
-        base_mat<5, 3>(
+        base_mat<f32, 5, 2>({ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 })
+        * base_mat<f32, 2, 3>({ 6, 5, 4, 3, 2, 1 }),
+        base_mat<f32, 5, 3>(
             { 12, 9, 6, 30, 23, 16, 48, 37, 26, 66, 51, 36, 84, 65, 46 }
         )
     ), "mat5x2 * mat2x3");
     test::assert(eq_mat(
-        5 * mat2({ 1, 2, 3, 4 }),
+        5.f * mat2({ 1, 2, 3, 4 }),
         mat2({ 5, 10, 15, 20 })
     ), "scalar * mat2");
     test::assert(eq_f32(
@@ -541,7 +541,7 @@ static void test_transform()
     test::assert(eq_vec(
         transform::apply_point_2d_h(
             transform::translate_2d_h(vec2(100))
-            * transform::rotate_2d_h(-pi / 6.f),
+            * transform::rotate_2d_h(-pi<f32> / 6.f),
             vec2(10, 20)
         ),
         vec2(118.6602554f, 112.3205109f)
@@ -554,12 +554,12 @@ static void test_prng()
 
     for (usize i = 0; i < 100; i++)
     {
-        i32 a = prng.next_i32(-100, 100);
+        i32 a = prng.next<i32>(-100, 100);
         test::assert(
             a >= -100 && a <= 100, std::format("next_i32(-100, 100) = {}", a)
         );
 
-        u32 b = prng.next_u32(10, 50);
+        u32 b = prng.next<u32>(10, 50);
         test::assert(
             b >= 10 && b <= 50, std::format("next_u32(10, 50) = {}", b)
         );
@@ -569,7 +569,7 @@ static void test_prng()
     hist.fill(0);
     for (usize i = 0; i < 1000000; i++)
     {
-        f32 num = prng.next_f32();
+        f32 num = prng.next<f32>();
         u32 category = (u32)math::floor(num * 99.9999f);
         hist[category]++;
     }

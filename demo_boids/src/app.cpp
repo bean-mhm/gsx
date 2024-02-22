@@ -57,11 +57,11 @@ void app_t::run()
         boid_t boid;
 
         boid.pos = math::vec2(
-            prng.next_f32(boid_min_pos.x, boid_max_pos.x),
-            prng.next_f32(boid_min_pos.y, boid_max_pos.y)
+            prng.next<f32>(boid_min_pos.x, boid_max_pos.x),
+            prng.next<f32>(boid_min_pos.y, boid_max_pos.y)
         );
 
-        f32 angle = prng.next_f32(0, math::tau);
+        f32 angle = prng.next<f32>(0, math::tau<f32>);
         boid.vel = boid_speed * math::vec2(math::cos(angle), math::sin(angle));
 
         boids.insert(boid);

@@ -36,28 +36,7 @@
     <ClCompile Include="include\gsx\internal_ecs\world.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\gsx\internal_math\circle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\gsx\internal_math\polar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="include\gsx\internal_math\prng.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\gsx\internal_math\quaternion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\gsx\internal_math\ray.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\gsx\internal_math\sphere.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\gsx\internal_math\spherical.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="include\gsx\internal_math\transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="include\gsx\internal_misc\utils.cpp">

@@ -99,14 +99,7 @@
     <ClCompile Include="include\gsx\internal_ecs\log.cpp" />
     <ClCompile Include="include\gsx\internal_ecs\system.cpp" />
     <ClCompile Include="include\gsx\internal_ecs\world.cpp" />
-    <ClCompile Include="include\gsx\internal_math\circle.cpp" />
-    <ClCompile Include="include\gsx\internal_math\polar.cpp" />
     <ClCompile Include="include\gsx\internal_math\prng.cpp" />
-    <ClCompile Include="include\gsx\internal_math\quaternion.cpp" />
-    <ClCompile Include="include\gsx\internal_math\ray.cpp" />
-    <ClCompile Include="include\gsx\internal_math\sphere.cpp" />
-    <ClCompile Include="include\gsx\internal_math\spherical.cpp" />
-    <ClCompile Include="include\gsx\internal_math\transform.cpp" />
     <ClCompile Include="include\gsx\internal_misc\utils.cpp" />
     <ClCompile Include="include\gsx\internal_misc\worker.cpp" />
     <ClCompile Include="include\gsx\internal_str\utils.cpp" />
@@ -116,6 +109,12 @@
     <ClCompile Include="src\systems.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\GLFW\glfw3.h" />
+    <ClInclude Include="include\GLFW\glfw3native.h" />
+    <ClInclude Include="include\GL\eglew.h" />
+    <ClInclude Include="include\GL\glew.h" />
+    <ClInclude Include="include\GL\glxew.h" />
+    <ClInclude Include="include\GL\wglew.h" />
     <ClInclude Include="include\gsx\gsx.h" />
     <ClInclude Include="include\gsx\internal_common\all.h" />
     <ClInclude Include="include\gsx\internal_common\macros.h" />
@@ -146,12 +145,6 @@
     <ClInclude Include="include\gsx\internal_misc\utils.h" />
     <ClInclude Include="include\gsx\internal_misc\worker.h" />
     <ClInclude Include="include\gsx\internal_spatial\all.h" />
-    <ClInclude Include="include\GLFW\glfw3.h" />
-    <ClInclude Include="include\GLFW\glfw3native.h" />
-    <ClInclude Include="include\GL\eglew.h" />
-    <ClInclude Include="include\GL\glew.h" />
-    <ClInclude Include="include\GL\glxew.h" />
-    <ClInclude Include="include\GL\wglew.h" />
     <ClInclude Include="include\gsx\internal_spatial\base_structure.h" />
     <ClInclude Include="include\gsx\internal_spatial\grid_2d.h" />
     <ClInclude Include="include\gsx\internal_spatial\grid_3d.h" />
