@@ -37,22 +37,22 @@ namespace gsx::math
             : x((T)v.x), y((T)v.y), z((T)v.z)
         {}
 
-        explicit constexpr base_vec3(const mat1x3& m)
-            : x((T)m(0)), y((T)m(1)), z((T)m(2))
+        explicit constexpr base_vec3(const base_mat<T, 1, 3>& m)
+            : x(m(0)), y(m(1)), z(m(2))
         {}
 
-        explicit constexpr base_vec3(const mat3x1& m)
-            : x((T)m(0)), y((T)m(1)), z((T)m(2))
+        explicit constexpr base_vec3(const base_mat<T, 3, 1>& m)
+            : x(m(0)), y(m(1)), z(m(2))
         {}
 
-        explicit constexpr operator mat1x3() const
+        explicit constexpr operator base_mat<T, 1, 3>() const
         {
-            return mat1x3({ (f32)x, (f32)y, (f32)z });
+            return base_mat<T, 1, 3>({ x, y, z });
         }
 
-        explicit constexpr operator mat3x1() const
+        explicit constexpr operator base_mat<T, 3, 1>() const
         {
-            return mat3x1({ (f32)x, (f32)y, (f32)z });
+            return base_mat<T, 3, 1>({ x, y, z });
         }
 
         std::string to_string() const
@@ -125,16 +125,32 @@ namespace gsx::math
 
         constexpr base_vec3<T> operator/(T s) const
         {
-            f32 inv = 1.f / (f32)s;
-            return base_vec3<T>(x * inv, y * inv, z * inv);
+            if constexpr (std::is_floating_point_v<T>)
+            {
+                T inv = (T)1 / s;
+                return base_vec3<T>(x * inv, y * inv, z * inv);
+            }
+            else
+            {
+                return base_vec3<T>(x / s, y / s, z / s);
+            }
         }
 
         constexpr base_vec3<T>& operator/=(T s)
         {
-            f32 inv = 1.f / (f32)s;
-            x *= inv;
-            y *= inv;
-            z *= inv;
+            if constexpr (std::is_floating_point_v<T>)
+            {
+                T inv = (T)1 / s;
+                x *= inv;
+                y *= inv;
+                z *= inv;
+            }
+            else
+            {
+                x /= s;
+                y /= s;
+                z /= s;
+            }
             return *this;
         }
 
@@ -148,6 +164,21 @@ namespace gsx::math
             x /= v.x;
             y /= v.y;
             z /= v.z;
+            return *this;
+        }
+
+        template<typename = std::enable_if_t<std::is_integral_v<T>>>
+        constexpr base_vec3<T> operator%(base_vec3<T> v) const
+        {
+            return base_vec3<T>(x % v.x, y % v.y, z % v.z);
+        }
+
+        template<typename = std::enable_if_t<std::is_integral_v<T>>>
+        constexpr base_vec3<T>& operator%=(base_vec3<T> v)
+        {
+            x %= v.x;
+            y %= v.y;
+            z %= v.z;
             return *this;
         }
 
@@ -221,133 +252,133 @@ namespace gsx::math
         return base_vec3<T>(s / v.x, s / v.y, s / v.z);
     }
 
-    template<typename T>
+    template<std::floating_point T>
     constexpr base_vec3<T> radians(const base_vec3<T>& degrees)
     {
         return degrees * deg2rad;
     }
 
-    template<typename T>
+    template<std::floating_point T>
     constexpr base_vec3<T> degrees(const base_vec3<T>& radians)
     {
         return radians * rad2deg;
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> sin(const base_vec3<T>& v)
     {
         return base_vec3<T>(sin(v.x), sin(v.y), sin(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> cos(const base_vec3<T>& v)
     {
         return base_vec3<T>(cos(v.x), cos(v.y), cos(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> tan(const base_vec3<T>& v)
     {
         return base_vec3<T>(tan(v.x), tan(v.y), tan(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> asin(const base_vec3<T>& v)
     {
         return base_vec3<T>(asin(v.x), asin(v.y), asin(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> acos(const base_vec3<T>& v)
     {
         return base_vec3<T>(acos(v.x), acos(v.y), acos(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> atan(const base_vec3<T>& v)
     {
         return base_vec3<T>(atan(v.x), atan(v.y), atan(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> sinh(const base_vec3<T>& v)
     {
         return base_vec3<T>(sinh(v.x), sinh(v.y), sinh(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> cosh(const base_vec3<T>& v)
     {
         return base_vec3<T>(cosh(v.x), cosh(v.y), cosh(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> tanh(const base_vec3<T>& v)
     {
         return base_vec3<T>(tanh(v.x), tanh(v.y), tanh(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> asinh(const base_vec3<T>& v)
     {
         return base_vec3<T>(asinh(v.x), asinh(v.y), asinh(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> acosh(const base_vec3<T>& v)
     {
         return base_vec3<T>(acosh(v.x), acosh(v.y), acosh(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> atanh(const base_vec3<T>& v)
     {
         return base_vec3<T>(atanh(v.x), atanh(v.y), atanh(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> pow(const base_vec3<T>& v1, const base_vec3<T>& v2)
     {
         return base_vec3<T>(pow(v1.x, v2.x), pow(v1.y, v2.y), pow(v1.z, v2.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> pow(const base_vec3<T>& v1, T v2)
     {
         return base_vec3<T>(pow(v1.x, v2), pow(v1.y, v2), pow(v1.z, v2));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> exp(const base_vec3<T>& v)
     {
         return base_vec3<T>(exp(v.x), exp(v.y), exp(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> log(const base_vec3<T>& v)
     {
         return base_vec3<T>(log(v.x), log(v.y), log(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> exp2(const base_vec3<T>& v)
     {
         return base_vec3<T>(exp2(v.x), exp2(v.y), exp2(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> log2(const base_vec3<T>& v)
     {
         return base_vec3<T>(log2(v.x), log2(v.y), log2(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> sqrt(const base_vec3<T>& v)
     {
         return base_vec3<T>(sqrt(v.x), sqrt(v.y), sqrt(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> inversesqrt(const base_vec3<T>& v)
     {
         return base_vec3<T>(
@@ -367,50 +398,50 @@ namespace gsx::math
         return base_vec3<T>(sign(v.x), sign(v.y), sign(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> floor(const base_vec3<T>& v)
     {
         return base_vec3<T>(floor(v.x), floor(v.y), floor(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> ceil(const base_vec3<T>& v)
     {
         return base_vec3<T>(ceil(v.x), ceil(v.y), ceil(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> trunc(const base_vec3<T>& v)
     {
         return base_vec3<T>(trunc(v.x), trunc(v.y), trunc(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> fract(const base_vec3<T>& v)
     {
         return base_vec3<T>(fract(v.x), fract(v.y), fract(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> mod(const base_vec3<T>& v1, const base_vec3<T>& v2)
     {
         return base_vec3<T>(mod(v1.x, v2.x), mod(v1.y, v2.y), mod(v1.z, v2.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> mod(const base_vec3<T>& v1, T v2)
     {
         return base_vec3<T>(mod(v1.x, v2), mod(v1.y, v2), mod(v1.z, v2));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> modf(const base_vec3<T>& v, base_vec3<T>& i)
     {
         return base_vec3<T>(modf(v.x, i.x), modf(v.y, i.y), modf(v.z, i.z));
     }
 
-    template<typename T>
-    inline base_vec3<T> wrap(const base_vec3<T>& v, f32 start, f32 end)
+    template<std::floating_point T>
+    inline base_vec3<T> wrap(const base_vec3<T>& v, T start, T end)
     {
         return start + mod(v - start, end - start);
     }
@@ -457,68 +488,68 @@ namespace gsx::math
         );
     }
 
-    template<typename T>
+    template<std::floating_point T>
     constexpr base_vec3<T> clamp01(const base_vec3<T>& v)
     {
         return base_vec3<T>(clamp01(v.x), clamp01(v.y), clamp01(v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     constexpr base_vec3<T> mix(
         const base_vec3<T>& v1,
         const base_vec3<T>& v2,
-        f32 a
+        T a
     )
     {
         return v1 + a * (v2 - v1);
     }
 
-    template<typename T>
+    template<std::floating_point T>
     constexpr base_vec3<T> remap(
         const base_vec3<T>& v,
-        f32 a_start,
-        f32 a_end,
-        f32 b_start,
-        f32 b_end
+        T a_start,
+        T a_end,
+        T b_start,
+        T b_end
     )
     {
         return
             b_start + ((b_end - b_start) / (a_end - a_start)) * (v - a_start);
     }
 
-    template<typename T>
+    template<std::floating_point T>
     constexpr base_vec3<T> remap_clamp(
         const base_vec3<T>& v,
-        f32 a_start,
-        f32 a_end,
-        f32 b_start,
-        f32 b_end
+        T a_start,
+        T a_end,
+        T b_start,
+        T b_end
     )
     {
         base_vec3<T> t = clamp01((v - a_start) / (a_end - a_start));
         return b_start + t * (b_end - b_start);
     }
 
-    template<typename T>
+    template<std::floating_point T>
     constexpr base_vec3<T> remap01(
         const base_vec3<T>& v,
-        f32 a_start,
-        f32 a_end
+        T a_start,
+        T a_end
     )
     {
         return clamp01((v - a_start) / (a_end - a_start));
     }
 
     template<typename T>
-    constexpr base_vec3<T> step(f32 edge, const base_vec3<T>& v)
+    constexpr base_vec3<T> step(T edge, const base_vec3<T>& v)
     {
         return base_vec3<T>(step(edge, v.x), step(edge, v.y), step(edge, v.z));
     }
 
-    template<typename T>
+    template<std::floating_point T>
     constexpr base_vec3<T> smoothstep(
-        f32 edge0,
-        f32 edge1,
+        T edge0,
+        T edge1,
         const base_vec3<T>& v
     )
     {
@@ -530,19 +561,19 @@ namespace gsx::math
     }
 
     template<typename T>
-    constexpr f32 length_squared(const base_vec3<T>& v)
+    constexpr T length_squared(const base_vec3<T>& v)
     {
         return v.x * v.x + v.y * v.y + v.z * v.z;
     }
 
-    template<typename T>
-    inline f32 length(const base_vec3<T>& v)
+    template<std::floating_point T>
+    inline T length(const base_vec3<T>& v)
     {
         return sqrt(length_squared(v));
     }
 
     template<typename T>
-    constexpr f32 distance_squared(
+    constexpr T distance_squared(
         const base_vec3<T>& v1,
         const base_vec3<T>& v2
     )
@@ -550,8 +581,8 @@ namespace gsx::math
         return length_squared(v1 - v2);
     }
 
-    template<typename T>
-    inline f32 distance(const base_vec3<T>& v1, const base_vec3<T>& v2)
+    template<std::floating_point T>
+    inline T distance(const base_vec3<T>& v1, const base_vec3<T>& v2)
     {
         return length(v1 - v2);
     }
@@ -572,13 +603,13 @@ namespace gsx::math
         );
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> normalize(const base_vec3<T>& v)
     {
         return v / length(v);
     }
 
-    template<typename T>
+    template<std::floating_point T>
     constexpr base_vec3<T> faceforward(
         const base_vec3<T>& n,
         const base_vec3<T>& i,
@@ -590,21 +621,21 @@ namespace gsx::math
         return -n;
     }
 
-    template<typename T>
+    template<std::floating_point T>
     constexpr base_vec3<T> reflect(const base_vec3<T>& i, const base_vec3<T>& n)
     {
         return i - 2 * dot(n, i) * n;
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline base_vec3<T> refract(
         const base_vec3<T>& i,
         const base_vec3<T>& n,
-        f32 eta
+        T eta
     )
     {
-        f32 dp = dot(n, i);
-        f32 k = 1 - eta * eta * (1 - dp * dp);
+        T dp = dot(n, i);
+        T k = 1 - eta * eta * (1 - dp * dp);
 
         if (k < 0)
             return 0;
@@ -640,7 +671,7 @@ namespace gsx::math
             : ((v.y > v.z) ? 1 : 2);
     }
 
-    template<typename T>
+    template<std::floating_point T>
     inline void coordinate_system(
         const base_vec3<T>& v1,
         base_vec3<T>& v2,
