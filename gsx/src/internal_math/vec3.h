@@ -659,6 +659,7 @@ namespace gsx::math
     }
 
     using vec3 = base_vec3<f32>;
+    using dvec3 = base_vec3<f64>;
     using ivec3 = base_vec3<i32>;
     using uvec3 = base_vec3<u32>;
 

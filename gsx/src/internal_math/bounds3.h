@@ -213,6 +213,7 @@ namespace gsx::math
     }
 
     using bounds3 = base_bounds3<f32>;
+    using dbounds3 = base_bounds3<f64>;
     using ibounds3 = base_bounds3<int>;
 
 }

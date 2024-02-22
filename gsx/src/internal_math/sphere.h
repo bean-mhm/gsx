@@ -9,77 +9,119 @@
 namespace gsx::math
 {
 
-    class sphere_t
+    template<std::floating_point T>
+    class base_sphere_t
     {
     public:
-        vec3 center;
-        f32 radius;
+        base_vec3<T> center;
+        T radius;
 
-        constexpr sphere_t()
-            : center(vec3(0)), radius(1)
+        constexpr base_sphere_t()
+            : center(base_vec3<T>(0)), radius(1)
         {}
 
-        constexpr sphere_t(const vec3& center, f32 radius)
+        constexpr base_sphere_t(const base_vec3<T>& center, T radius)
             : center(center), radius(radius)
         {}
 
+        template<std::floating_point U>
+        constexpr operator base_sphere_t<U>() const
+        {
+            return base_sphere_t<U>((base_vec3<U>)center, (U)radius);
+        }
+
         // construct a sphere that bounds a given bounding box
-        sphere_t(const bounds3& b);
+        base_sphere_t(const base_bounds3<T>& b)
+            : center((b.pmin + b.pmax) * .5f),
+            radius(inside(center, b) ? distance(center, b.pmax) : 0)
+        {}
 
-        std::string to_string() const;
+        std::string to_string() const
+        {
+            return std::format(
+                "[center={}, radius={}]",
+                center.to_string(),
+                str::from_number(radius)
+            );
+        }
 
-        friend std::ostream& operator<<(std::ostream& os, const sphere_t& s);
+        friend std::ostream& operator<<(
+            std::ostream& os,
+            const base_sphere_t& s
+            )
+        {
+            os << s.to_string();
+            return os;
+        }
 
-        constexpr bool operator==(const sphere_t& s) const
+        constexpr bool operator==(const base_sphere_t& s) const
         {
             return center == s.center && radius == s.radius;
         }
 
-        constexpr bool operator!=(const sphere_t& s) const
+        constexpr bool operator!=(const base_sphere_t& s) const
         {
             return center != s.center || radius != s.radius;
         }
 
-        constexpr bounds3 bounds() const
+        constexpr base_bounds3<T> bounds() const
         {
-            return bounds3(center - radius, center + radius);
+            return base_bounds3<T>(center - radius, center + radius);
         }
 
         // a point on the sphere at given theta and phi angles
-        vec3 at(f32 theta, f32 phi) const;
+        base_vec3<T> at(T theta, T phi) const
+        {
+            return center + radius * unit_at(theta, phi);
+        }
 
         // a point on the unit sphere at given theta and phi angles
-        static vec3 unit_at(f32 theta, f32 phi);
+        static base_vec3<T> unit_at(T theta, T phi)
+        {
+            const T sin_theta = math::sin(theta);
+            return base_vec3<T>(
+                sin_theta * math::cos(phi),
+                sin_theta * math::sin(phi),
+                math::cos(theta)
+            );
+        }
 
     };
 
-    inline bool inside(const vec3& p, const sphere_t& s)
+    template<std::floating_point T>
+    inline bool inside(const base_vec3<T>& p, const base_sphere_t<T>& s)
     {
         return distance_squared(p, s.center) <= squared(s.radius);
     }
 
-    inline bool overlaps(const sphere_t& s1, const sphere_t& s2)
+    template<std::floating_point T>
+    inline bool overlaps(const base_sphere_t<T>& s1, const base_sphere_t<T>& s2)
     {
         return
             distance_squared(s1.center, s2.center)
             <= squared(s1.radius + s2.radius);
     }
 
-    inline bool overlaps(const sphere_t& s, const bounds3& b)
+    template<std::floating_point T>
+    inline bool overlaps(const base_sphere_t<T>& s, const base_bounds3<T>& b)
     {
         return inside(b.pmin, s)
-            || inside(vec3(b.pmax.x, b.pmin.y, b.pmin.z), s)
-            || inside(vec3(b.pmin.x, b.pmax.y, b.pmin.z), s)
-            || inside(vec3(b.pmax.x, b.pmax.y, b.pmin.z), s)
-            || inside(vec3(b.pmin.x, b.pmin.y, b.pmax.z), s)
-            || inside(vec3(b.pmax.x, b.pmin.y, b.pmax.z), s)
-            || inside(vec3(b.pmin.x, b.pmax.y, b.pmax.z), s)
+            || inside(base_vec3<T>(b.pmax.x, b.pmin.y, b.pmin.z), s)
+            || inside(base_vec3<T>(b.pmin.x, b.pmax.y, b.pmin.z), s)
+            || inside(base_vec3<T>(b.pmax.x, b.pmax.y, b.pmin.z), s)
+            || inside(base_vec3<T>(b.pmin.x, b.pmin.y, b.pmax.z), s)
+            || inside(base_vec3<T>(b.pmax.x, b.pmin.y, b.pmax.z), s)
+            || inside(base_vec3<T>(b.pmin.x, b.pmax.y, b.pmax.z), s)
             || inside(b.pmax, s);
     }
 
-    inline bool overlaps(const bounds3& b, const sphere_t& s)
+    template<std::floating_point T>
+    inline bool overlaps(const base_bounds3<T>& b, const base_sphere_t<T>& s)
     {
         return overlaps(s, b);
     }
+
+    using sphere_t = base_sphere_t<f32>;
+    using dsphere_t = base_sphere_t<f64>;
 
 }

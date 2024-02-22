@@ -601,6 +601,7 @@ namespace gsx::math
     }
 
     using vec2 = base_vec2<f32>;
+    using dvec2 = base_vec2<f64>;
     using ivec2 = base_vec2<i32>;
     using uvec2 = base_vec2<u32>;
 

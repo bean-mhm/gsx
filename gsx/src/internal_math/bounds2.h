@@ -190,6 +190,7 @@ namespace gsx::math
     }
 
     using bounds2 = base_bounds2<f32>;
+    using dbounds2 = base_bounds2<f64>;
     using ibounds2 = base_bounds2<int>;
 
     class ibounds2_iterator : public std::forward_iterator_tag

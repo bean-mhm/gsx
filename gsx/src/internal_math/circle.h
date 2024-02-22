@@ -9,63 +9,96 @@
 namespace gsx::math
 {
 
-    class circle_t
+    template<std::floating_point T>
+    class base_circle_t
     {
     public:
-        vec2 center;
-        f32 radius;
+        base_vec2<T> center;
+        T radius;
 
-        constexpr circle_t()
-            : center(vec2(0)), radius(1)
+        constexpr base_circle_t()
+            : center(base_vec2<T>(0)), radius(1)
         {}
 
-        constexpr circle_t(const vec2& center, f32 radius)
+        constexpr base_circle_t(const base_vec2<T>& center, T radius)
             : center(center), radius(radius)
         {}
 
+        template<std::floating_point U>
+        constexpr operator base_circle_t<U>() const
+        {
+            return base_circle_t<U>((base_vec2<U>)center, (U)radius);
+        }
+
         // construct a circle that bounds a given bounding box
-        circle_t(const bounds2& b);
+        base_circle_t(const base_bounds2<T>& b)
+            : center((b.pmin + b.pmax) * .5f),
+            radius(inside(center, b) ? distance(center, b.pmax) : 0)
+        {}
 
-        std::string to_string() const;
+        std::string to_string() const
+        {
+            return std::format(
+                "[center={}, radius={}]",
+                center.to_string(),
+                str::from_number(radius)
+            );
+        }
 
-        friend std::ostream& operator<<(std::ostream& os, const circle_t& c);
+        friend std::ostream& operator<<(
+            std::ostream& os,
+            const base_circle_t& c
+            )
+        {
+            os << c.to_string();
+            return os;
+        }
 
-        constexpr bool operator==(const circle_t& c) const
+        constexpr bool operator==(const base_circle_t& c) const
         {
             return center == c.center && radius == c.radius;
         }
 
-        constexpr bool operator!=(const circle_t& c) const
+        constexpr bool operator!=(const base_circle_t& c) const
         {
             return center != c.center || radius != c.radius;
         }
 
-        constexpr bounds2 bounds() const
+        constexpr base_bounds2<T> bounds() const
         {
-            return bounds2(center - radius, center + radius);
+            return base_bounds2<T>(center - radius, center + radius);
         }
 
         // a point on the circle at a given angle
-        vec2 at(f32 angle) const;
+        base_vec2<T> at(T angle) const
+        {
+            return center + radius * unit_at(angle);
+        }
 
         // a point on the unit circle at a given angle
-        static vec2 unit_at(f32 angle);
+        static base_vec2<T> unit_at(T angle)
+        {
+            return base_vec2<T>(math::cos(angle), math::sin(angle));
+        }
 
     };
 
-    inline bool inside(const vec2& p, const circle_t& c)
+    template<std::floating_point T>
+    inline bool inside(const base_vec2<T>& p, const base_circle_t<T>& c)
     {
         return distance_squared(p, c.center) <= squared(c.radius);
     }
 
-    inline bool overlaps(const circle_t& c1, const circle_t& c2)
+    template<std::floating_point T>
+    inline bool overlaps(const base_circle_t<T>& c1, const base_circle_t<T>& c2)
     {
         return
             distance_squared(c1.center, c2.center)
             <= squared(c1.radius + c2.radius);
     }
 
-    inline bool overlaps(const circle_t& c, const bounds2& b)
+    template<std::floating_point T>
+    inline bool overlaps(const base_circle_t<T>& c, const base_bounds2<T>& b)
     {
         return inside(b.pmin, c)
             || inside(vec2(b.pmax.x, b.pmin.y), c)
@@ -73,9 +106,13 @@ namespace gsx::math
             || inside(b.pmax, c);
     }
 
-    inline bool overlaps(const bounds2& b, const circle_t& c)
+    template<std::floating_point T>
+    inline bool overlaps(const base_bounds2<T>& b, const base_circle_t<T>& c)
     {
         return overlaps(c, b);
     }
+
+    using circle_t = base_circle_t<f32>;
+    using dcircle_t = base_circle_t<f64>;
 
 }

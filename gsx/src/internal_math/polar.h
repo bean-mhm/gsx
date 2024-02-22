@@ -9,38 +9,69 @@ namespace gsx::math
 {
 
     // polar coordinates
-    class polar_t
+    template<std::floating_point T>
+    class base_polar_t
     {
     public:
-        f32 r;
-        f32 theta;
+        T r;
+        T theta;
 
-        constexpr polar_t()
+        constexpr base_polar_t()
             : r(0), theta(0)
         {}
 
-        constexpr polar_t(f32 r, f32 theta)
+        constexpr base_polar_t(T r, T theta)
             : r(r), theta(theta)
         {}
 
-        polar_t(const vec2& cartesian);
+        template<std::floating_point U>
+        constexpr operator base_polar_t<U>() const
+        {
+            return base_polar_t<U>((U)r, (U)theta);
+        }
 
-        std::string to_string() const;
+        base_polar_t(const base_vec2<T>& cartesian)
+        {
+            r = length(cartesian);
 
-        friend std::ostream& operator<<(std::ostream& os, const polar_t& p);
+            theta = atan(cartesian.y, cartesian.x);
+            if (theta < 0)
+                theta += tau<T>;
+        }
 
-        constexpr bool operator==(const polar_t& p) const
+        std::string to_string() const
+        {
+            return std::format(
+                "[r={}, theta={}]",
+                str::from_number(r),
+                str::from_number(theta)
+            );
+        }
+
+        friend std::ostream& operator<<(std::ostream& os, const base_polar_t& p)
+        {
+            os << p.to_string();
+            return os;
+        }
+
+        constexpr bool operator==(const base_polar_t& p) const
         {
             return r == p.r && theta == p.theta;
         }
 
-        constexpr bool operator!=(const polar_t& p) const
+        constexpr bool operator!=(const base_polar_t& p) const
         {
             return r != p.r || theta != p.theta;
         }
 
-        const vec2 cartesian() const;
+        const base_vec2<T> cartesian() const
+        {
+            return r * base_vec2<T>(math::cos(theta), math::sin(theta));
+        }
 
     };
+
+    using polar_t = base_polar_t<f32>;
+    using dpolar_t = base_polar_t<f64>;
 
 }

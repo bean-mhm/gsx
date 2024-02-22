@@ -694,6 +694,7 @@ namespace gsx::math
     }
 
     using vec4 = base_vec4<f32>;
+    using dvec4 = base_vec4<f64>;
     using ivec4 = base_vec4<i32>;
     using uvec4 = base_vec4<u32>;
 

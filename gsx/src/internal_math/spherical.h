@@ -9,39 +9,77 @@ namespace gsx::math
 {
 
     // spherical coordinates
-    class spherical_t
+    template<std::floating_point T>
+    class base_spherical_t
     {
     public:
-        f32 r;
-        f32 theta;
-        f32 phi;
+        T r;
+        T theta;
+        T phi;
 
-        constexpr spherical_t()
+        constexpr base_spherical_t()
             : r(0), theta(0), phi(0)
         {}
 
-        constexpr spherical_t(f32 r, f32 theta, f32 phi)
+        constexpr base_spherical_t(T r, T theta, T phi)
             : r(r), theta(theta), phi(phi)
         {}
 
-        spherical_t(const vec3& cartesian);
+        template<std::floating_point U>
+        constexpr operator base_spherical_t<U>() const
+        {
+            return base_spherical_t<U>((U)r, (U)theta, (U)phi);
+        }
 
-        std::string to_string() const;
+        base_spherical_t(const base_vec3<T>& cartesian)
+        {
+            r = length(cartesian);
+            theta = atan(r, cartesian.z);
+            phi = atan(cartesian.y, cartesian.x);
+        }
 
-        friend std::ostream& operator<<(std::ostream& os, const spherical_t& s);
+        std::string to_string() const
+        {
+            return std::format(
+                "[r={}, theta={}, phi={}]",
+                str::from_number(r),
+                str::from_number(theta),
+                str::from_number(phi)
+            );
+        }
 
-        constexpr bool operator==(const spherical_t& s) const
+        friend std::ostream& operator<<(
+            std::ostream& os,
+            const base_spherical_t& s
+            )
+        {
+            os << s.to_string();
+            return os;
+        }
+
+        constexpr bool operator==(const base_spherical_t& s) const
         {
             return r == s.r && theta == s.theta && phi == s.phi;
         }
 
-        constexpr bool operator!=(const spherical_t& s) const
+        constexpr bool operator!=(const base_spherical_t& s) const
         {
             return r != s.r || theta != s.theta || phi != s.phi;
         }
 
-        const vec3 cartesian() const;
+        const base_vec3<T> cartesian() const
+        {
+            const T sin_theta = math::sin(theta);
+            return r * base_vec3<T>(
+                sin_theta * math::cos(phi),
+                sin_theta * math::sin(phi),
+                math::cos(theta)
+            );
+        }
 
     };
+
+    using spherical_t = base_spherical_t<f32>;
+    using dspherical_t = base_spherical_t<f64>;
 
 }
