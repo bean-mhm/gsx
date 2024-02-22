@@ -75,7 +75,7 @@ namespace gsx::ecs
         // start the main loop with a given maximum update rate. this will call
         // the abstract functions of the systems present in the world.
         // * avoid adding or removing systems while the world is running, as it
-        // will not affect the current run.
+        //   will not affect the current run.
         // * only a single thread can be running the world at a time.
         // * use a max_update_rate of 0 for uncapped update rate.
         // * use a max_run_time of 0 for uncapped run time.
