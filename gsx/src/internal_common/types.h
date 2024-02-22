@@ -1,5 +1,6 @@
 #pragma once
 
+#include <type_traits>
 #include <cstdint>
 
 namespace gsx::common
