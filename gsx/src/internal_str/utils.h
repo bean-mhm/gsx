@@ -25,8 +25,9 @@ namespace gsx::str
     std::string lpad(const std::string& s, u64 length, bool add_space = true);
     std::string rpad(const std::string& s, u64 length, bool add_space = true);
 
-    bool contains(const std::string& s, const std::string& substring);
-    bool contains(const std::string& s, char ch);
+    bool contains(std::string_view s, std::string_view substring);
+    bool contains(std::string_view s, char ch);
+
     void replace_inplace(
         std::string& s,
         const std::string& from,
@@ -48,10 +49,10 @@ namespace gsx::str
 
     std::string from_list(
         const std::vector<std::string>& list,
-        const std::string& delimiter
+        std::string_view delimiter
     );
     void to_list(
-        const std::string& s,
+        std::string_view s,
         char delimiter,
         std::vector<std::string>& out_elements
     );

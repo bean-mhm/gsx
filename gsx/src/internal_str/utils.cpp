@@ -99,12 +99,12 @@ namespace gsx::str
         return add_space ? (s + " ") : s;
     }
 
-    bool contains(const std::string& s, const std::string& substring)
+    bool contains(std::string_view s, std::string_view substring)
     {
         return (s.find(substring) != std::string::npos);
     }
 
-    bool contains(const std::string& s, char ch)
+    bool contains(std::string_view s, char ch)
     {
         return (s.find(ch) != std::string::npos);
     }
@@ -207,7 +207,7 @@ namespace gsx::str
 
     std::string from_list(
         const std::vector<std::string>& list,
-        const std::string& delimiter
+        std::string_view delimiter
     )
     {
         std::string result = "";
@@ -220,7 +220,7 @@ namespace gsx::str
     }
 
     void to_list(
-        const std::string& s,
+        std::string_view s,
         char delimiter,
         std::vector<std::string>& out_elements
     )
@@ -232,13 +232,17 @@ namespace gsx::str
         {
             if (s[i] == delimiter)
             {
-                out_elements.push_back(trim(s.substr(from, i - from)));
+                out_elements.push_back(
+                    trim(std::string(s.substr(from, i - from)))
+                );
                 from = i + 1;
             }
         }
 
         if (from < s.size())
-            out_elements.push_back(trim(s.substr(from, s.size() - from)));
+            out_elements.push_back(
+                trim(std::string(s.substr(from, s.size() - from)))
+            );
     }
 
     std::string from_data_size(u64 bytes)
